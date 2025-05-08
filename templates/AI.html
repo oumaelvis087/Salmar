@@ -1,0 +1,3459 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SalmarAI Chat - Advanced AI Conversation</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --primary-light: #a5b4fc;
+            --secondary: #f43f5e;
+            --light-bg: #f8fafc;
+            --dark-bg: #0f172a;
+            --light-card: #ffffff;
+            --dark-card: #1e293b;
+            --light-text: #1e293b;
+            --dark-text: #f1f5f9;
+            --light-border: #e2e8f0;
+            --dark-border: #334155;
+            --light-hover: #f1f5f9;
+            --dark-hover: #334155;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --info: #3b82f6;
+            --light-shadow: rgba(0, 0, 0, 0.05);
+            --dark-shadow: rgba(0, 0, 0, 0.3);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--light-bg);
+            color: var(--light-text);
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        body.dark-mode {
+            background-color: var(--dark-bg);
+            color: var(--dark-text);
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 280px;
+            background-color: var(--light-card);
+            border-right: 1px solid var(--light-border);
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            position: relative;
+            z-index: 10;
+            box-shadow: 2px 0 10px var(--light-shadow);
+        }
+
+        body.dark-mode .sidebar {
+            background-color: var(--dark-card);
+            border-right: 1px solid var(--dark-border);
+            box-shadow: 2px 0 10px var(--dark-shadow);
+        }
+
+        .sidebar-header {
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid var(--light-border);
+        }
+
+        body.dark-mode .sidebar-header {
+            border-bottom: 1px solid var(--dark-border);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo-icon {
+            font-size: 24px;
+            color: var(--primary);
+        }
+
+        .logo-text {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .sidebar-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .action-btn {
+            background: none;
+            border: none;
+            font-size: 16px;
+            cursor: pointer;
+            color: var(--light-text);
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        body.dark-mode .action-btn {
+            color: var(--dark-text);
+        }
+
+        .action-btn:hover {
+            background-color: var(--light-hover);
+        }
+
+        body.dark-mode .action-btn:hover {
+            background-color: var(--dark-hover);
+        }
+
+        .new-chat-btn {
+            margin: 15px;
+            padding: 10px 15px;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: background-color 0.2s;
+        }
+
+        .new-chat-btn:hover {
+            background-color: var(--primary-dark);
+        }
+
+        .sidebar-search {
+            padding: 0 15px 15px;
+            position: relative;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 10px 15px 10px 38px;
+            border-radius: 8px;
+            border: 1px solid var(--light-border);
+            background-color: var(--light-bg);
+            color: var(--light-text);
+            font-size: 14px;
+        }
+
+        body.dark-mode .search-input {
+            border: 1px solid var(--dark-border);
+            background-color: var(--dark-bg);
+            color: var(--dark-text);
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 25px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--light-text);
+            opacity: 0.5;
+        }
+
+        body.dark-mode .search-icon {
+            color: var(--dark-text);
+        }
+
+        .sidebar-tabs {
+            display: flex;
+            border-bottom: 1px solid var(--light-border);
+            margin-bottom: 15px;
+        }
+
+        body.dark-mode .sidebar-tabs {
+            border-bottom: 1px solid var(--dark-border);
+        }
+
+        .sidebar-tab {
+            flex: 1;
+            padding: 10px;
+            text-align: center;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--light-text);
+            cursor: pointer;
+            opacity: 0.7;
+            border-bottom: 2px solid transparent;
+        }
+
+        body.dark-mode .sidebar-tab {
+            color: var(--dark-text);
+        }
+
+        .sidebar-tab.active {
+            opacity: 1;
+            border-bottom: 2px solid var(--primary);
+            color: var(--primary);
+        }
+
+        .conversations-list {
+            flex: 1;
+            overflow-y: auto;
+            padding: 0 15px;
+        }
+
+        .conversations-list::-webkit-scrollbar {
+            width: 5px;
+        }
+
+        .conversations-list::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .conversations-list::-webkit-scrollbar-thumb {
+            background: var(--light-border);
+            border-radius: 10px;
+        }
+
+        body.dark-mode .conversations-list::-webkit-scrollbar-thumb {
+            background: var(--dark-border);
+        }
+
+        .conversation-item {
+            padding: 12px 15px;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .conversation-item:hover {
+            background-color: var(--light-hover);
+        }
+
+        body.dark-mode .conversation-item:hover {
+            background-color: var(--dark-hover);
+        }
+
+        .conversation-item.active {
+            background-color: rgba(99, 102, 241, 0.1);
+        }
+
+        body.dark-mode .conversation-item.active {
+            background-color: rgba(99, 102, 241, 0.2);
+        }
+
+        .conversation-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            background-color: var(--primary);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+        }
+
+        .conversation-details {
+            flex: 1;
+            overflow: hidden;
+        }
+
+        .conversation-title {
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 4px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .conversation-preview {
+            font-size: 12px;
+            opacity: 0.7;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .conversation-time {
+            font-size: 11px;
+            opacity: 0.5;
+        }
+
+        .sidebar-footer {
+            padding: 15px;
+            border-top: 1px solid var(--light-border);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        body.dark-mode .sidebar-footer {
+            border-top: 1px solid var(--dark-border);
+        }
+
+        .user-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background-color: var(--primary);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .user-info {
+            flex: 1;
+        }
+
+        .user-name {
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .user-status {
+            font-size: 12px;
+            opacity: 0.7;
+        }
+
+        .user-menu {
+            cursor: pointer;
+            color: var(--light-text);
+            opacity: 0.7;
+        }
+
+        body.dark-mode .user-menu {
+            color: var(--dark-text);
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            position: relative;
+        }
+
+        .chat-header {
+            padding: 15px 20px;
+            border-bottom: 1px solid var(--light-border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background-color: var(--light-card);
+            z-index: 5;
+        }
+
+        body.dark-mode .chat-header {
+            border-bottom: 1px solid var(--dark-border);
+            background-color: var(--dark-card);
+        }
+
+        .chat-title {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .ai-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            background-color: var(--primary);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+        }
+
+        .ai-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .ai-name {
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .ai-description {
+            font-size: 12px;
+            opacity: 0.7;
+        }
+
+        .chat-actions {
+            display: flex;
+            gap: 15px;
+        }
+
+        .chat-action-btn {
+            background: none;
+            border: none;
+            font-size: 16px;
+            cursor: pointer;
+            color: var(--light-text);
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        body.dark-mode .chat-action-btn {
+            color: var(--dark-text);
+        }
+
+        .chat-action-btn:hover {
+            background-color: var(--light-hover);
+        }
+
+        body.dark-mode .chat-action-btn:hover {
+            background-color: var(--dark-hover);
+        }
+
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .chat-messages::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .chat-messages::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .chat-messages::-webkit-scrollbar-thumb {
+            background: var(--light-border);
+            border-radius: 10px;
+        }
+
+        body.dark-mode .chat-messages::-webkit-scrollbar-thumb {
+            background: var(--dark-border);
+        }
+
+        .message {
+            display: flex;
+            gap: 16px;
+            max-width: 90%;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .message.user {
+            align-self: flex-end;
+            flex-direction: row-reverse;
+        }
+
+        .message-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background-color: var(--primary);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            flex-shrink: 0;
+        }
+
+        .message.user .message-avatar {
+            background-color: var(--secondary);
+        }
+
+        .message-content {
+            background-color: var(--light-card);
+            padding: 15px;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px var(--light-shadow);
+            font-size: 15px;
+            line-height: 1.5;
+            position: relative;
+        }
+
+        body.dark-mode .message-content {
+            background-color: var(--dark-card);
+            box-shadow: 0 2px 10px var(--dark-shadow);
+        }
+
+        .message.user .message-content {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        body.dark-mode .message.user .message-content {
+            background-color: var(--primary-dark);
+        }
+
+        .message-content::before {
+            content: '';
+            position: absolute;
+            left: -10px;
+            top: 14px;
+            border-width: 10px 10px 10px 0;
+            border-style: solid;
+            border-color: transparent var(--light-card) transparent transparent;
+        }
+
+        body.dark-mode .message-content::before {
+            border-color: transparent var(--dark-card) transparent transparent;
+        }
+
+        .message.user .message-content::before {
+            left: auto;
+            right: -10px;
+            border-width: 10px 0 10px 10px;
+            border-color: transparent transparent transparent var(--primary);
+        }
+
+        body.dark-mode .message.user .message-content::before {
+            border-color: transparent transparent transparent var(--primary-dark);
+        }
+
+        .message-footer {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 8px;
+            font-size: 12px;
+            opacity: 0.7;
+        }
+
+        .message-time {
+            font-size: 12px;
+            opacity: 0.7;
+        }
+
+        .message-actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 8px;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+
+        .message:hover .message-actions {
+            opacity: 1;
+        }
+
+        .message-action {
+            background: none;
+            border: none;
+            font-size: 14px;
+            cursor: pointer;
+            color: var(--light-text);
+            opacity: 0.7;
+            transition: opacity 0.2s;
+        }
+
+        body.dark-mode .message-action {
+            color: var(--dark-text);
+        }
+
+        .message.user .message-action {
+            color: white;
+        }
+
+        .message-action:hover {
+            opacity: 1;
+        }
+
+        .typing-indicator {
+            display: flex;
+            gap: 5px;
+            padding: 10px;
+            align-items: center;
+        }
+
+        .typing-dot {
+            width: 8px;
+            height: 8px;
+            background-color: var(--light-text);
+            border-radius: 50%;
+            opacity: 0.7;
+            animation: typingAnimation 1.5s infinite ease-in-out;
+        }
+
+        body.dark-mode .typing-dot {
+            background-color: var(--dark-text);
+        }
+
+        .typing-dot:nth-child(1) {
+            animation-delay: 0s;
+        }
+
+        .typing-dot:nth-child(2) {
+            animation-delay: 0.3s;
+        }
+
+        .typing-dot:nth-child(3) {
+            animation-delay: 0.6s;
+        }
+
+        @keyframes typingAnimation {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-5px);
+            }
+        }
+
+        .chat-input-container {
+            padding: 15px 20px;
+            border-top: 1px solid var(--light-border);
+            background-color: var(--light-card);
+            position: relative;
+            z-index: 5;
+        }
+
+        body.dark-mode .chat-input-container {
+            border-top: 1px solid var(--dark-border);
+            background-color: var(--dark-card);
+        }
+
+        .chat-input-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background-color: var(--light-bg);
+            border-radius: 12px;
+            padding: 5px 15px;
+            border: 1px solid var(--light-border);
+        }
+
+        body.dark-mode .chat-input-wrapper {
+            background-color: var(--dark-bg);
+            border: 1px solid var(--dark-border);
+        }
+
+        .chat-input-wrapper:focus-within {
+            border-color: var(--primary);
+        }
+
+        .input-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .input-action-btn {
+            background: none;
+            border: none;
+            font-size: 16px;
+            cursor: pointer;
+            color: var(--light-text);
+            opacity: 0.7;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+        }
+
+        body.dark-mode .input-action-btn {
+            color: var(--dark-text);
+        }
+
+        .input-action-btn:hover {
+            opacity: 1;
+            background-color: var(--light-hover);
+        }
+
+        body.dark-mode .input-action-btn:hover {
+            background-color: var(--dark-hover);
+        }
+
+        .chat-input {
+            flex: 1;
+            border: none;
+            background: none;
+            padding: 10px 0;
+            font-size: 15px;
+            resize: none;
+            max-height: 150px;
+            color: var(--light-text);
+        }
+
+        body.dark-mode .chat-input {
+            color: var(--dark-text);
+        }
+
+        .chat-input:focus {
+            outline: none;
+        }
+
+        .send-btn {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .send-btn:hover {
+            background-color: var(--primary-dark);
+        }
+
+        .send-btn:disabled {
+            background-color: var(--light-border);
+            cursor: not-allowed;
+        }
+
+        body.dark-mode .send-btn:disabled {
+            background-color: var(--dark-border);
+        }
+
+        /* AI Models Sidebar */
+        .models-sidebar {
+            width: 280px;
+            background-color: var(--light-card);
+            border-left: 1px solid var(--light-border);
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            position: relative;
+            z-index: 10;
+            box-shadow: -2px 0 10px var(--light-shadow);
+            transition: transform 0.3s ease;
+            transform: translateX(100%);
+        }
+
+        body.dark-mode .models-sidebar {
+            background-color: var(--dark-card);
+            border-left: 1px solid var(--dark-border);
+            box-shadow: -2px 0 10px var(--dark-shadow);
+        }
+
+        .models-sidebar.open {
+            transform: translateX(0);
+        }
+
+        .models-header {
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid var(--light-border);
+        }
+
+        body.dark-mode .models-header {
+            border-bottom: 1px solid var(--dark-border);
+        }
+
+        .models-title {
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .close-models-btn {
+            background: none;
+            border: none;
+            font-size: 16px;
+            cursor: pointer;
+            color: var(--light-text);
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+        }
+
+        body.dark-mode .close-models-btn {
+            color: var(--dark-text);
+        }
+
+        .close-models-btn:hover {
+            background-color: var(--light-hover);
+        }
+
+        body.dark-mode .close-models-btn:hover {
+            background-color: var(--dark-hover);
+        }
+
+        .models-list {
+            flex: 1;
+            overflow-y: auto;
+            padding: 15px;
+        }
+
+        .models-list::-webkit-scrollbar {
+            width: 5px;
+        }
+
+        .models-list::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .models-list::-webkit-scrollbar-thumb {
+            background: var(--light-border);
+            border-radius: 10px;
+        }
+
+        body.dark-mode .models-list::-webkit-scrollbar-thumb {
+            background: var(--dark-border);
+        }
+
+        .models-category {
+            margin-bottom: 20px;
+        }
+
+        .category-title {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            padding-left: 10px;
+            color: var(--light-text);
+            opacity: 0.7;
+        }
+
+        body.dark-mode .category-title {
+            color: var(--dark-text);
+        }
+
+        .model-item {
+            padding: 12px 15px;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .model-item:hover {
+            background-color: var(--light-hover);
+        }
+
+        body.dark-mode .model-item:hover {
+            background-color: var(--dark-hover);
+        }
+
+        .model-item.active {
+            background-color: rgba(99, 102, 241, 0.1);
+        }
+
+        body.dark-mode .model-item.active {
+            background-color: rgba(99, 102, 241, 0.2);
+        }
+
+        .model-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            background-color: var(--primary);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+        }
+
+        .model-details {
+            flex: 1;
+        }
+
+        .model-name {
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 3px;
+        }
+
+        .model-description {
+            font-size: 12px;
+            opacity: 0.7;
+        }
+
+        .model-badge {
+            font-size: 10px;
+            padding: 3px 6px;
+            border-radius: 20px;
+            background-color: rgba(99, 102, 241, 0.1);
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        .model-badge.new {
+            background-color: rgba(16, 185, 129, 0.1);
+            color: var(--success);
+        }
+
+        .model-badge.beta {
+            background-color: rgba(245, 158, 11, 0.1);
+            color: var(--warning);
+        }
+
+        /* Settings Panel */
+        .settings-panel {
+            position: fixed;
+            top: 0;
+            right: 0;
+            width: 350px;
+            height: 100vh;
+            background-color: var(--light-card);
+            box-shadow: -5px 0 15px var(--light-shadow);
+            z-index: 1000;
+            transform: translateX(100%);
+            transition: transform 0.3s ease;
+            display: flex;
+            flex-direction: column;
+        }
+
+        body.dark-mode .settings-panel {
+            background-color: var(--dark-card);
+            box-shadow: -5px 0 15px var(--dark-shadow);
+        }
+
+        .settings-panel.open {
+            transform: translateX(0);
+        }
+
+        .settings-header {
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid var(--light-border);
+        }
+
+        body.dark-mode .settings-header {
+            border-bottom: 1px solid var(--dark-border);
+        }
+
+        .settings-title {
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .close-settings-btn {
+            background: none;
+            border: none;
+            font-size: 16px;
+            cursor: pointer;
+            color: var(--light-text);
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+        }
+
+        body.dark-mode .close-settings-btn {
+            color: var(--dark-text);
+        }
+
+        .close-settings-btn:hover {
+            background-color: var(--light-hover);
+        }
+
+        body.dark-mode .close-settings-btn:hover {
+            background-color: var(--dark-hover);
+        }
+
+        .settings-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+        }
+
+        .settings-content::-webkit-scrollbar {
+            width: 5px;
+        }
+
+        .settings-content::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .settings-content::-webkit-scrollbar-thumb {
+            background: var(--light-border);
+            border-radius: 10px;
+        }
+
+        body.dark-mode .settings-content::-webkit-scrollbar-thumb {
+            background: var(--dark-border);
+        }
+
+        .settings-section {
+            margin-bottom: 25px;
+        }
+
+        .settings-section-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: var(--light-text);
+        }
+
+        body.dark-mode .settings-section-title {
+            color: var(--dark-text);
+        }
+
+        .settings-option {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--light-border);
+        }
+
+        body.dark-mode .settings-option {
+            border-bottom: 1px solid var(--dark-border);
+        }
+
+        .option-label {
+            font-size: 14px;
+            color: var(--light-text);
+        }
+
+        body.dark-mode .option-label {
+            color: var(--dark-text);
+        }
+
+        .option-description {
+            font-size: 12px;
+            opacity: 0.7;
+            margin-top: 4px;
+        }
+
+        /* Toggle Switch */
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 46px;
+            height: 24px;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: var(--light-border);
+            transition: .4s;
+            border-radius: 24px;
+        }
+
+        body.dark-mode .toggle-slider {
+            background-color: var(--dark-border);
+        }
+
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .toggle-slider {
+            background-color: var(--primary);
+        }
+
+        input:checked + .toggle-slider:before {
+            transform: translateX(22px);
+        }
+
+        /* Select Dropdown */
+        .settings-select {
+            padding: 8px 12px;
+            border-radius: 6px;
+            border: 1px solid var(--light-border);
+            background-color: var(--light-bg);
+            color: var(--light-text);
+            font-size: 14px;
+            width: 120px;
+        }
+
+        body.dark-mode .settings-select {
+            border: 1px solid var(--dark-border);
+            background-color: var(--dark-bg);
+            color: var(--dark-text);
+        }
+
+        .settings-select:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        /* Range Slider */
+        .range-slider {
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        .range-slider-container {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .range-input {
+            flex: 1;
+            -webkit-appearance: none;
+            width: 100%;
+            height: 6px;
+            border-radius: 5px;
+            background: var(--light-border);
+            outline: none;
+        }
+
+        body.dark-mode .range-input {
+            background: var(--dark-border);
+        }
+
+        .range-input::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: var(--primary);
+            cursor: pointer;
+        }
+
+        .range-value {
+            width: 40px;
+            text-align: center;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        /* Context Menu */
+        .context-menu {
+            position: absolute;
+            background-color: var(--light-card);
+            border-radius: 8px;
+            box-shadow: 0 2px 10px var(--light-shadow);
+            padding: 8px 0;
+            z-index: 1000;
+            min-width: 180px;
+            display: none;
+        }
+
+        body.dark-mode .context-menu {
+            background-color: var(--dark-card);
+            box-shadow: 0 2px 10px var(--dark-shadow);
+        }
+
+        .context-menu.show {
+            display: block;
+            animation: fadeIn 0.2s ease;
+        }
+
+        .context-menu-item {
+            padding: 8px 15px;
+            font-size: 14px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--light-text);
+        }
+
+        body.dark-mode .context-menu-item {
+            color: var(--dark-text);
+        }
+
+        .context-menu-item:hover {
+            background-color: var(--light-hover);
+        }
+
+        body.dark-mode .context-menu-item:hover {
+            background-color: var(--dark-hover);
+        }
+
+        .context-menu-divider {
+            height: 1px;
+            background-color: var(--light-border);
+            margin: 5px 0;
+        }
+
+        body.dark-mode .context-menu-divider {
+            background-color: var(--dark-border);
+        }
+
+        /* Toast Notifications */
+        .toast-container {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1100;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .toast {
+            padding: 12px 15px;
+            border-radius: 8px;
+            background-color: var(--light-card);
+            box-shadow: 0 2px 10px var(--light-shadow);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            min-width: 280px;
+            max-width: 350px;
+            transform: translateX(100%);
+            opacity: 0;
+            transition: transform 0.3s, opacity 0.3s;
+        }
+
+        body.dark-mode .toast {
+            background-color: var(--dark-card);
+            box-shadow: 0 2px 10px var(--dark-shadow);
+        }
+
+        .toast.show {
+            transform: translateX(0);
+            opacity: 1;
+        }
+
+        .toast-icon {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            color: white;
+        }
+
+        .toast-icon.success {
+            background-color: var(--success);
+        }
+
+        .toast-icon.error {
+            background-color: var(--danger);
+        }
+
+        .toast-icon.warning {
+            background-color: var(--warning);
+        }
+
+        .toast-icon.info {
+            background-color: var(--info);
+        }
+
+        .toast-content {
+            flex: 1;
+        }
+
+        .toast-title {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 3px;
+            color: var(--light-text);
+        }
+
+        body.dark-mode .toast-title {
+            color: var(--dark-text);
+        }
+
+        .toast-message {
+            font-size: 12px;
+            opacity: 0.8;
+            color: var(--light-text);
+        }
+
+        body.dark-mode .toast-message {
+            color: var(--dark-text);
+        }
+
+        .toast-close {
+            background: none;
+            border: none;
+            font-size: 14px;
+            cursor: pointer;
+            color: var(--light-text);
+            opacity: 0.7;
+        }
+
+        body.dark-mode .toast-close {
+            color: var(--dark-text);
+        }
+
+        .toast-close:hover {
+            opacity: 1;
+        }
+
+        /* Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 2000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s, visibility 0.3s;
+        }
+
+        .modal-overlay.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal {
+            background-color: var(--light-card);
+            border-radius: 12px;
+            box-shadow: 0 5px 20px var(--light-shadow);
+            width: 90%;
+            max-width: 500px;
+            max-height: 90vh;
+            overflow-y: auto;
+            transform: translateY(20px);
+            opacity: 0;
+            transition: transform 0.3s, opacity 0.3s;
+        }
+
+        body.dark-mode .modal {
+            background-color: var(--dark-card);
+            box-shadow: 0 5px 20px var(--dark-shadow);
+        }
+
+        .modal-overlay.show .modal {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .modal-header {
+            padding: 20px;
+            border-bottom: 1px solid var(--light-border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        body.dark-mode .modal-header {
+            border-bottom: 1px solid var(--dark-border);
+        }
+
+        .modal-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--light-text);
+        }
+
+        body.dark-mode .modal-title {
+            color: var(--dark-text);
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 18px;
+            cursor: pointer;
+            color: var(--light-text);
+            opacity: 0.7;
+        }
+
+        body.dark-mode .modal-close {
+            color: var(--dark-text);
+        }
+
+        .modal-close:hover {
+            opacity: 1;
+        }
+
+        .modal-body {
+            padding: 20px;
+        }
+
+        .modal-footer {
+            padding: 15px 20px;
+            border-top: 1px solid var(--light-border);
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+
+        body.dark-mode .modal-footer {
+            border-top: 1px solid var(--dark-border);
+        }
+
+        .modal-btn {
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .modal-btn-secondary {
+            background-color: transparent;
+            border: 1px solid var(--light-border);
+            color: var(--light-text);
+        }
+
+        body.dark-mode .modal-btn-secondary {
+            border: 1px solid var(--dark-border);
+            color: var(--dark-text);
+        }
+
+        .modal-btn-secondary:hover {
+            background-color: var(--light-hover);
+        }
+
+        body.dark-mode .modal-btn-secondary:hover {
+            background-color: var(--dark-hover);
+        }
+
+        .modal-btn-primary {
+            background-color: var(--primary);
+            border: none;
+            color: white;
+        }
+
+        .modal-btn-primary:hover {
+            background-color: var(--primary-dark);
+        }
+
+        .modal-form-group {
+            margin-bottom: 15px;
+        }
+
+        .modal-label {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--light-text);
+        }
+
+        body.dark-mode .modal-label {
+            color: var(--dark-text);
+        }
+
+        .modal-input {
+            width: 100%;
+            padding: 10px;
+            border-radius: 6px;
+            border: 1px solid var(--light-border);
+            background-color: var(--light-bg);
+            color: var(--light-text);
+            font-size: 14px;
+        }
+
+        body.dark-mode .modal-input {
+            border: 1px solid var(--dark-border);
+            background-color: var(--dark-bg);
+            color: var(--dark-text);
+        }
+
+        .modal-input:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        /* Welcome Screen */
+        .welcome-screen {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            padding: 0 20px;
+            text-align: center;
+        }
+
+        .welcome-icon {
+            font-size: 48px;
+            color: var(--primary);
+            margin-bottom: 20px;
+        }
+
+        .welcome-title {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: var(--light-text);
+        }
+
+        body.dark-mode .welcome-title {
+            color: var(--dark-text);
+        }
+
+        .welcome-description {
+            font-size: 16px;
+            max-width: 500px;
+            margin-bottom: 30px;
+            color: var(--light-text);
+            opacity: 0.8;
+            line-height: 1.5;
+        }
+
+        body.dark-mode .welcome-description {
+            color: var(--dark-text);
+        }
+
+        .welcome-models {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .welcome-model {
+            padding: 15px;
+            border-radius: 12px;
+            background-color: var(--light-card);
+            border: 1px solid var(--light-border);
+            width: 120px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        body.dark-mode .welcome-model {
+            background-color: var(--dark-card);
+            border: 1px solid var(--dark-border);
+        }
+
+        .welcome-model:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px var(--light-shadow);
+        }
+
+        body.dark-mode .welcome-model:hover {
+            box-shadow: 0 5px 15px var(--dark-shadow);
+        }
+
+        .welcome-model-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            background-color: var(--primary);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+
+        .welcome-model-name {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--light-text);
+        }
+
+        body.dark-mode .welcome-model-name {
+            color: var(--dark-text);
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 1024px) {
+            .sidebar {
+                position: fixed;
+                left: -280px;
+                transition: left 0.3s ease;
+            }
+
+            .sidebar.open {
+                left: 0;
+            }
+
+            .models-sidebar {
+                position: fixed;
+                right: -280px;
+                transition: right 0.3s ease;
+                transform: none;
+            }
+
+            .models-sidebar.open {
+                right: 0;
+                transform: none;
+            }
+
+            .mobile-menu-toggle {
+                display: flex;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .chat-header {
+                padding: 10px 15px;
+            }
+
+            .ai-avatar {
+                width: 36px;
+                height: 36px;
+                font-size: 16px;
+            }
+
+            .chat-input-container {
+                padding: 10px 15px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .message {
+                max-width: 95%;
+            }
+
+            .chat-action-btn {
+                width: 32px;
+                height: 32px;
+            }
+
+            .welcome-model {
+                width: 100px;
+            }
+
+            .welcome-model-icon {
+                width: 40px;
+                height: 40px;
+                font-size: 20px;
+            }
+        }
+
+        /* Animation Classes */
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes shimmer {
+            0% {
+                background-position: -1000px 0;
+            }
+            100% {
+                background-position: 1000px 0;
+            }
+        }
+
+        .shimmer {
+            background: linear-gradient(90deg, 
+                rgba(255, 255, 255, 0.1) 0%, 
+                rgba(255, 255, 255, 0.2) 50%, 
+                rgba(255, 255, 255, 0.1) 100%);
+            background-size: 1000px 100%;
+            animation: shimmer 2s infinite linear;
+        }
+
+        /* Code Block Styling */
+        .code-block {
+            background-color: var(--light-bg);
+            border-radius: 8px;
+            padding: 15px;
+            margin: 10px 0;
+            font-family: monospace;
+            position: relative;
+            overflow-x: auto;
+        }
+
+        body.dark-mode .code-block {
+            background-color: var(--dark-bg);
+        }
+
+        .code-header {
+            display: flex;
+            justify-content: space-between;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--light-border);
+            margin-bottom: 10px;
+        }
+
+        body.dark-mode .code-header {
+            border-bottom: 1px solid var(--dark-border);
+        }
+
+        .code-language {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        .code-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .code-action-btn {
+            background: none;
+            border: none;
+            font-size: 12px;
+            cursor: pointer;
+            color: var(--light-text);
+            opacity: 0.7;
+        }
+
+        body.dark-mode .code-action-btn {
+            color: var(--dark-text);
+        }
+
+        .code-action-btn:hover {
+            opacity: 1;
+            color: var(--primary);
+        }
+
+        .code-content {
+            white-space: pre;
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        /* Code Syntax Highlighting */
+        .token.comment,
+        .token.prolog,
+        .token.doctype,
+        .token.cdata {
+            color: #6b7280;
+        }
+
+        .token.punctuation {
+            color: #6b7280;
+        }
+
+        .token.namespace {
+            opacity: 0.7;
+        }
+
+        .token.property,
+        .token.tag,
+        .token.boolean,
+        .token.number,
+        .token.constant,
+        .token.symbol {
+            color: #f59e0b;
+        }
+
+        .token.selector,
+        .token.attr-name,
+        .token.string,
+        .token.char,
+        .token.builtin {
+            color: #10b981;
+        }
+
+        .token.operator,
+        .token.entity,
+        .token.url,
+        .language-css .token.string,
+        .style .token.string {
+            color: #ef4444;
+        }
+
+        .token.atrule,
+        .token.attr-value,
+        .token.keyword {
+            color: #3b82f6;
+        }
+
+        .token.function,
+        .token.class-name {
+            color: #8b5cf6;
+        }
+
+        .token.regex,
+        .token.important,
+        .token.variable {
+            color: #ec4899;
+        }
+
+        /* Markdown Styling */
+        .markdown h1 {
+            font-size: 1.8em;
+            margin-top: 1em;
+            margin-bottom: 0.5em;
+            font-weight: 600;
+            border-bottom: 1px solid var(--light-border);
+            padding-bottom: 0.3em;
+        }
+
+        body.dark-mode .markdown h1 {
+            border-bottom: 1px solid var(--dark-border);
+        }
+
+        .markdown h2 {
+            font-size: 1.5em;
+            margin-top: 1em;
+            margin-bottom: 0.5em;
+            font-weight: 600;
+        }
+
+        .markdown h3 {
+            font-size: 1.3em;
+            margin-top: 1em;
+            margin-bottom: 0.5em;
+            font-weight: 600;
+        }
+
+        .markdown h4 {
+            font-size: 1.2em;
+            margin-top: 1em;
+            margin-bottom: 0.5em;
+            font-weight: 600;
+        }
+
+        .markdown p {
+            margin-bottom: 1em;
+            line-height: 1.6;
+        }
+
+        .markdown ul, .markdown ol {
+            margin-bottom: 1em;
+            padding-left: 2em;
+        }
+
+        .markdown li {
+            margin-bottom: 0.5em;
+        }
+
+        .markdown blockquote {
+            margin: 1em 0;
+            padding-left: 1em;
+            border-left: 4px solid var(--primary);
+            color: var(--light-text);
+            opacity: 0.8;
+        }
+
+        body.dark-mode .markdown blockquote {
+            color: var(--dark-text);
+        }
+
+        .markdown a {
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        .markdown a:hover {
+            text-decoration: underline;
+        }
+
+        .markdown table {
+            border-collapse: collapse;
+            margin: 1em 0;
+            width: 100%;
+        }
+
+        .markdown th, .markdown td {
+            border: 1px solid var(--light-border);
+            padding: 0.5em;
+            text-align: left;
+        }
+
+        body.dark-mode .markdown th, body.dark-mode .markdown td {
+            border: 1px solid var(--dark-border);
+        }
+
+        .markdown th {
+            background-color: var(--light-hover);
+            font-weight: 600;
+        }
+
+        body.dark-mode .markdown th {
+            background-color: var(--dark-hover);
+        }
+
+        /* Keyboard Shortcuts Tooltip */
+        .kbd {
+            display: inline-block;
+            padding: 3px 5px;
+            font-size: 11px;
+            line-height: 10px;
+            color: var(--light-text);
+            vertical-align: middle;
+            background-color: var(--light-bg);
+            border: 1px solid var(--light-border);
+            border-radius: 3px;
+            box-shadow: 0 1px 0 var(--light-border);
+        }
+
+        body.dark-mode .kbd {
+            color: var(--dark-text);
+            background-color: var(--dark-bg);
+            border: 1px solid var(--dark-border);
+            box-shadow: 0 1px 0 var(--dark-border);
+        }
+
+        /* Tooltip */
+        .tooltip {
+            position: relative;
+        }
+
+        .tooltip .tooltip-text {
+            visibility: hidden;
+            width: auto;
+            min-width: 120px;
+            background-color: rgba(0, 0, 0, 0.8);
+            color: white;
+            text-align: center;
+            border-radius: 6px;
+            padding: 5px 10px;
+            position: absolute;
+            z-index: 1;
+            bottom: 125%;
+            left: 50%;
+            transform: translateX(-50%);
+            opacity: 0;
+            transition: opacity 0.3s;
+            font-size: 12px;
+            white-space: nowrap;
+        }
+
+        .tooltip:hover .tooltip-text {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        /* Mobile Menu Toggle */
+        .mobile-menu-toggle {
+            display: none;
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            background: none;
+            border: none;
+            font-size: 18px;
+            cursor: pointer;
+            color: var(--light-text);
+            align-items: center;
+            justify-content: center;
+        }
+
+        body.dark-mode .mobile-menu-toggle {
+            color: var(--dark-text);
+        }
+
+        .mobile-menu-toggle:hover {
+            background-color: var(--light-hover);
+        }
+
+        body.dark-mode .mobile-menu-toggle:hover {
+            background-color: var(--dark-hover);
+        }
+
+        /* Overlay for mobile menu */
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 5;
+            display: none;
+        }
+
+        .overlay.show {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="logo">
+                <i class="fas fa-brain logo-icon"></i>
+                <span class="logo-text">SalmarAI</span>
+            </div>
+            <div class="sidebar-actions">
+                <button class="action-btn" id="theme-toggle" title="Toggle theme">
+                    <i class="fas fa-moon"></i>
+                </button>
+                <button class="action-btn" id="sidebar-close">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+        </div>
+        <button class="new-chat-btn" id="new-chat-btn">
+            <i class="fas fa-plus"></i>
+            <span>New Chat</span>
+        </button>
+        <div class="sidebar-search">
+            <i class="fas fa-search search-icon"></i>
+            <input type="text" class="search-input" placeholder="Search conversations...">
+        </div>
+        <div class="sidebar-tabs">
+            <div class="sidebar-tab active" data-tab="recent">Recent</div>
+            <div class="sidebar-tab" data-tab="favorites">Favorites</div>
+        </div>
+        <div class="conversations-list" id="conversations-list">
+            <div class="conversation-item active">
+                <div class="conversation-icon">
+                    <i class="fas fa-robot"></i>
+                </div>
+                <div class="conversation-details">
+                    <div class="conversation-title">Advanced AI Capabilities</div>
+                    <div class="conversation-preview">Discussing neural networks and machine learning algorithms...</div>
+                </div>
+                <div class="conversation-time">Now</div>
+            </div>
+            <div class="conversation-item">
+                <div class="conversation-icon">
+                    <i class="fas fa-code"></i>
+                </div>
+                <div class="conversation-details">
+                    <div class="conversation-title">JavaScript Debugging</div>
+                    <div class="conversation-preview">How to optimize React performance and fix memory leaks</div>
+                </div>
+                <div class="conversation-time">2h ago</div>
+            </div>
+            <div class="conversation-item">
+                <div class="conversation-icon">
+                    <i class="fas fa-paint-brush"></i>
+                </div>
+                <div class="conversation-details">
+                    <div class="conversation-title">UI Design Principles</div>
+                    <div class="conversation-preview">Creating effective color schemes for web applications</div>
+                </div>
+                <div class="conversation-time">Yesterday</div>
+            </div>
+            <div class="conversation-item">
+                <div class="conversation-icon">
+                    <i class="fas fa-chart-line"></i>
+                </div>
+                <div class="conversation-details">
+                    <div class="conversation-title">Data Analysis</div>
+                    <div class="conversation-preview">Interpreting market trends and statistical significance</div>
+                </div>
+                <div class="conversation-time">3d ago</div>
+            </div>
+            <div class="conversation-item">
+                <div class="conversation-icon">
+                    <i class="fas fa-book"></i>
+                </div>
+                <div class="conversation-details">
+                    <div class="conversation-title">Literature Review</div>
+                    <div class="conversation-preview">Analysis of themes in contemporary fiction</div>
+                </div>
+                <div class="conversation-time">1w ago</div>
+            </div>
+            <div class="conversation-item">
+                <div class="conversation-icon">
+                    <i class="fas fa-flask"></i>
+                </div>
+                <div class="conversation-details">
+                    <div class="conversation-title">Scientific Research</div>
+                    <div class="conversation-preview">Latest developments in quantum computing theory</div>
+                </div>
+                <div class="conversation-time">2w ago</div>
+            </div>
+        </div>
+        <div class="sidebar-footer">
+            <div class="user-avatar">JD</div>
+            <div class="user-info">
+                <div class="user-name">John Doe</div>
+                <div class="user-status">Pro Plan</div>
+            </div>
+            <div class="user-menu">
+                <i class="fas fa-ellipsis-v"></i>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="chat-header">
+            <button class="mobile-menu-toggle" id="mobile-menu-toggle">
+                <i class="fas fa-bars"></i>
+            </button>
+            <div class="chat-title">
+                <div class="ai-avatar">
+                    <i class="fas fa-brain"></i>
+                </div>
+                <div class="ai-info">
+                    <div class="ai-name">SalmarGPT</div>
+                    <div class="ai-description">Advanced AI Assistant</div>
+                </div>
+            </div>
+            <div class="chat-actions">
+                <button class="chat-action-btn tooltip" id="clear-chat-btn">
+                    <i class="fas fa-trash-alt"></i>
+                    <span class="tooltip-text">Clear chat <span class="kbd">Alt+C</span></span>
+                </button>
+                <button class="chat-action-btn tooltip" id="share-chat-btn">
+                    <i class="fas fa-share-alt"></i>
+                    <span class="tooltip-text">Share conversation</span>
+                </button>
+                <button class="chat-action-btn tooltip" id="favorite-btn">
+                    <i class="far fa-star"></i>
+                    <span class="tooltip-text">Add to favorites</span>
+                </button>
+                <button class="chat-action-btn tooltip" id="models-btn">
+                    <i class="fas fa-robot"></i>
+                    <span class="tooltip-text">Change AI model</span>
+                </button>
+                <button class="chat-action-btn tooltip" id="settings-btn">
+                    <i class="fas fa-cog"></i>
+                    <span class="tooltip-text">Settings</span>
+                </button>
+            </div>
+        </div>
+        <div class="chat-messages" id="chat-messages">
+            <!-- Welcome Screen -->
+            <div class="welcome-screen" id="welcome-screen">
+                <div class="welcome-icon">
+                    <i class="fas fa-brain"></i>
+                </div>
+                <h1 class="welcome-title">Welcome to SalmarAI Chat</h1>
+                <p class="welcome-description">
+                    Experience the power of advanced AI models. Choose a model to start a conversation or ask any question to get intelligent, human-like responses.
+                </p>
+                <div class="welcome-models">
+                    <div class="welcome-model" data-model="salmargpt">
+                        <div class="welcome-model-icon">
+                            <i class="fas fa-brain"></i>
+                        </div>
+                        <div class="welcome-model-name">SalmarGPT</div>
+                    </div>
+                    <div class="welcome-model" data-model="codeassist">
+                        <div class="welcome-model-icon">
+                            <i class="fas fa-code"></i>
+                        </div>
+                        <div class="welcome-model-name">CodeAssist</div>
+                    </div>
+                    <div class="welcome-model" data-model="creativeai">
+                        <div class="welcome-model-icon">
+                            <i class="fas fa-paint-brush"></i>
+                        </div>
+                        <div class="welcome-model-name">CreativeAI</div>
+                    </div>
+                    <div class="welcome-model" data-model="researchpro">
+                        <div class="welcome-model-icon">
+                            <i class="fas fa-search"></i>
+                        </div>
+                        <div class="welcome-model-name">ResearchPro</div>
+                    </div>
+                </div>
+                <button class="new-chat-btn">
+                    <i class="fas fa-plus"></i>
+                    <span>Start New Chat</span>
+                </button>
+            </div>
+
+            <!-- Messages will be added dynamically -->
+        </div>
+        <div class="chat-input-container">
+            <div class="chat-input-wrapper">
+                <div class="input-actions">
+                    <button class="input-action-btn tooltip" id="upload-btn">
+                        <i class="fas fa-paperclip"></i>
+                        <span class="tooltip-text">Upload file</span>
+                    </button>
+                    <button class="input-action-btn tooltip" id="voice-btn">
+                        <i class="fas fa-microphone"></i>
+                        <span class="tooltip-text">Voice input</span>
+                    </button>
+                </div>
+                <textarea class="chat-input" id="chat-input" placeholder="Type a message..." rows="1"></textarea>
+                <button class="send-btn" id="send-btn" disabled>
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- AI Models Sidebar -->
+    <div class="models-sidebar" id="models-sidebar">
+        <div class="models-header">
+            <div class="models-title">AI Models</div>
+            <button class="close-models-btn" id="close-models-btn">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="models-list">
+            <div class="models-category">
+                <div class="category-title">General Purpose</div>
+                <div class="model-item active">
+                    <div class="model-icon">
+                        <i class="fas fa-brain"></i>
+                    </div>
+                    <div class="model-details">
+                        <div class="model-name">SalmarGPT</div>
+                        <div class="model-description">Advanced general AI</div>
+                    </div>
+                </div>
+                <div class="model-item">
+                    <div class="model-icon">
+                        <i class="fas fa-brain"></i>
+                    </div>
+                    <div class="model-details">
+                        <div class="model-name">Salmar GPT Pro</div>
+                        <div class="model-description">Enhanced reasoning</div>
+                    </div>
+                    <span class="model-badge">PRO</span>
+                </div>
+                <div class="model-item">
+                    <div class="model-icon">
+                        <i class="fas fa-brain"></i>
+                    </div>
+                    <div class="model-details">
+                        <div class="model-name">SalmarGPT Ultra</div>
+                        <div class="model-description">Highest capability</div>
+                    </div>
+                    <span class="model-badge new">NEW</span>
+                </div>
+            </div>
+            <div class="models-category">
+                <div class="category-title">Specialized</div>
+                <div class="model-item">
+                    <div class="model-icon">
+                        <i class="fas fa-code"></i>
+                    </div>
+                    <div class="model-details">
+                        <div class="model-name">CodeAssist</div>
+                        <div class="model-description">Programming expert</div>
+                    </div>
+                </div>
+                <div class="model-item">
+                    <div class="model-icon">
+                        <i class="fas fa-paint-brush"></i>
+                    </div>
+                    <div class="model-details">
+                        <div class="model-name">CreativeAI</div>
+                        <div class="model-description">Creative writing</div>
+                    </div>
+                </div>
+                <div class="model-item">
+                    <div class="model-icon">
+                        <i class="fas fa-search"></i>
+                    </div>
+                    <div class="model-details">
+                        <div class="model-name">ResearchPro</div>
+                        <div class="model-description">Research assistant</div>
+                    </div>
+                </div>
+                <div class="model-item">
+                    <div class="model-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <div class="model-details">
+                        <div class="model-name">DataAnalyst</div>
+                        <div class="model-description">Data interpretation</div>
+                    </div>
+                </div>
+            </div>
+            <div class="models-category">
+                <div class="category-title">Experimental</div>
+                <div class="model-item">
+                    <div class="model-icon">
+                        <i class="fas fa-flask"></i>
+                    </div>
+                    <div class="model-details">
+                        <div class="model-name">MultiModal</div>
+                        <div class="model-description">Text & image analysis</div>
+                    </div>
+                    <span class="model-badge beta">BETA</span>
+                </div>
+                <div class="model-item">
+                    <div class="model-icon">
+                        <i class="fas fa-plug"></i>
+                    </div>
+                    <div class="model-details">
+                        <div class="model-name">PluginMaster</div>
+                        <div class="model-description">Tool integration</div>
+                    </div>
+                    <span class="model-badge beta">BETA</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Settings Panel -->
+    <div class="settings-panel" id="settings-panel">
+        <div class="settings-header">
+            <div class="settings-title">Settings</div>
+            <button class="close-settings-btn" id="close-settings-btn">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="settings-content">
+            <div class="settings-section">
+                <div class="settings-section-title">General</div>
+                <div class="settings-option">
+                    <div>
+                        <div class="option-label">Dark Mode</div>
+                        <div class="option-description">Switch between light and dark theme</div>
+                    </div>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="dark-mode-toggle">
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+                <div class="settings-option">
+                    <div>
+                        <div class="option-label">Sound Effects</div>
+                        <div class="option-description">Play sounds for notifications and actions</div>
+                    </div>
+                    <label class="toggle-switch">
+                        <input type="checkbox" checked>
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+                <div class="settings-option">
+                    <div>
+                        <div class="option-label">Keyboard Shortcuts</div>
+                        <div class="option-description">Enable keyboard shortcuts for quick actions</div>
+                    </div>
+                    <label class="toggle-switch">
+                        <input type="checkbox" checked>
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+                <div class="settings-option">
+                    <div>
+                        <div class="option-label">Font Size</div>
+                        <div class="option-description">Adjust the size of text in the chat</div>
+                    </div>
+                    <select class="settings-select">
+                        <option value="small">Small</option>
+                        <option value="medium" selected>Medium</option>
+                        <option value="large">Large</option>
+                    </select>
+                </div>
+            </div>
+            <div class="settings-section">
+                <div class="settings-section-title">AI Behavior</div>
+                <div class="settings-option">
+                    <div>
+                        <div class="option-label">Response Length</div>
+                        <div class="option-description">Control the verbosity of AI responses</div>
+                    </div>
+                    <div class="range-slider-container">
+                        <input type="range" min="1" max="5" value="3" class="range-input" id="length-slider">
+                        <span class="range-value" id="length-value">3</span>
+                    </div>
+                </div>
+                <div class="settings-option">
+                    <div>
+                        <div class="option-label">Creativity Level</div>
+                        <div class="option-description">Adjust the creativity vs. precision balance</div>
+                    </div>
+                    <div class="range-slider-container">
+                        <input type="range" min="1" max="5" value="4" class="range-input" id="creativity-slider">
+                        <span class="range-value" id="creativity-value">4</span>
+                    </div>
+                </div>
+                <div class="settings-option">
+                    <div>
+                        <div class="option-label">Memory</div>
+                        <div class="option-description">How much context to remember from conversation</div>
+                    </div>
+                    <select class="settings-select">
+                        <option value="short">Short</option>
+                        <option value="medium" selected>Medium</option>
+                        <option value="long">Long</option>
+                        <option value="full">Full</option>
+                    </select>
+                </div>
+                <div class="settings-option">
+                    <div>
+                        <div class="option-label">Web Search</div>
+                        <div class="option-description">Allow AI to search the web for information</div>
+                    </div>
+                    <label class="toggle-switch">
+                        <input type="checkbox" checked>
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+                <div class="settings-option">
+                    <div>
+                        <div class="option-label">Code Execution</div>
+                        <div class="option-description">Allow AI to run code in a sandbox environment</div>
+                    </div>
+                    <label class="toggle-switch">
+                        <input type="checkbox">
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+            </div>
+            <div class="settings-section">
+                <div class="settings-section-title">Privacy</div>
+                <div class="settings-option">
+                    <div>
+                        <div class="option-label">Save Chat History</div>
+                        <div class="option-description">Store conversations for future reference</div>
+                    </div>
+                    <label class="toggle-switch">
+                        <input type="checkbox" checked>
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+                <div class="settings-option">
+                    <div>
+                        <div class="option-label">Data Collection</div>
+                        <div class="option-description">Allow anonymous data collection for improving AI</div>
+                    </div>
+                    <label class="toggle-switch">
+                        <input type="checkbox" checked>
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+                <div class="settings-option">
+                    <div>
+                        <div class="option-label">Content Filtering</div>
+                        <div class="option-description">Filter inappropriate or harmful content</div>
+                    </div>
+                    <select class="settings-select">
+                        <option value="strict">Strict</option>
+                        <option value="moderate" selected>Moderate</option>
+                        <option value="minimal">Minimal</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Context Menu -->
+    <div class="context-menu" id="context-menu">
+        <div class="context-menu-item" id="copy-text">
+            <i class="fas fa-copy"></i> Copy text
+        </div>
+        <div class="context-menu-item" id="regenerate-response">
+            <i class="fas fa-redo"></i> Regenerate response
+        </div>
+        <div class="context-menu-divider"></div>
+        <div class="context-menu-item" id="edit-message">
+            <i class="fas fa-edit"></i> Edit message
+        </div>
+        <div class="context-menu-item" id="delete-message">
+            <i class="fas fa-trash-alt"></i> Delete message
+        </div>
+        <div class="context-menu-divider"></div>
+        <div class="context-menu-item" id="share-message">
+            <i class="fas fa-share-alt"></i> Share message
+        </div>
+    </div>
+
+    <!-- Toast Notifications -->
+    <div class="toast-container" id="toast-container">
+        <!-- Toasts will be added dynamically -->
+    </div>
+
+    <!-- Modal -->
+    <div class="modal-overlay" id="modal-overlay">
+        <div class="modal" id="modal">
+            <div class="modal-header">
+                <div class="modal-title" id="modal-title">Share Conversation</div>
+                <button class="modal-close" id="modal-close">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body" id="modal-body">
+                <div class="modal-form-group">
+                    <label class="modal-label">Share Link</label>
+                    <input type="text" class="modal-input" value="https://salmarai.com/chat/s/abc123" readonly>
+                </div>
+                <div class="modal-form-group">
+                    <label class="modal-label">Access Control</label>
+                    <select class="modal-input">
+                        <option value="public">Public - Anyone with the link</option>
+                        <option value="restricted">Restricted - Only specified users</option>
+                        <option value="private">Private - Only you</option>
+                    </select>
+                </div>
+                <div class="modal-form-group">
+                    <label class="modal-label">Expiration</label>
+                    <select class="modal-input">
+                        <option value="never">Never</option>
+                        <option value="1day">1 day</option>
+                        <option value="7days">7 days</option>
+                        <option value="30days">30 days</option>
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="modal-btn modal-btn-secondary" id="modal-cancel">Cancel</button>
+                <button class="modal-btn modal-btn-primary" id="modal-action">Copy Link</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Overlay for mobile menu -->
+    <div class="overlay" id="overlay"></div>
+
+    <script>
+        // DOM Elements
+        const body = document.body;
+        const sidebar = document.getElementById('sidebar');
+        const sidebarClose = document.getElementById('sidebar-close');
+        const mobileMenuToggle = document.getElementById('mobile-menu-toggle');
+        const overlay = document.getElementById('overlay');
+        const themeToggle = document.getElementById('theme-toggle');
+        const darkModeToggle = document.getElementById('dark-mode-toggle');
+        const modelsSidebar = document.getElementById('models-sidebar');
+        const modelsBtn = document.getElementById('models-btn');
+        const closeModelsBtn = document.getElementById('close-models-btn');
+        const settingsPanel = document.getElementById('settings-panel');
+        const settingsBtn = document.getElementById('settings-btn');
+        const closeSettingsBtn = document.getElementById('close-settings-btn');
+        const chatMessages = document.getElementById('chat-messages');
+        const chatInput = document.getElementById('chat-input');
+        const sendBtn = document.getElementById('send-btn');
+        const clearChatBtn = document.getElementById('clear-chat-btn');
+        const shareChatBtn = document.getElementById('share-chat-btn');
+        const favoriteBtn = document.getElementById('favorite-btn');
+        const welcomeScreen = document.getElementById('welcome-screen');
+        const welcomeModels = document.querySelectorAll('.welcome-model');
+        const newChatBtn = document.getElementById('new-chat-btn');
+        const contextMenu = document.getElementById('context-menu');
+        const modalOverlay = document.getElementById('modal-overlay');
+        const modal = document.getElementById('modal');
+        const modalClose = document.getElementById('modal-close');
+        const modalCancel = document.getElementById('modal-cancel');
+        const modalAction = document.getElementById('modal-action');
+        const toastContainer = document.getElementById('toast-container');
+        const lengthSlider = document.getElementById('length-slider');
+        const lengthValue = document.getElementById('length-value');
+        const creativitySlider = document.getElementById('creativity-slider');
+        const creativityValue = document.getElementById('creativity-value');
+        const sidebarTabs = document.querySelectorAll('.sidebar-tab');
+        const conversationsList = document.getElementById('conversations-list');
+        const conversationItems = document.querySelectorAll('.conversation-item');
+        const uploadBtn = document.getElementById('upload-btn');
+        const voiceBtn = document.getElementById('voice-btn');
+
+        // Theme Toggle
+        themeToggle.addEventListener('click', () => {
+            body.classList.toggle('dark-mode');
+            const isDarkMode = body.classList.contains('dark-mode');
+            themeToggle.innerHTML = isDarkMode ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
+            darkModeToggle.checked = isDarkMode;
+            localStorage.setItem('darkMode', isDarkMode);
+        });
+
+        darkModeToggle.addEventListener('change', () => {
+            body.classList.toggle('dark-mode', darkModeToggle.checked);
+            themeToggle.innerHTML = darkModeToggle.checked ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
+            localStorage.setItem('darkMode', darkModeToggle.checked);
+        });
+
+        // Check for saved theme preference
+        const savedDarkMode = localStorage.getItem('darkMode') === 'true';
+        if (savedDarkMode) {
+            body.classList.add('dark-mode');
+            themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+            darkModeToggle.checked = true;
+        }
+
+        // Mobile Menu Toggle
+        mobileMenuToggle.addEventListener('click', () => {
+            sidebar.classList.add('open');
+            overlay.classList.add('show');
+        });
+
+        sidebarClose.addEventListener('click', () => {
+            sidebar.classList.remove('open');
+            overlay.classList.remove('show');
+        });
+
+        overlay.addEventListener('click', () => {
+            sidebar.classList.remove('open');
+            modelsSidebar.classList.remove('open');
+            overlay.classList.remove('show');
+        });
+
+        // Models Sidebar Toggle
+        modelsBtn.addEventListener('click', () => {
+            modelsSidebar.classList.toggle('open');
+            if (window.innerWidth <= 1024) {
+                overlay.classList.add('show');
+            }
+        });
+
+        closeModelsBtn.addEventListener('click', () => {
+            modelsSidebar.classList.remove('open');
+            overlay.classList.remove('show');
+        });
+
+        // Settings Panel Toggle
+        settingsBtn.addEventListener('click', () => {
+            settingsPanel.classList.add('open');
+        });
+
+        closeSettingsBtn.addEventListener('click', () => {
+            settingsPanel.classList.remove('open');
+        });
+
+        // Sidebar Tabs
+        sidebarTabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                sidebarTabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                // Here you would typically update the conversations list based on the selected tab
+                showToast('Changed to ' + tab.dataset.tab + ' conversations', 'info');
+            });
+        });
+
+        // Conversation Items
+        conversationItems.forEach(item => {
+            item.addEventListener('click', () => {
+                conversationItems.forEach(i => i.classList.remove('active'));
+                item.classList.add('active');
+                welcomeScreen.style.display = 'none';
+                // Here you would typically load the selected conversation
+            });
+        });
+
+        // Welcome Models
+        welcomeModels.forEach(model => {
+            model.addEventListener('click', () => {
+                const modelName = model.querySelector('.welcome-model-name').textContent;
+                welcomeScreen.style.display = 'none';
+                startNewChat(modelName);
+            });
+        });
+
+        // New Chat Button
+        newChatBtn.addEventListener('click', () => {
+            welcomeScreen.style.display = 'none';
+            startNewChat('SalmarGPT');
+        });
+
+        // Chat Input Auto Resize
+        chatInput.addEventListener('input', () => {
+            chatInput.style.height = 'auto';
+            chatInput.style.height = (chatInput.scrollHeight) + 'px';
+            
+            // Enable/disable send button based on input
+            sendBtn.disabled = chatInput.value.trim() === '';
+        });
+
+        // Handle Enter key in chat input
+        chatInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                if (!sendBtn.disabled) {
+                    sendMessage();
+                }
+            }
+        });
+
+        // Send Button
+        sendBtn.addEventListener('click', sendMessage);
+
+        // Clear Chat Button
+        clearChatBtn.addEventListener('click', () => {
+            showModal('Clear Conversation', 
+                     'Are you sure you want to clear this conversation? This action cannot be undone.', 
+                     'Clear', 
+                     clearChat);
+        });
+
+        // Share Chat Button
+        shareChatBtn.addEventListener('click', () => {
+            showModal('Share Conversation', 
+                     `<div class="modal-form-group">
+                        <label class="modal-label">Share Link</label>
+                        <input type="text" class="modal-input" value="https://Salmarai.com/chat/s/abc123" readonly>
+                      </div>
+                      <div class="modal-form-group">
+                        <label class="modal-label">Access Control</label>
+                        <select class="modal-input">
+                            <option value="public">Public - Anyone with the link</option>
+                            <option value="restricted">Restricted - Only specified users</option>
+                            <option value="private">Private - Only you</option>
+                        </select>
+                      </div>
+                      <div class="modal-form-group">
+                        <label class="modal-label">Expiration</label>
+                        <select class="modal-input">
+                            <option value="never">Never</option>
+                            <option value="1day">1 day</option>
+                            <option value="7days">7 days</option>
+                            <option value="30days">30 days</option>
+                        </select>
+                      </div>`, 
+                     'Copy Link', 
+                     copyShareLink);
+        });
+
+        // Favorite Button
+        favoriteBtn.addEventListener('click', () => {
+            const icon = favoriteBtn.querySelector('i');
+            if (icon.classList.contains('far')) {
+                icon.classList.remove('far');
+                icon.classList.add('fas');
+                showToast('Added to favorites', 'success');
+            } else {
+                icon.classList.remove('fas');
+                icon.classList.add('far');
+                showToast('Removed from favorites', 'info');
+            }
+        });
+
+        // Range Sliders
+        lengthSlider.addEventListener('input', () => {
+            lengthValue.textContent = lengthSlider.value;
+        });
+
+        creativitySlider.addEventListener('input', () => {
+            creativityValue.textContent = creativitySlider.value;
+        });
+
+        // Upload Button
+        uploadBtn.addEventListener('click', () => {
+            showToast('File upload feature coming soon', 'info');
+        });
+
+        // Voice Button
+        voiceBtn.addEventListener('click', () => {
+            showToast('Voice input feature coming soon', 'info');
+        });
+
+        // Context Menu
+        document.addEventListener('contextmenu', (e) => {
+            // Only show context menu for message elements
+            if (e.target.closest('.message')) {
+                e.preventDefault();
+                
+                // Position the context menu
+                contextMenu.style.left = `${e.pageX}px`;
+                contextMenu.style.top = `${e.pageY}px`;
+                
+                // Show the context menu
+                contextMenu.classList.add('show');
+                
+                // Store the target message for reference
+                contextMenu.dataset.target = e.target.closest('.message').id;
+            }
+        });
+
+        // Hide context menu when clicking elsewhere
+        document.addEventListener('click', () => {
+            contextMenu.classList.remove('show');
+        });
+
+        // Context Menu Items
+        document.getElementById('copy-text').addEventListener('click', () => {
+            const messageId = contextMenu.dataset.target;
+            const messageEl = document.getElementById(messageId);
+            if (messageEl) {
+                const text = messageEl.querySelector('.message-content').textContent;
+                navigator.clipboard.writeText(text)
+                    .then(() => showToast('Text copied to clipboard', 'success'))
+                    .catch(() => showToast('Failed to copy text', 'error'));
+            }
+        });
+
+        document.getElementById('regenerate-response').addEventListener('click', () => {
+            const messageId = contextMenu.dataset.target;
+            const messageEl = document.getElementById(messageId);
+            if (messageEl && !messageEl.classList.contains('user')) {
+                regenerateResponse(messageId);
+            }
+        });
+
+        document.getElementById('edit-message').addEventListener('click', () => {
+            const messageId = contextMenu.dataset.target;
+            const messageEl = document.getElementById(messageId);
+            if (messageEl && messageEl.classList.contains('user')) {
+                editMessage(messageId);
+            }
+        });
+
+        document.getElementById('delete-message').addEventListener('click', () => {
+            const messageId = contextMenu.dataset.target;
+            const messageEl = document.getElementById(messageId);
+            if (messageEl) {
+                deleteMessage(messageId);
+            }
+        });
+
+        document.getElementById('share-message').addEventListener('click', () => {
+            const messageId = contextMenu.dataset.target;
+            const messageEl = document.getElementById(messageId);
+            if (messageEl) {
+                shareMessage(messageId);
+            }
+        });
+
+        // Modal
+        modalClose.addEventListener('click', () => {
+            modalOverlay.classList.remove('show');
+        });
+
+        modalCancel.addEventListener('click', () => {
+            modalOverlay.classList.remove('show');
+        });
+
+        modalAction.addEventListener('click', () => {
+            if (typeof modalOverlay.dataset.callback === 'string') {
+                const callback = window[modalOverlay.dataset.callback];
+                if (typeof callback === 'function') {
+                    callback();
+                }
+            }
+            modalOverlay.classList.remove('show');
+        });
+
+        // Keyboard Shortcuts
+        document.addEventListener('keydown', (e) => {
+            // Alt+C to clear chat
+            if (e.altKey && e.key === 'c') {
+                clearChatBtn.click();
+            }
+            
+            // Escape to close modals, context menu, etc.
+            if (e.key === 'Escape') {
+                contextMenu.classList.remove('show');
+                modalOverlay.classList.remove('show');
+                settingsPanel.classList.remove('open');
+                modelsSidebar.classList.remove('open');
+                sidebar.classList.remove('open');
+                overlay.classList.remove('show');
+            }
+        });
+
+        // Functions
+        function sendMessage() {
+            const message = chatInput.value.trim();
+            if (message) {
+                // Add user message
+                addMessage(message, true);
+                
+                // Clear input
+                chatInput.value = '';
+                chatInput.style.height = 'auto';
+                sendBtn.disabled = true;
+                
+                // Show typing indicator
+                showTypingIndicator();
+                
+                // Simulate AI response after a delay
+                setTimeout(() => {
+                    hideTypingIndicator();
+                    
+                    // Generate AI response based on user message
+                    let aiResponse;
+                    
+                    if (message.toLowerCase().includes('hello') || message.toLowerCase().includes('hi')) {
+                        aiResponse = "Hello! I'm SalmarGPT, an advanced AI assistant. How can I help you today?";
+                    } 
+                    else if (message.toLowerCase().includes('help')) {
+                        aiResponse = "I'm here to help! You can ask me questions on a wide range of topics, request creative content, solve problems, or just chat. What would you like assistance with?";
+                    }
+                    else if (message.toLowerCase().includes('feature') || message.toLowerCase().includes('can you do')) {
+                        aiResponse = `I have several capabilities including:
+                        
+1. Answering questions and providing information on various topics
+2. Writing and editing content (essays, stories, emails, etc.)
+3. Generating creative ideas
+4. Helping with programming and debugging code
+5. Explaining complex concepts in simple terms
+6. Assisting with problem-solving and critical thinking
+7. Providing recommendations and suggestions
+8. Language translation and summarization
+9. Mathematical calculations and data analysis
+
+What would you like me to help you with?`;
+                    }
+                    else if (message.toLowerCase().includes('code') || message.toLowerCase().includes('programming')) {
+                        aiResponse = `Here's an example of a simple JavaScript function that calculates the Fibonacci sequence:
+
+\`\`\`javascript
+function fibonacci(n) {
+    // Create an array to store Fibonacci numbers
+    let fib = [0, 1];
+    
+    // Generate Fibonacci numbers
+    for (let i = 2; i <= n; i++) {
+        fib[i] = fib[i-1] + fib[i-2];
+    }
+    
+    // Return the first n Fibonacci numbers
+    return fib.slice(0, n + 1);
+}
+
+// Example usage
+console.log(fibonacci(10)); // [0, 1, 1, 2, 3, 5, 8, 13, 21, 34, 55]
+\`\`\`
+
+This function creates an array starting with 0 and 1, then calculates each subsequent number by adding the two previous numbers. Would you like me to explain how this works in more detail or help you with a different coding task?`;
+                    }
+                    else if (message.toLowerCase().includes('ai') || message.toLowerCase().includes('machine learning')) {
+                        aiResponse = `Artificial Intelligence (AI) is a rapidly evolving field that focuses on creating systems capable of performing tasks that typically require human intelligence.
+
+Key concepts in AI include:
+
+1. **Machine Learning**: Algorithms that improve through experience without explicit programming
+2. **Neural Networks**: Computing systems inspired by biological neural networks
+3. **Deep Learning**: Advanced neural networks with multiple layers
+4. **Natural Language Processing**: Enabling computers to understand and generate human language
+5. **Computer Vision**: Allowing machines to interpret and understand visual information
+
+The field has seen remarkable progress in recent years, with applications ranging from virtual assistants and recommendation systems to autonomous vehicles and medical diagnostics.
+
+Would you like to explore any specific aspect of AI in more detail?`;
+                    }
+                    else {
+                        aiResponse = "I understand you're asking about \"" + message + "\". That's an interesting topic. Would you like me to provide more detailed information or explore specific aspects of this subject?";
+                    }
+                    
+                    addMessage(aiResponse, false);
+                }, 1500);
+            }
+        }
+
+        function addMessage(content, isUser) {
+            // Create message element
+            const messageId = 'msg-' + Date.now();
+            const messageEl = document.createElement('div');
+            messageEl.classList.add('message');
+            messageEl.id = messageId;
+            
+            if (isUser) {
+                messageEl.classList.add('user');
+            }
+            
+            // Format content if it contains code blocks
+            let formattedContent = content;
+            if (!isUser && content.includes('```')) {
+                formattedContent = formatCodeBlocks(content);
+            }
+            
+            messageEl.innerHTML = `
+                <div class="message-avatar">
+                    ${isUser ? '<i class="fas fa-user"></i>' : '<i class="fas fa-brain"></i>'}
+                </div>
+                <div>
+                    <div class="message-content">${formattedContent}</div>
+                    <div class="message-footer">
+                        <span class="message-time">${getCurrentTime()}</span>
+                    </div>
+                    <div class="message-actions">
+                        ${isUser ? 
+                            `<button class="message-action" onclick="editMessage('${messageId}')">
+                                <i class="fas fa-edit"></i> Edit
+                            </button>` : 
+                            `<button class="message-action" onclick="regenerateResponse('${messageId}')">
+                                <i class="fas fa-redo"></i> Regenerate
+                            </button>`
+                        }
+                        <button class="message-action" onclick="copyMessage('${messageId}')">
+                            <i class="fas fa-copy"></i> Copy
+                        </button>
+                        <button class="message-action" onclick="deleteMessage('${messageId}')">
+                            <i class="fas fa-trash-alt"></i> Delete
+                        </button>
+                    </div>
+                </div>
+            `;
+            
+            // Add message to chat
+            chatMessages.appendChild(messageEl);
+            
+            // Scroll to bottom
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+            
+            return messageId;
+        }
+
+        function formatCodeBlocks(content) {
+            // Replace code blocks with formatted HTML
+            let formatted = content;
+            const codeBlockRegex = /```([a-zA-Z]*)\n([\s\S]*?)```/g;
+            
+            formatted = formatted.replace(codeBlockRegex, (match, language, code) => {
+                return `
+                <div class="code-block">
+                    <div class="code-header">
+                        <div class="code-language">${language || 'plaintext'}</div>
+                        <div class="code-actions">
+                            <button class="code-action-btn" onclick="copyCode(this)">
+                                <i class="fas fa-copy"></i> Copy
+                            </button>
+                        </div>
+                    </div>
+                    <div class="code-content">${code}</div>
+                </div>
+                `;
+            });
+            
+            // Replace newlines with <br> for regular text
+            formatted = formatted.replace(/\n/g, '<br>');
+            
+            return formatted;
+        }
+
+        function showTypingIndicator() {
+            const typingEl = document.createElement('div');
+            typingEl.id = 'typing-indicator';
+            typingEl.classList.add('message');
+            
+            typingEl.innerHTML = `
+                <div class="message-avatar">
+                    <i class="fas fa-brain"></i>
+                </div>
+                <div class="message-content">
+                    <div class="typing-indicator">
+                        <div class="typing-dot"></div>
+                        <div class="typing-dot"></div>
+                        <div class="typing-dot"></div>
+                    </div>
+                </div>
+            `;
+            
+            chatMessages.appendChild(typingEl);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        function hideTypingIndicator() {
+            const typingEl = document.getElementById('typing-indicator');
+            if (typingEl) {
+                typingEl.remove();
+            }
+        }
+
+        function getCurrentTime() {
+            const now = new Date();
+            let hours = now.getHours();
+            const minutes = now.getMinutes().toString().padStart(2, '0');
+            const ampm = hours >= 12 ? 'PM' : 'AM';
+            
+            hours = hours % 12;
+            hours = hours ? hours : 12; // Convert 0 to 12
+            
+            return `${hours}:${minutes} ${ampm}`;
+        }
+
+        function showToast(message, type = 'success') {
+            const toast = document.createElement('div');
+            toast.classList.add('toast');
+            
+            let icon;
+            if (type === 'success') {
+                icon = '<i class="fas fa-check-circle"></i>';
+            } else if (type === 'error') {
+                icon = '<i class="fas fa-exclamation-circle"></i>';
+            } else if (type === 'warning') {
+                icon = '<i class="fas fa-exclamation-triangle"></i>';
+            } else if (type === 'info') {
+                icon = '<i class="fas fa-info-circle"></i>';
+            }
+            
+            toast.innerHTML = `
+                <div class="toast-icon ${type}">
+                    ${icon}
+                </div>
+                <div class="toast-content">
+                    <div class="toast-title">${type.charAt(0).toUpperCase() + type.slice(1)}</div>
+                    <div class="toast-message">${message}</div>
+                </div>
+                <button class="toast-close">
+                    <i class="fas fa-times"></i>
+                </button>
+            `;
+            
+            // Add to container
+            toastContainer.appendChild(toast);
+            
+            // Add close event
+            toast.querySelector('.toast-close').addEventListener('click', () => {
+                toast.classList.remove('show');
+                setTimeout(() => {
+                    toast.remove();
+                }, 300);
+            });
+            
+            // Show toast
+            setTimeout(() => {
+                toast.classList.add('show');
+            }, 10);
+            
+            // Auto remove after 5 seconds
+            setTimeout(() => {
+                if (toast.parentNode) {
+                    toast.classList.remove('show');
+                    setTimeout(() => {
+                        if (toast.parentNode) {
+                            toast.remove();
+                        }
+                    }, 300);
+                }
+            }, 5000);
+        }
+
+        function showModal(title, content, actionText, callback) {
+            document.getElementById('modal-title').textContent = title;
+            document.getElementById('modal-body').innerHTML = content;
+            document.getElementById('modal-action').textContent = actionText;
+            
+            // Store callback
+            if (typeof callback === 'function') {
+                modalOverlay.dataset.callback = callback.name;
+            }
+            
+            // Show modal
+            modalOverlay.classList.add('show');
+        }
+
+        function clearChat() {
+            // Remove all messages except welcome screen
+            while (chatMessages.firstChild) {
+                chatMessages.removeChild(chatMessages.firstChild);
+            }
+            
+            // Show welcome screen
+            welcomeScreen.style.display = 'flex';
+            
+            showToast('Conversation cleared', 'success');
+        }
+
+        function copyShareLink() {
+            const link = document.querySelector('.modal-input').value;
+            navigator.clipboard.writeText(link)
+                .then(() => showToast('Link copied to clipboard', 'success'))
+                .catch(() => showToast('Failed to copy link', 'error'));
+        }
+
+        function copyMessage(messageId) {
+            const messageEl = document.getElementById(messageId);
+            if (messageEl) {
+                const text = messageEl.querySelector('.message-content').textContent;
+                navigator.clipboard.writeText(text)
+                    .then(() => showToast('Message copied to clipboard', 'success'))
+                    .catch(() => showToast('Failed to copy message', 'error'));
+            }
+        }
+
+        function copyCode(button) {
+            const codeBlock = button.closest('.code-block');
+            const code = codeBlock.querySelector('.code-content').textContent;
+            navigator.clipboard.writeText(code)
+                .then(() => showToast('Code copied to clipboard', 'success'))
+                .catch(() => showToast('Failed to copy code', 'error'));
+        }
+
+        function editMessage(messageId) {
+            const messageEl = document.getElementById(messageId);
+            if (messageEl) {
+                const contentEl = messageEl.querySelector('.message-content');
+                const text = contentEl.textContent;
+                
+                // Replace content with textarea
+                contentEl.innerHTML = `<textarea class="chat-input" style="width:100%;min-height:80px;">${text}</textarea>
+                                      <div style="display:flex;justify-content:flex-end;gap:10px;margin-top:10px;">
+                                        <button class="modal-btn modal-btn-secondary" onclick="cancelEdit('${messageId}')">Cancel</button>
+                                        <button class="modal-btn modal-btn-primary" onclick="saveEdit('${messageId}')">Save</button>
+                                      </div>`;
+                
+                // Focus textarea
+                const textarea = contentEl.querySelector('textarea');
+                textarea.focus();
+                textarea.setSelectionRange(textarea.value.length, textarea.value.length);
+            }
+        }
+
+        function cancelEdit(messageId) {
+            const messageEl = document.getElementById(messageId);
+            if (messageEl) {
+                const contentEl = messageEl.querySelector('.message-content');
+                const textarea = contentEl.querySelector('textarea');
+                
+                // Restore original content
+                contentEl.innerHTML = textarea.dataset.original || textarea.value;
+            }
+        }
+
+        function saveEdit(messageId) {
+            const messageEl = document.getElementById(messageId);
+            if (messageEl) {
+                const contentEl = messageEl.querySelector('.message-content');
+                const textarea = contentEl.querySelector('textarea');
+                const newText = textarea.value;
+                
+                // Update content
+                contentEl.innerHTML = newText;
+                
+                // If this was a user message, regenerate the AI response
+                if (messageEl.classList.contains('user')) {
+                    // Find the next AI message
+                    let nextEl = messageEl.nextElementSibling;
+                    if (nextEl && !nextEl.classList.contains('user')) {
+                        // Show typing indicator
+                        nextEl.remove();
+                        showTypingIndicator();
+                        
+                        // Regenerate response
+                        setTimeout(() => {
+                            hideTypingIndicator();
+                            addMessage(`I've noted your edited message: "${newText}". Would you like me to provide a new response based on this updated information?`, false);
+                        }, 1500);
+                    }
+                }
+                
+                showToast('Message updated', 'success');
+            }
+        }
+
+        function deleteMessage(messageId) {
+            const messageEl = document.getElementById(messageId);
+            if (messageEl) {
+                // If user message, also delete the corresponding AI response
+                if (messageEl.classList.contains('user')) {
+                    let nextEl = messageEl.nextElementSibling;
+                    if (nextEl && !nextEl.classList.contains('user')) {
+                        nextEl.remove();
+                    }
+                }
+                
+                // Remove message
+                messageEl.remove();
+                showToast('Message deleted', 'success');
+            }
+        }
+
+        function regenerateResponse(messageId) {
+            const messageEl = document.getElementById(messageId);
+            if (messageEl) {
+                // Show regenerating effect
+                const contentEl = messageEl.querySelector('.message-content');
+                const originalContent = contentEl.innerHTML;
+                contentEl.innerHTML = `<div class="typing-indicator">
+                                        <div class="typing-dot"></div>
+                                        <div class="typing-dot"></div>
+                                        <div class="typing-dot"></div>
+                                      </div>`;
+                
+                // Simulate regeneration
+                setTimeout(() => {
+                    // Generate a slightly different response
+                    let newContent;
+                    if (originalContent.includes('code')) {
+                        newContent = `I've revised my explanation about coding. Here's an improved example:
+
+\`\`\`javascript
+// A more efficient Fibonacci implementation using memoization
+function fibonacci(n, memo = {}) {
+    if (n in memo) return memo[n];
+    if (n <= 1) return n;
+    
+    memo[n] = fibonacci(n - 1, memo) + fibonacci(n - 2, memo);
+    return memo[n];
+}
+
+// Example usage
+console.log(fibonacci(10)); // 55
+console.log(fibonacci(40)); // 102334155 (much faster than naive recursion)
+\`\`\`
+
+This implementation is more efficient for larger numbers because it uses memoization to avoid redundant calculations. Would you like me to explain how this optimization works?`;
+                    } else {
+                        newContent = "I've reconsidered my previous response and would like to provide a more comprehensive answer. " + originalContent;
+                    }
+                    
+                    // Update content
+                    contentEl.innerHTML = formatCodeBlocks(newContent);
+                    
+                    showToast('Response regenerated', 'success');
+                }, 2000);
+            }
+        }
+
+        function shareMessage(messageId) {
+            const messageEl = document.getElementById(messageId);
+            if (messageEl) {
+                const text = messageEl.querySelector('.message-content').textContent;
+                showModal('Share Message', 
+                         `<div class="modal-form-group">
+                            <label class="modal-label">Message Content</label>
+                            <textarea class="modal-input" rows="5" readonly>${text}</textarea>
+                          </div>
+                          <div class="modal-form-group">
+                            <label class="modal-label">Share Options</label>
+                            <div style="display:flex;gap:10px;margin-top:10px;">
+                                <button class="modal-btn modal-btn-secondary" onclick="window.open('https://twitter.com/intent/tweet?text=${encodeURIComponent(text.substring(0, 280))}', '_blank')">
+                                    <i class="fab fa-twitter"></i> Twitter
+                                </button>
+                                <button class="modal-btn modal-btn-secondary" onclick="window.open('mailto:?subject=Interesting AI conversation&body=${encodeURIComponent(text)}', '_blank')">
+                                    <i class="fas fa-envelope"></i> Email
+                                </button>
+                            </div>
+                          </div>`, 
+                         'Copy Text', 
+                         () => copyMessage(messageId));
+            }
+        }
+
+        function startNewChat(modelName) {
+            // Clear existing messages
+            while (chatMessages.firstChild) {
+                chatMessages.removeChild(chatMessages.firstChild);
+            }
+            
+            // Update chat header
+            document.querySelector('.ai-name').textContent = modelName;
+            document.querySelector('.ai-description').textContent = getModelDescription(modelName);
+            
+            // Add welcome message
+            const welcomeMessage = getWelcomeMessage(modelName);
+            addMessage(welcomeMessage, false);
+            
+            // Update sidebar
+            const newConversation = document.createElement('div');
+            newConversation.classList.add('conversation-item', 'active');
+            newConversation.innerHTML = `
+                <div class="conversation-icon">
+                    <i class="fas fa-${getModelIcon(modelName)}"></i>
+                </div>
+                <div class="conversation-details">
+                    <div class="conversation-title">New Conversation</div>
+                    <div class="conversation-preview">${welcomeMessage.substring(0, 60)}...</div>
+                </div>
+                <div class="conversation-time">Now</div>
+            `;
+            
+            // Add to conversations list
+            conversationsList.insertBefore(newConversation, conversationsList.firstChild);
+            
+            // Update active state
+            document.querySelectorAll('.conversation-item').forEach(item => {
+                if (item !== newConversation) {
+                    item.classList.remove('active');
+                }
+            });
+            
+            // Focus input
+            chatInput.focus();
+        }
+
+        function getModelDescription(modelName) {
+            const descriptions = {
+                'SalmarGPT': 'Advanced AI Assistant',
+                'CodeAssist': 'Programming Expert',
+                'CreativeAI': 'Creative Writing Specialist',
+                'ResearchPro': 'Research & Analysis Expert',
+                'SalmarGPT Pro': 'Enhanced Reasoning & Analysis',
+                'SalmarGPT Ultra': 'Highest Capability AI',
+                'DataAnalyst': 'Data Interpretation Expert',
+                'MultiModal': 'Text & Image Analysis',
+                'PluginMaster': 'Tool Integration Specialist'
+            };
+            
+            return descriptions[modelName] || 'AI Assistant';
+        }
+
+        function getModelIcon(modelName) {
+            const icons = {
+                'SalmarGPT': 'brain',
+                'CodeAssist': 'code',
+                'CreativeAI': 'paint-brush',
+                'ResearchPro': 'search',
+                'SalmarGPT Pro': 'brain',
+                'SalmarGPT Ultra': 'brain',
+                'DataAnalyst': 'chart-line',
+                'MultiModal': 'image',
+                'PluginMaster': 'plug'
+            };
+            
+            return icons[modelName] || 'robot';
+        }
+
+        function getWelcomeMessage(modelName) {
+            const messages = {
+                'SalmarGPT': "Hello! I'm SalmarGPT, an advanced AI assistant ready to help with a wide range of tasks. I can answer questions, provide information, generate creative content, assist with problem-solving, and much more. What can I help you with today?",
+                'CodeAssist': "Welcome to CodeAssist! I'm specialized in programming and software development. I can help you write code, debug issues, explain programming concepts, suggest optimizations, and provide guidance across many programming languages and frameworks. What coding challenge are you working on?",
+                'CreativeAI': "Hi there! I'm CreativeAI, your creative writing and ideation partner. I can help with stories, poems, scripts, marketing copy, creative brainstorming, and more. I'm designed to spark your imagination and help bring your creative ideas to life. What would you like to create today?",
+                'ResearchPro': "Greetings! I'm ResearchPro, specialized in research, analysis, and information synthesis. I can help you explore topics in depth, analyze complex information, summarize research findings, and organize knowledge effectively. What topic would you like to investigate today?",
+                'SalmarGPT Pro': "Welcome to SalmarGPT Pro! I offer enhanced reasoning capabilities with deeper analysis and more nuanced responses. I excel at handling complex questions, multi-step problems, and scenarios requiring careful consideration. How can I assist you today?",
+                'SalmarGPT Ultra': "Welcome to the ultimate AI experience with SalmarGPT Ultra. I represent the highest level of capability, offering exceptional depth, nuance, and precision across all domains of knowledge. I'm here to tackle your most challenging questions and complex tasks. What would you like to explore?",
+                'DataAnalyst': "Hello! I'm DataAnalyst, specialized in data interpretation, statistics, and analytical thinking. I can help you understand data patterns, interpret results, create data visualizations conceptually, and draw meaningful insights from information. What data challenge can I help you with?",
+                'MultiModal': "Welcome to MultiModal! I can analyze and discuss both text and images. While I can't see images in this interface yet, I can provide guidance on visual content conceptually. I'm designed to offer a more comprehensive understanding across different types of information. How can I assist you today?",
+                'PluginMaster': "Hello! I'm PluginMaster, specialized in integrating with various tools and services. I can help you understand how to connect different systems, use APIs, automate workflows, and leverage external tools effectively. What integration challenge are you facing?"
+            };
+            
+            return messages[modelName] || "Hello! I'm an AI assistant ready to help you. What would you like to know?";
+        }
+
+        // Initialize with welcome screen
+        welcomeScreen.style.display = 'flex';
+    </script>
+</body>
+</html>
