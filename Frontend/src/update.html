@@ -1,0 +1,820 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Salmar AI - Update in Progress</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow-x: hidden;
+            background: linear-gradient(135deg, #4B0082 0%, #1C1C1E 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            color: #FFFFFF;
+        }
+
+        /* Animated Background Particles */
+        .particle-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .particle {
+            position: absolute;
+            width: 3px;
+            height: 3px;
+            background: rgba(157, 78, 221, 0.6);
+            border-radius: 50%;
+            animation: float 15s infinite ease-in-out;
+            box-shadow: 0 0 10px rgba(157, 78, 221, 0.8);
+        }
+
+        @keyframes float {
+
+            0%,
+            100% {
+                transform: translateY(0) translateX(0);
+                opacity: 0;
+            }
+
+            10% {
+                opacity: 1;
+            }
+
+            90% {
+                opacity: 1;
+            }
+
+            100% {
+                transform: translateY(-100vh) translateX(50px);
+                opacity: 0;
+            }
+        }
+
+        /* Main Container */
+        .container {
+            position: relative;
+            z-index: 10;
+            text-align: center;
+            padding: 2rem;
+            max-width: 1200px;
+            width: 100%;
+        }
+
+        /* Logo Orb Container */
+        .orb-container {
+            position: relative;
+            width: 200px;
+            height: 200px;
+            margin: 0 auto 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Rotating Rings */
+        .ring {
+            position: absolute;
+            border: 2px solid rgba(157, 78, 221, 0.3);
+            border-radius: 50%;
+            animation: rotate 8s linear infinite;
+        }
+
+        .ring-1 {
+            width: 180px;
+            height: 180px;
+            border-top-color: #9D4EDD;
+            border-right-color: #9D4EDD;
+            animation-duration: 6s;
+        }
+
+        .ring-2 {
+            width: 220px;
+            height: 220px;
+            border-bottom-color: #C77DFF;
+            border-left-color: #C77DFF;
+            animation-duration: 8s;
+            animation-direction: reverse;
+        }
+
+        .ring-3 {
+            width: 260px;
+            height: 260px;
+            border-top-color: #FF4DFF;
+            border-right-color: #FF4DFF;
+            animation-duration: 10s;
+        }
+
+        @keyframes rotate {
+            from {
+                transform: rotate(0deg);
+            }
+
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* Central Orb */
+        .orb {
+            width: 120px;
+            height: 120px;
+            background: radial-gradient(circle at 30% 30%, #C77DFF, #9D4EDD, #4B0082);
+            border-radius: 50%;
+            position: relative;
+            z-index: 2;
+            animation: pulse 2s ease-in-out infinite;
+            box-shadow:
+                0 0 40px rgba(157, 78, 221, 0.8),
+                0 0 80px rgba(157, 78, 221, 0.5),
+                inset 0 0 30px rgba(199, 125, 255, 0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3.5rem;
+            font-weight: bold;
+            color: #FFFFFF;
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.8);
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                transform: scale(1);
+                box-shadow:
+                    0 0 40px rgba(157, 78, 221, 0.8),
+                    0 0 80px rgba(157, 78, 221, 0.5),
+                    inset 0 0 30px rgba(199, 125, 255, 0.4);
+            }
+
+            50% {
+                transform: scale(1.05);
+                box-shadow:
+                    0 0 60px rgba(157, 78, 221, 1),
+                    0 0 120px rgba(157, 78, 221, 0.7),
+                    inset 0 0 40px rgba(199, 125, 255, 0.6);
+            }
+        }
+
+        /* Pulsing Text */
+        .pulsing-text {
+            font-size: 1.1rem;
+            color: #E0E0E0;
+            margin-bottom: 3rem;
+            animation: textPulse 2s ease-in-out infinite;
+        }
+
+        @keyframes textPulse {
+
+            0%,
+            100% {
+                opacity: 0.7;
+            }
+
+            50% {
+                opacity: 1;
+            }
+        }
+
+        /* Main Headline */
+        h1 {
+            font-size: 3rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #FFFFFF, #C77DFF);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: slideDown 1s ease-out;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Subtext */
+        .subtext {
+            font-size: 1.2rem;
+            color: #E0E0E0;
+            margin-bottom: 2.5rem;
+            line-height: 1.6;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+            animation: fadeIn 1.5s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        /* Progress Bar Container */
+        .progress-container {
+            max-width: 600px;
+            margin: 0 auto 1rem;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50px;
+            padding: 8px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(199, 125, 255, 0.2);
+        }
+
+        .progress-bar {
+            height: 20px;
+            background: linear-gradient(90deg, #9D4EDD, #C77DFF, #FF4DFF);
+            border-radius: 50px;
+            width: 0%;
+            animation: fillProgress 4s ease-in-out infinite;
+            box-shadow: 0 0 20px rgba(157, 78, 221, 0.8);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .progress-bar::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+            animation: shimmer 2s infinite;
+        }
+
+        @keyframes shimmer {
+            to {
+                left: 100%;
+            }
+        }
+
+        @keyframes fillProgress {
+            0% {
+                width: 0%;
+            }
+
+            50% {
+                width: 70%;
+            }
+
+            100% {
+                width: 100%;
+            }
+        }
+
+        .progress-caption {
+            font-size: 0.95rem;
+            color: #C77DFF;
+            margin-top: 0.5rem;
+            font-style: italic;
+            animation: textPulse 2s ease-in-out infinite;
+        }
+
+        /* Update Notes Card */
+        .update-card {
+            max-width: 500px;
+            margin: 3rem auto;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 2rem;
+            border: 2px solid rgba(199, 125, 255, 0.3);
+            box-shadow:
+                0 8px 32px rgba(0, 0, 0, 0.3),
+                0 0 40px rgba(199, 125, 255, 0.2);
+            animation: slideUp 1.5s ease-out;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .update-card h2 {
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+            color: #FFFFFF;
+            text-align: left;
+        }
+
+        .update-card ul {
+            list-style: none;
+            text-align: left;
+        }
+
+        .update-card li {
+            font-size: 1.1rem;
+            color: #E0E0E0;
+            margin-bottom: 1rem;
+            padding-left: 2rem;
+            position: relative;
+            line-height: 1.6;
+        }
+
+        .update-card li::before {
+            content: attr(data-icon);
+            position: absolute;
+            left: 0;
+            font-size: 1.3rem;
+        }
+
+        /* CTA Button */
+        .cta-button {
+            display: inline-block;
+            margin-top: 2rem;
+            padding: 1rem 3rem;
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #FFFFFF;
+            background: linear-gradient(135deg, #9D4EDD, #C77DFF);
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow:
+                0 8px 30px rgba(157, 78, 221, 0.5),
+                0 0 40px rgba(157, 78, 221, 0.3);
+            transition: all 0.3s ease;
+            text-decoration: none;
+            animation: buttonGlow 2s ease-in-out infinite;
+        }
+
+        @keyframes buttonGlow {
+
+            0%,
+            100% {
+                box-shadow:
+                    0 8px 30px rgba(157, 78, 221, 0.5),
+                    0 0 40px rgba(157, 78, 221, 0.3);
+            }
+
+            50% {
+                box-shadow:
+                    0 8px 40px rgba(255, 77, 255, 0.7),
+                    0 0 60px rgba(255, 77, 255, 0.5);
+            }
+        }
+
+        .cta-button:hover {
+            background: linear-gradient(135deg, #C77DFF, #FF4DFF);
+            transform: translateY(-3px);
+            box-shadow:
+                0 12px 40px rgba(255, 77, 255, 0.7),
+                0 0 60px rgba(255, 77, 255, 0.5);
+        }
+
+        .cta-button:active {
+            transform: translateY(-1px);
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(10px);
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: linear-gradient(135deg, #2D1B4E, #1C1C1E);
+            padding: 3rem;
+            border-radius: 20px;
+            max-width: 500px;
+            width: 90%;
+            border: 2px solid rgba(199, 125, 255, 0.3);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            animation: modalSlide 0.4s ease-out;
+        }
+
+        @keyframes modalSlide {
+            from {
+                opacity: 0;
+                transform: translateY(-50px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .modal-content h3 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            color: #FFFFFF;
+        }
+
+        .modal-content p {
+            color: #E0E0E0;
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+
+        .modal-content input {
+            width: 100%;
+            padding: 1rem;
+            font-size: 1rem;
+            border: 2px solid rgba(199, 125, 255, 0.3);
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.05);
+            color: #FFFFFF;
+            margin-bottom: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .modal-content input:focus {
+            outline: none;
+            border-color: #9D4EDD;
+            box-shadow: 0 0 20px rgba(157, 78, 221, 0.4);
+        }
+
+        .modal-content input::placeholder {
+            color: rgba(224, 224, 224, 0.5);
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .modal-button {
+            flex: 1;
+            padding: 1rem;
+            font-size: 1rem;
+            font-weight: bold;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .modal-button.submit {
+            background: linear-gradient(135deg, #9D4EDD, #C77DFF);
+            color: #FFFFFF;
+            box-shadow: 0 5px 20px rgba(157, 78, 221, 0.4);
+        }
+
+        .modal-button.submit:hover {
+            background: linear-gradient(135deg, #C77DFF, #FF4DFF);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(255, 77, 255, 0.5);
+        }
+
+        .modal-button.cancel {
+            background: rgba(255, 255, 255, 0.1);
+            color: #E0E0E0;
+            border: 1px solid rgba(199, 125, 255, 0.3);
+        }
+
+        .modal-button.cancel:hover {
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        /* Success Message */
+        .success-message {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: linear-gradient(135deg, #2D1B4E, #1C1C1E);
+            padding: 2rem 3rem;
+            border-radius: 20px;
+            border: 2px solid rgba(199, 125, 255, 0.5);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            z-index: 1001;
+            text-align: center;
+            animation: successPop 0.5s ease-out;
+        }
+
+        @keyframes successPop {
+            0% {
+                opacity: 0;
+                transform: translate(-50%, -50%) scale(0.8);
+            }
+
+            100% {
+                opacity: 1;
+                transform: translate(-50%, -50%) scale(1);
+            }
+        }
+
+        .success-message.active {
+            display: block;
+        }
+
+        .success-message h3 {
+            font-size: 1.8rem;
+            color: #FFFFFF;
+            margin-bottom: 1rem;
+        }
+
+        .success-message p {
+            color: #E0E0E0;
+            font-size: 1.1rem;
+        }
+
+        .checkmark {
+            font-size: 4rem;
+            color: #9D4EDD;
+            margin-bottom: 1rem;
+            animation: checkmarkPop 0.6s ease-out;
+        }
+
+        @keyframes checkmarkPop {
+            0% {
+                transform: scale(0);
+            }
+
+            50% {
+                transform: scale(1.2);
+            }
+
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2rem;
+            }
+
+            .subtext {
+                font-size: 1rem;
+            }
+
+            .orb-container {
+                width: 150px;
+                height: 150px;
+            }
+
+            .orb {
+                width: 90px;
+                height: 90px;
+                font-size: 2.5rem;
+            }
+
+            .ring-1 {
+                width: 140px;
+                height: 140px;
+            }
+
+            .ring-2 {
+                width: 170px;
+                height: 170px;
+            }
+
+            .ring-3 {
+                width: 200px;
+                height: 200px;
+            }
+
+            .update-card {
+                padding: 1.5rem;
+            }
+
+            .update-card h2 {
+                font-size: 1.5rem;
+            }
+
+            .update-card li {
+                font-size: 1rem;
+            }
+
+            .cta-button {
+                padding: 0.9rem 2rem;
+                font-size: 1rem;
+            }
+
+            .modal-content {
+                padding: 2rem;
+            }
+
+            .modal-buttons {
+                flex-direction: column;
+            }
+        }
+
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 1.6rem;
+            }
+
+            .pulsing-text {
+                font-size: 0.95rem;
+            }
+
+            .orb {
+                width: 70px;
+                height: 70px;
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Particle Background -->
+    <div class="particle-container" id="particles"></div>
+
+    <!-- Main Container -->
+    <div class="container">
+        <!-- Orb Logo with Rotating Rings -->
+        <div class="orb-container">
+            <div class="ring ring-3"></div>
+            <div class="ring ring-2"></div>
+            <div class="ring ring-1"></div>
+            <div class="orb">S</div>
+        </div>
+
+        <p class="pulsing-text">Preparing something amazing for you…</p>
+
+        <!-- Main Headline -->
+        <h1>An Update is on the Way 🚀</h1>
+
+        <!-- Subtext -->
+        <p class="subtext">
+            We're improving Salmar AI to make your experience faster, smarter, and more powerful. Please check back
+            soon.
+        </p>
+
+        <!-- Progress Bar -->
+        <div class="progress-container">
+            <div class="progress-bar"></div>
+        </div>
+        <p class="progress-caption">Optimizing neural pathways…</p>
+
+        <!-- Update Notes Card -->
+        <div class="update-card">
+            <h2>What's Coming</h2>
+            <ul>
+                <li data-icon="⚡">Faster response times</li>
+                <li data-icon="🤖">Smarter reasoning & creativity</li>
+                <li data-icon="🔒">Enhanced privacy & security</li>
+                <li data-icon="🎨">New interface polish</li>
+            </ul>
+        </div>
+
+        <!-- CTA Button -->
+        <button class="cta-button" id="notifyBtn">Notify Me When Ready</button>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal" id="modal">
+        <div class="modal-content">
+            <h3>Get Notified</h3>
+            <p>Enter your email and we'll let you know when Salmar AI is back online with amazing new features!</p>
+            <input type="email" id="emailInput" placeholder="your@email.com" required>
+            <div class="modal-buttons">
+                <button class="modal-button cancel" id="cancelBtn">Cancel</button>
+                <button class="modal-button submit" id="submitBtn">Subscribe</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Success Message -->
+    <div class="success-message" id="successMessage">
+        <div class="checkmark">✓</div>
+        <h3>You're All Set!</h3>
+        <p>We'll notify you as soon as Salmar AI is ready.</p>
+    </div>
+
+    <script>
+        // Generate particles
+        const particleContainer = document.getElementById('particles');
+        for (let i = 0; i < 50; i++) {
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+            particle.style.left = Math.random() * 100 + '%';
+            particle.style.animationDelay = Math.random() * 15 + 's';
+            particle.style.animationDuration = (Math.random() * 10 + 10) + 's';
+            particleContainer.appendChild(particle);
+        }
+
+        // Modal functionality
+        const notifyBtn = document.getElementById('notifyBtn');
+        const modal = document.getElementById('modal');
+        const cancelBtn = document.getElementById('cancelBtn');
+        const submitBtn = document.getElementById('submitBtn');
+        const emailInput = document.getElementById('emailInput');
+        const successMessage = document.getElementById('successMessage');
+
+        notifyBtn.addEventListener('click', () => {
+            modal.classList.add('active');
+        });
+
+        cancelBtn.addEventListener('click', () => {
+            modal.classList.remove('active');
+            emailInput.value = '';
+        });
+
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                modal.classList.remove('active');
+                emailInput.value = '';
+            }
+        });
+
+        submitBtn.addEventListener('click', () => {
+            const email = emailInput.value.trim();
+            if (email && email.includes('@')) {
+                modal.classList.remove('active');
+                successMessage.classList.add('active');
+                emailInput.value = '';
+
+                setTimeout(() => {
+                    successMessage.classList.remove('active');
+                }, 3000);
+            } else {
+                emailInput.style.borderColor = '#FF4DFF';
+                emailInput.placeholder = 'Please enter a valid email';
+                setTimeout(() => {
+                    emailInput.style.borderColor = 'rgba(199, 125, 255, 0.3)';
+                }, 2000);
+            }
+        });
+
+        // Enter key support for email input
+        emailInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                submitBtn.click();
+            }
+        });
+
+        // Random progress captions
+        const captions = [
+            'Optimizing neural pathways…',
+            'Teaching Salmar new tricks…',
+            'Upgrading intelligence cores…',
+            'Fine-tuning algorithms…',
+            'Enhancing cognitive abilities…',
+            'Polishing the future…'
+        ];
+
+        const progressCaption = document.querySelector('.progress-caption');
+        let captionIndex = 0;
+
+        setInterval(() => {
+            captionIndex = (captionIndex + 1) % captions.length;
+            progressCaption.style.opacity = '0';
+            setTimeout(() => {
+                progressCaption.textContent = captions[captionIndex];
+                progressCaption.style.opacity = '1';
+            }, 300);
+        }, 4000);
+
+        progressCaption.style.transition = 'opacity 0.3s ease';
+    </script>
+</body>
+
+</html>

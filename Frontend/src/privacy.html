@@ -1,0 +1,1207 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="color-scheme" content="dark light" />
+  <title>Salmar — Privacy Policy</title>
+  <meta name="description" content="Salmar Privacy Policy — Your trust is the foundation of Salmar. Learn how we protect your data and respect your privacy." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;800;900&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #0E0722;
+      --bg-2: #140B31;
+      --txt: #EDE7FF;
+      --txt-dim: #C9B9FF;
+      --txt-muted: #A897E8;
+      --primary: #B873FF; /* neon purple */
+      --primary-2: #C792FF;
+      --accent: #7C3AED;
+      --accent-2: #9D4EDD;
+      --success: #5CF2B8;
+      --warning: #F9D85E;
+      --danger: #FF6B9E;
+
+      --glass: rgba(255,255,255,0.06);
+      --glass-strong: rgba(255,255,255,0.1);
+      --glass-border: rgba(255,255,255,0.14);
+
+      --shadow-1: 0 10px 30px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.06);
+      --shadow-2: 0 20px 60px rgba(120,60,200,0.35);
+      --ring: 0 0 0 2px rgba(184,115,255,0.35), 0 0 30px rgba(184,115,255,0.4);
+
+      --radius: 16px;
+      --radius-lg: 22px;
+
+      --gradient-neo: radial-gradient(1200px 800px at 10% -20%, rgba(168,85,247,.18), transparent 70%),
+                      radial-gradient(900px 700px at 110% 120%, rgba(168,85,247,.22), transparent 70%),
+                      linear-gradient(180deg, var(--bg), var(--bg-2));
+      --underline: linear-gradient(90deg, transparent, rgba(184,115,255,0.9), transparent);
+    }
+
+    [data-theme="light"] {
+      --bg: #F6F3FF;
+      --bg-2: #EFE7FF;
+      --txt: #1F1147;
+      --txt-dim: #3A2A6B;
+      --txt-muted: #574790;
+
+      --primary: #7C3AED; /* deeper purple in light */
+      --primary-2: #9D4EDD;
+      --accent: #6D28D9;
+      --accent-2: #8B5CF6;
+
+      --glass: rgba(255,255,255,0.7);
+      --glass-strong: rgba(255,255,255,0.9);
+      --glass-border: rgba(40,0,120,0.14);
+
+      --shadow-1: 0 10px 35px rgba(98,38,205,0.15), inset 0 1px 0 rgba(255,255,255,0.8);
+      --shadow-2: 0 20px 60px rgba(98,38,205,0.15);
+      --ring: 0 0 0 2px rgba(98,38,205,0.25), 0 0 26px rgba(98,38,205,0.25);
+
+      --gradient-neo: radial-gradient(1200px 800px at 10% -20%, rgba(124,58,237,.12), transparent 70%),
+                      radial-gradient(900px 700px at 110% 120%, rgba(124,58,237,.15), transparent 70%),
+                      linear-gradient(180deg, var(--bg), var(--bg-2));
+      --underline: linear-gradient(90deg, transparent, rgba(124,58,237,0.9), transparent);
+    }
+
+    html, body {
+      height: 100%;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Inter', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Apple Color Emoji', 'Segoe UI Emoji';
+      color: var(--txt);
+      background: var(--gradient-neo);
+      background-attachment: fixed;
+      line-height: 1.65;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      text-rendering: optimizeLegibility;
+      overflow-x: hidden;
+    }
+
+    /* Subtle animated edge glows */
+    .bg-aurora {
+      pointer-events: none;
+      position: fixed;
+      inset: -10vmax;
+      z-index: -1;
+      filter: blur(40px) saturate(110%);
+      opacity: 0.7;
+      background:
+        radial-gradient(50vmax 35vmax at -10% 0%, rgba(184,115,255,0.18), transparent 60%),
+        radial-gradient(60vmax 40vmax at 110% 100%, rgba(184,115,255,0.22), transparent 60%);
+      animation: drift 28s ease-in-out infinite alternate;
+    }
+
+    @keyframes drift {
+      from { transform: translate3d(0,0,0) rotate(0deg) scale(1); }
+      to   { transform: translate3d(2%, -1%, 0) rotate(2deg) scale(1.02); }
+    }
+
+    /* Skip link */
+    .skip-link {
+      position: absolute;
+      top: -40px;
+      left: 16px;
+      background: var(--glass);
+      color: var(--txt);
+      padding: 10px 14px;
+      border-radius: 10px;
+      border: 1px solid var(--glass-border);
+      box-shadow: var(--shadow-1);
+      transition: top .25s ease, transform .25s ease;
+      z-index: 50;
+    }
+    .skip-link:focus {
+      top: 16px;
+      transform: translateY(0);
+      outline: none;
+      box-shadow: var(--ring);
+    }
+
+    /* Layout */
+    .wrapper {
+      max-width: 1100px;
+      margin-inline: auto;
+      padding-inline: clamp(16px, 3vw, 28px);
+    }
+
+    header.nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 18px 0;
+      position: sticky;
+      top: 0;
+      background: linear-gradient(180deg, rgba(10,6,24,0.65), rgba(10,6,24,0.25) 60%, transparent);
+      backdrop-filter: blur(7px);
+      z-index: 20;
+    }
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+      color: var(--txt);
+      font-weight: 800;
+      letter-spacing: 0.2px;
+      font-size: 1.05rem;
+      text-transform: uppercase;
+      padding: 8px 12px;
+      border-radius: 12px;
+      background: var(--glass);
+      border: 1px solid var(--glass-border);
+      box-shadow: var(--shadow-1);
+    }
+    .brand svg {
+      width: 22px; height: 22px;
+      stroke: var(--primary);
+      filter: drop-shadow(0 0 10px rgba(184,115,255,.55));
+    }
+
+    .mode-toggle {
+      display: inline-flex;
+      gap: 10px;
+      align-items: center;
+      background: var(--glass);
+      border: 1px solid var(--glass-border);
+      border-radius: 999px;
+      padding: 6px 10px;
+      box-shadow: var(--shadow-1);
+    }
+    .mode-toggle button {
+      appearance: none;
+      border: none;
+      background: transparent;
+      color: var(--txt);
+      padding: 8px 12px;
+      border-radius: 999px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: transform .2s ease, background .25s ease, color .25s ease;
+    }
+    .mode-toggle button[aria-pressed="true"] {
+      background: linear-gradient(180deg, rgba(184,115,255,0.18), rgba(184,115,255,0.1));
+      color: var(--primary);
+      box-shadow: inset 0 0 0 1px rgba(184,115,255,.35), 0 0 22px rgba(184,115,255,.25);
+    }
+    .mode-toggle button:focus-visible {
+      outline: none;
+      box-shadow: var(--ring);
+    }
+
+    /* Hero */
+    .hero {
+      display: grid;
+      grid-template-columns: 1.25fr 1fr;
+      gap: clamp(20px, 5vw, 40px);
+      align-items: center;
+      padding-top: 22px;
+      padding-bottom: 14px;
+    }
+    @media (max-width: 920px) {
+      .hero { grid-template-columns: 1fr; }
+    }
+
+    .hero-title {
+      font-size: clamp(2rem, 3.2vw, 3.2rem);
+      line-height: 1.1;
+      font-weight: 900;
+      letter-spacing: -0.02em;
+      margin: 8px 0 10px;
+      text-shadow: 0 6px 30px rgba(184,115,255,0.25);
+    }
+    .hero-sub {
+      color: var(--txt-dim);
+      font-size: clamp(1rem, 1.6vw, 1.125rem);
+      max-width: 66ch;
+    }
+
+    .shield-stage {
+      position: relative;
+      min-height: 260px;
+      display: grid;
+      place-items: center;
+      isolation: isolate;
+    }
+
+    .shield {
+      width: clamp(160px, 32vw, 240px);
+      aspect-ratio: 1/1.2;
+      filter: drop-shadow(0 0 24px rgba(184,115,255,.65));
+    }
+    .shield .core {
+      stroke: var(--primary);
+      fill: linear-gradient(180deg, rgba(184,115,255,.15), rgba(184,115,255,.05));
+      filter: drop-shadow(0 0 14px rgba(184,115,255,.7));
+    }
+    /* Subtle glow ring */
+    .glow-ring {
+      position: absolute;
+      width: clamp(260px, 36vw, 360px);
+      height: clamp(260px, 36vw, 360px);
+      border-radius: 50%;
+      background: radial-gradient(closest-side, rgba(184,115,255,.22), rgba(184,115,255,.05) 60%, transparent 80%);
+      filter: blur(6px);
+      z-index: -1;
+      opacity: .9;
+      animation: pulse 3.6s ease-in-out infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); opacity: .9; }
+      50% { transform: scale(1.05); opacity: 1; }
+    }
+
+    /* Orbiting sparks */
+    .orbit {
+      position: absolute;
+      width: clamp(300px, 44vw, 420px);
+      height: clamp(300px, 44vw, 420px);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+    .spark {
+      position: absolute;
+      top: 50%; left: 50%;
+      width: 10px; height: 10px;
+      margin: -5px 0 0 -5px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 30% 30%, #fff, var(--primary) 55%, transparent 70%);
+      box-shadow: 0 0 16px rgba(184,115,255,.85), 0 0 40px rgba(184,115,255,.55);
+      transform-origin: -140px 0; /* radius of orbit */
+      animation: orbit 10s linear infinite;
+      filter: saturate(120%);
+    }
+    .spark:nth-child(2) {
+      transform-origin: 160px 0;
+      animation-duration: 14s;
+      opacity: .85;
+    }
+    .spark:nth-child(3) {
+      transform-origin: -180px 0;
+      animation-duration: 18s;
+      opacity: .7;
+    }
+    @keyframes orbit {
+      from { transform: rotate(0deg) translateX(0); }
+      to   { transform: rotate(360deg) translateX(0); }
+    }
+
+    /* Section cards & headings */
+    .policy {
+      margin-top: 10px;
+    }
+
+    .card {
+      background: var(--glass);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-1);
+      padding: clamp(16px, 2.2vw, 22px);
+    }
+
+    .section {
+      margin: 14px 0;
+      border-radius: var(--radius-lg);
+      overflow: clip;
+      background: linear-gradient(180deg, transparent, rgba(255,255,255,0.02) 30%, transparent);
+      border: 1px solid transparent;
+      transition: border-color .25s ease, background .25s ease;
+    }
+    .section:focus-within, .section:hover {
+      border-color: rgba(184,115,255,0.22);
+      background: linear-gradient(180deg, rgba(184,115,255,0.06), rgba(255,255,255,0.02));
+      box-shadow: var(--shadow-2);
+    }
+
+    /* Accessible accordion using details/summary */
+    details.policy-item {
+      break-inside: avoid;
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      background: linear-gradient(180deg, rgba(255,255,255,0.03), transparent);
+      border: 1px solid var(--glass-border);
+      box-shadow: var(--shadow-1);
+      margin: 14px 0;
+    }
+    details[open].policy-item {
+      outline: none;
+    }
+
+    summary.policy-summary {
+      list-style: none;
+      cursor: pointer;
+      display: flex;
+      gap: 14px;
+      align-items: center;
+      padding: clamp(14px, 2.4vw, 18px) clamp(16px, 2.8vw, 22px);
+      position: relative;
+      user-select: none;
+    }
+    summary.policy-summary::-webkit-details-marker { display: none; }
+
+    .heading {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      font-size: clamp(1.05rem, 1.6vw, 1.25rem);
+      font-weight: 800;
+      letter-spacing: 0.2px;
+      color: var(--txt);
+      text-shadow: 0 4px 18px rgba(184,115,255,.2);
+      position: relative;
+    }
+
+    /* Neon underline animation */
+    .heading::after {
+      content: "";
+      position: absolute;
+      left: 0; bottom: -4px;
+      height: 2px; width: 100%;
+      background: var(--underline);
+      border-radius: 2px;
+      transform: scaleX(0.2);
+      transform-origin: left;
+      filter: drop-shadow(0 0 10px rgba(184,115,255,.8));
+      transition: transform .45s ease;
+    }
+    details[open] .heading::after,
+    summary.policy-summary:hover .heading::after,
+    summary.policy-summary:focus-visible .heading::after {
+      transform: scaleX(1);
+    }
+
+    .glow-icon {
+      width: 22px; height: 22px; min-width: 22px;
+      stroke: var(--primary);
+      fill: none;
+      stroke-width: 1.8;
+      filter: drop-shadow(0 0 12px rgba(184,115,255,.6));
+    }
+
+    .caret {
+      margin-left: auto;
+      width: 20px; height: 20px;
+      border-radius: 50%;
+      display: grid; place-items: center;
+      color: var(--primary);
+      box-shadow: inset 0 0 0 1px rgba(184,115,255,.35), 0 0 18px rgba(184,115,255,.15);
+      background: radial-gradient(circle at 30% 30%, rgba(184,115,255,.2), rgba(184,115,255,.05));
+      transition: transform .4s ease;
+    }
+    details[open] .caret {
+      transform: rotate(180deg);
+    }
+
+    .panel {
+      padding: 0 clamp(16px, 2.8vw, 22px) clamp(16px, 2.8vw, 22px);
+      color: var(--txt-dim);
+    }
+    .panel p { margin: 10px 0; }
+    .panel ul {
+      padding-left: 1.15em;
+      margin: 8px 0 2px;
+    }
+    .panel li { margin: 6px 0; }
+
+    /* Cookie toggles */
+    .toggles {
+      display: grid;
+      gap: 10px;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      margin-top: 8px;
+    }
+    .switch {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--glass);
+      border: 1px solid var(--glass-border);
+      border-radius: 12px;
+      padding: 12px 14px;
+      gap: 18px;
+    }
+    .switch label {
+      font-weight: 600;
+      color: var(--txt);
+    }
+    .switch small {
+      display: block;
+      color: var(--txt-muted);
+      font-weight: 500;
+    }
+    .switch input {
+      position: absolute;
+      opacity: 0;
+      pointer-events: none;
+    }
+    .toggle {
+      position: relative;
+      width: 54px; height: 30px;
+      border-radius: 999px;
+      background: linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.02));
+      border: 1px solid var(--glass-border);
+      box-shadow: inset 0 0 0 1px rgba(184,115,255,.15);
+      transition: background .25s ease, border-color .25s ease;
+    }
+    .toggle::after {
+      content: "";
+      position: absolute;
+      top: 3px; left: 4px;
+      width: 24px; height: 24px; border-radius: 50%;
+      background: radial-gradient(circle at 35% 35%, #fff, rgba(184,115,255,.8) 60%, rgba(184,115,255,.6));
+      box-shadow: 0 4px 16px rgba(184,115,255,.45), inset 0 0 0 1px rgba(255,255,255,.65);
+      transition: transform .25s ease;
+    }
+    .switch input:checked + .toggle {
+      background: linear-gradient(180deg, rgba(184,115,255,.35), rgba(184,115,255,.15));
+      border-color: rgba(184,115,255,.55);
+      box-shadow: 0 0 22px rgba(184,115,255,.25);
+    }
+    .switch input:checked + .toggle::after {
+      transform: translateX(22px);
+    }
+
+    /* Data visualizer */
+    .viz {
+      margin: 24px 0;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+      align-items: center;
+      justify-items: center;
+    }
+    .viz .canvas {
+      width: min(900px, 94vw);
+      background: var(--glass);
+      border: 1px solid var(--glass-border);
+      border-radius: 18px;
+      box-shadow: var(--shadow-1);
+      padding: 10px;
+    }
+    .viz .controls {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .btn {
+      appearance: none;
+      border: 1px solid rgba(184,115,255,.5);
+      background: linear-gradient(180deg, rgba(184,115,255,.15), rgba(184,115,255,.08));
+      color: var(--txt);
+      border-radius: 12px;
+      padding: 10px 14px;
+      font-weight: 700;
+      letter-spacing: .2px;
+      cursor: pointer;
+      box-shadow: var(--shadow-1);
+      transition: transform .15s ease, box-shadow .25s ease, background .25s ease;
+    }
+    .btn:hover { transform: translateY(-1px); box-shadow: var(--ring); }
+    .btn:active { transform: translateY(0); }
+    .btn.secondary {
+      border-color: rgba(255,255,255,.25);
+      background: linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,.06));
+      color: var(--txt-dim);
+    }
+
+    /* Trust badges */
+    .badges {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 12px;
+    }
+    .badge {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 16px;
+      border-radius: 14px;
+      border: 1px dashed rgba(184,115,255,.55);
+      background: linear-gradient(180deg, rgba(184,115,255,.1), rgba(184,115,255,.06));
+      box-shadow: 0 0 22px rgba(184,115,255,.15);
+      color: var(--txt);
+      font-weight: 700;
+    }
+    .badge svg {
+      width: 22px; height: 22px;
+      stroke: var(--primary);
+      filter: drop-shadow(0 0 10px rgba(184,115,255,.7));
+    }
+
+    /* Footer */
+    footer {
+      text-align: center;
+      padding: 26px 0 46px;
+      color: var(--txt-muted);
+    }
+    .closing {
+      text-align: center;
+      font-weight: 800;
+      font-size: clamp(1.2rem, 2.2vw, 1.6rem);
+      letter-spacing: .2px;
+      color: var(--txt);
+      text-shadow: 0 4px 18px rgba(184,115,255,.25);
+      margin: 14px 0 10px;
+    }
+    .footer-line {
+      color: var(--txt-dim);
+      font-weight: 700;
+      letter-spacing: .1px;
+      opacity: .95;
+    }
+
+    /* Back to top */
+    .backtop {
+      position: fixed;
+      right: 16px; bottom: 16px;
+      z-index: 10;
+      translate: 0 18px;
+      opacity: 0;
+      pointer-events: none;
+      transition: translate .25s ease, opacity .25s ease;
+    }
+    .backtop.show {
+      translate: 0 0;
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .fab {
+      width: 48px; height: 48px;
+      display: grid; place-items: center;
+      border-radius: 999px;
+      border: 1px solid rgba(184,115,255,.55);
+      background: radial-gradient(circle at 30% 30%, rgba(184,115,255,.35), rgba(184,115,255,.15));
+      color: var(--txt);
+      cursor: pointer;
+      box-shadow: var(--shadow-2);
+    }
+    .fab svg { width: 22px; height: 22px; stroke: var(--primary); }
+
+    /* Reveal on scroll */
+    .reveal {
+      opacity: 0;
+      transform: translateY(12px);
+      transition: opacity .6s ease, transform .6s ease;
+    }
+    .reveal.in {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Focus visible outline */
+    :focus-visible {
+      outline: none;
+      box-shadow: var(--ring);
+      border-radius: 12px;
+    }
+
+    /* Reduced motion */
+    @media (prefers-reduced-motion: reduce) {
+      .bg-aurora, .spark, .orbit, .glow-ring, .heading::after {
+        animation: none !important;
+      }
+    }
+  </style>
+ </head>
+<body>
+  <div class="bg-aurora" aria-hidden="true"></div>
+
+  <a href="#content" class="skip-link">Skip to content</a>
+
+  <div class="wrapper">
+    <header class="nav" role="banner" aria-label="Primary">
+      <a class="brand" href="#" aria-label="Salmar Home">
+        <!-- Brand icon -->
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M12 3l8 4v5c0 5-3.5 9-8 9s-8-4-8-9V7l8-4Z" fill="none" stroke-linecap="round" stroke-linejoin="round"></path>
+        </svg>
+        <span>Salmar</span>
+      </a>
+      <div class="mode-toggle" role="group" aria-label="Theme toggle">
+        <button id="theme-dark" type="button" aria-pressed="true" aria-label="Use dark mode">Dark</button>
+        <button id="theme-light" type="button" aria-pressed="false" aria-label="Use light mode">Light</button>
+      </div>
+    </header>
+
+    <main id="content" role="main" tabindex="-1">
+      <section class="hero">
+        <div>
+          <h1 class="hero-title">Privacy Policy</h1>
+          <p class="hero-sub">Your trust is the foundation of Salmar. Here’s how we protect your data and respect your privacy.</p>
+        </div>
+        <div class="shield-stage" aria-hidden="true">
+          <div class="glow-ring"></div>
+          <div class="orbit" aria-hidden="true">
+            <span class="spark"></span>
+            <span class="spark"></span>
+            <span class="spark"></span>
+          </div>
+          <!-- Glowing shield icon -->
+          <svg class="shield" viewBox="0 0 200 240" role="img" aria-label="Glowing shield representing privacy">
+            <defs>
+              <linearGradient id="grad1" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="rgba(184,115,255,0.45)" />
+                <stop offset="100%" stop-color="rgba(184,115,255,0.12)" />
+              </linearGradient>
+              <filter id="soft" x="-20%" y="-20%" width="140%" height="140%">
+                <feGaussianBlur in="SourceGraphic" stdDeviation="1.6" />
+              </filter>
+              <filter id="outerGlow" x="-50%" y="-50%" width="200%" height="200%">
+                <feDropShadow dx="0" dy="0" stdDeviation="8" flood-color="rgba(184,115,255,0.9)"/>
+              </filter>
+            </defs>
+            <path d="M100 10l75 36v56c0 61-38 116-75 128C63 218 25 163 25 102V46l75-36z"
+                  fill="url(#grad1)" stroke="rgba(184,115,255,0.85)" stroke-width="2.5" filter="url(#outerGlow)"/>
+            <path d="M65 110l25 25 45-55" fill="none" stroke="#5CF2B8" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" filter="url(#soft)"/>
+          </svg>
+        </div>
+      </section>
+
+      <section class="policy">
+        <!-- Introduction -->
+        <details class="policy-item reveal" open>
+          <summary class="policy-summary">
+            <span class="heading">
+              <!-- Shield icon -->
+              <svg class="glow-icon" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M12 3l8 4v5c0 5-3.5 9-8 9s-8-4-8-9V7l8-4Z" stroke-linecap="round" stroke-linejoin="round"></path>
+              </svg>
+              Introduction
+            </span>
+            <span class="caret" aria-hidden="true">
+              <svg viewBox="0 0 24 24" width="16" height="16">
+                <path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+              </svg>
+            </span>
+          </summary>
+          <div class="panel">
+            <p>Salmar is designed to serve you, not exploit you. We collect only what’s necessary, and you’re always in control.</p>
+          </div>
+        </details>
+
+        <!-- Information We Collect -->
+        <details class="policy-item reveal">
+          <summary class="policy-summary">
+            <span class="heading">
+              <!-- Eye icon -->
+              <svg class="glow-icon" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7S1 12 1 12Z" stroke-linecap="round" stroke-linejoin="round"></path>
+                <circle cx="12" cy="12" r="3.5"></circle>
+              </svg>
+              Information We Collect
+            </span>
+            <span class="caret" aria-hidden="true">
+              <svg viewBox="0 0 24 24" width="16" height="16"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+            </span>
+          </summary>
+          <div class="panel">
+            <ul>
+              <li><strong>Accounts:</strong> Name, email, and login credentials.</li>
+              <li><strong>Usage Data:</strong> Interactions, preferences, and feature activity.</li>
+              <li><strong>Device Data:</strong> Browser, operating system, and IP (for security and fraud prevention).</li>
+            </ul>
+          </div>
+        </details>
+
+        <!-- How We Use -->
+        <details class="policy-item reveal">
+          <summary class="policy-summary">
+            <span class="heading">
+              <!-- Key icon -->
+              <svg class="glow-icon" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M21 7a4 4 0 1 1-7.9 1H11l-8 8v3h3l4-4h2v-2l2.1-2.1A4 4 0 0 1 21 7Z" stroke-linecap="round" stroke-linejoin="round"></path>
+              </svg>
+              How We Use Your Information
+            </span>
+            <span class="caret" aria-hidden="true">
+              <svg viewBox="0 0 24 24" width="16" height="16"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+            </span>
+          </summary>
+          <div class="panel">
+            <ul>
+              <li>To provide and continuously improve Salmar’s features.</li>
+              <li>To personalize your experiences and recommendations.</li>
+              <li>To maintain security, detect anomalies, and prevent abuse.</li>
+            </ul>
+          </div>
+        </details>
+
+        <!-- Biometric -->
+        <details class="policy-item reveal">
+          <summary class="policy-summary">
+            <span class="heading">
+              <!-- Lock icon -->
+              <svg class="glow-icon" viewBox="0 0 24 24" aria-hidden="true">
+                <rect x="4" y="11" width="16" height="9" rx="2" ry="2"></rect>
+                <path d="M7 11V8a5 5 0 0 1 10 0v3" stroke-linecap="round" stroke-linejoin="round"></path>
+              </svg>
+              Biometric & Security Data
+            </span>
+            <span class="caret" aria-hidden="true">
+              <svg viewBox="0 0 24 24" width="16" height="16"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+            </span>
+          </summary>
+          <div class="panel">
+            <p>Where enabled, you may use biometric login (e.g., fingerprint or Face ID) for convenient and secure access.</p>
+            <p><strong>Assurance:</strong> Biometric data is stored securely on your device and never leaves it.</p>
+          </div>
+        </details>
+
+        <!-- Data Sharing & Integrations -->
+        <details class="policy-item reveal">
+          <summary class="policy-summary">
+            <span class="heading">
+              <!-- Network icon -->
+              <svg class="glow-icon" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M12 3v6m0 6v6M3 12h6m6 0h6" stroke-linecap="round"></path>
+                <circle cx="12" cy="12" r="3"></circle>
+              </svg>
+              Data Sharing & Integrations
+            </span>
+            <span class="caret" aria-hidden="true">
+              <svg viewBox="0 0 24 24" width="16" height="16"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+            </span>
+          </summary>
+          <div class="panel">
+            <p>With your permission, Salmar can connect to services like Google, Slack, and Discord to deliver seamless workflows.</p>
+            <ul>
+              <li>Integrations are scoped to the minimum necessary permissions.</li>
+              <li>Data is shared only to complete a requested action (e.g., posting a message on your behalf).</li>
+            </ul>
+            <p><strong>We do not sell your data. Ever.</strong></p>
+          </div>
+        </details>
+
+        <!-- Your Rights -->
+        <details class="policy-item reveal">
+          <summary class="policy-summary">
+            <span class="heading">
+              <!-- User check icon -->
+              <svg class="glow-icon" viewBox="0 0 24 24" aria-hidden="true">
+                <circle cx="12" cy="8" r="4"></circle>
+                <path d="M3 21a9 9 0 0 1 18 0" stroke-linecap="round" stroke-linejoin="round"></path>
+                <path d="M16.5 13.5l2 2 3-3" stroke="var(--success)" stroke-width="2" stroke-linecap="round"></path>
+              </svg>
+              Your Rights & Controls
+            </span>
+            <span class="caret" aria-hidden="true">
+              <svg viewBox="0 0 24 24" width="16" height="16"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+            </span>
+          </summary>
+          <div class="panel">
+            <ul>
+              <li>Access, edit, or delete your account and data at any time.</li>
+              <li>Export your data in a portable format.</li>
+              <li>Opt out of non-essential analytics and tracking.</li>
+            </ul>
+          </div>
+        </details>
+
+        <!-- Storage & Protection -->
+        <details class="policy-item reveal">
+          <summary class="policy-summary">
+            <span class="heading">
+              <!-- Shield lock -->
+              <svg class="glow-icon" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M12 3l8 4v5c0 5-3.5 9-8 9s-8-4-8-9V7l8-4Z" stroke-linecap="round" stroke-linejoin="round"></path>
+                <path d="M9 13h6" stroke-linecap="round"></path>
+              </svg>
+              Data Storage & Protection
+            </span>
+            <span class="caret" aria-hidden="true">
+              <svg viewBox="0 0 24 24" width="16" height="16"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+            </span>
+          </summary>
+          <div class="panel">
+            <ul>
+              <li>End-to-end encryption for sensitive data in transit and at rest.</li>
+              <li>Secure servers, strict access controls, and zero-trust principles.</li>
+              <li>Committed to global standards and compliance (GDPR, CCPA).</li>
+            </ul>
+          </div>
+        </details>
+
+        <!-- Cookies -->
+        <details class="policy-item reveal">
+          <summary class="policy-summary">
+            <span class="heading">
+              <!-- Cookie / circle dots -->
+              <svg class="glow-icon" viewBox="0 0 24 24" aria-hidden="true">
+                <circle cx="12" cy="12" r="9"></circle>
+                <circle cx="9" cy="10" r="1.3"></circle>
+                <circle cx="14.5" cy="8.5" r="1.3"></circle>
+                <circle cx="14" cy="14" r="1.3"></circle>
+              </svg>
+              Cookies & Tracking
+            </span>
+            <span class="caret" aria-hidden="true">
+              <svg viewBox="0 0 24 24" width="16" height="16"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+            </span>
+          </summary>
+          <div class="panel">
+            <p>Transparency matters. Here’s what we use and why:</p>
+            <div class="toggles" role="group" aria-label="Cookie preferences">
+              <div class="switch">
+                <div>
+                  <label id="lab-required">Strictly Necessary</label>
+                  <small>Essential for authentication and core features.</small>
+                </div>
+                <div>
+                  <input id="ck-necessary" type="checkbox" checked disabled aria-labelledby="lab-required" />
+                  <span class="toggle" aria-hidden="true"></span>
+                </div>
+              </div>
+              <div class="switch">
+                <div>
+                  <label for="ck-analytics">Analytics</label>
+                  <small>Helps us improve the product experience.</small>
+                </div>
+                <div>
+                  <input id="ck-analytics" type="checkbox" />
+                  <span class="toggle" aria-hidden="true"></span>
+                </div>
+              </div>
+              <div class="switch">
+                <div>
+                  <label for="ck-functional">Functional</label>
+                  <small>Remembers preferences like language and theme.</small>
+                </div>
+                <div>
+                  <input id="ck-functional" type="checkbox" />
+                  <span class="toggle" aria-hidden="true"></span>
+                </div>
+              </div>
+              <div class="switch">
+                <div>
+                  <label for="ck-marketing">Marketing</label>
+                  <small>Optional personalization across channels.</small>
+                </div>
+                <div>
+                  <input id="ck-marketing" type="checkbox" />
+                  <span class="toggle" aria-hidden="true"></span>
+                </div>
+              </div>
+            </div>
+            <p style="margin-top:10px">You choose what Salmar remembers. You can update preferences anytime.</p>
+          </div>
+        </details>
+
+        <!-- Updates -->
+        <details class="policy-item reveal">
+          <summary class="policy-summary">
+            <span class="heading">
+              <!-- Bell icon -->
+              <svg class="glow-icon" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 8h18c0-1-3-1-3-8Z" stroke-linecap="round"></path>
+                <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+              </svg>
+              Policy Updates
+            </span>
+            <span class="caret" aria-hidden="true">
+              <svg viewBox="0 0 24 24" width="16" height="16"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+            </span>
+          </summary>
+          <div class="panel">
+            <p>We’ll always notify you when we make meaningful changes and keep a changelog of revisions.</p>
+          </div>
+        </details>
+
+        <!-- Contact -->
+        <details class="policy-item reveal">
+          <summary class="policy-summary">
+            <span class="heading">
+              <!-- Mail icon -->
+              <svg class="glow-icon" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M4 6h16a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2Z" stroke-linecap="round"></path>
+                <path d="M22 8l-10 6L2 8" stroke-linecap="round" stroke-linejoin="round"></path>
+              </svg>
+              Contact Us
+            </span>
+            <span class="caret" aria-hidden="true">
+              <svg viewBox="0 0 24 24" width="16" height="16"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+            </span>
+          </summary>
+          <div class="panel">
+            <p>Questions or requests? We’re here to help.</p>
+            <p><strong>Email:</strong> <a href="mailto:privacy@salmar.ai" style="color:var(--primary)">privacy@salmar.ai</a></p>
+            <p class="closing">Your privacy is your power. Salmar protects both.</p>
+          </div>
+        </details>
+
+        <!-- Interactive Data Visualizer -->
+        <section class="section card reveal" aria-labelledby="viz-title">
+          <h2 id="viz-title" class="heading" style="display:flex;gap:12px;align-items:center;margin:4px 0 10px;">
+            <!-- Diagram icon -->
+            <svg class="glow-icon" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M3 3h7v7H3zM14 3h7v7h-7zM3 14h7v7H3zM14 14h7v7h-7z" fill="none"></path>
+            </svg>
+            Data Flow (Interactive)
+          </h2>
+          <p class="hero-sub" style="margin-top:0">How your data moves: You → Secure Device → Encrypted Cloud → Salmar.</p>
+
+          <div class="viz">
+            <div class="canvas">
+              <svg id="flow" viewBox="0 0 900 360" role="img" aria-label="Data flow diagram from user to Salmar">
+                <defs>
+                  <filter id="glow">
+                    <feDropShadow dx="0" dy="0" stdDeviation="4" flood-color="rgba(184,115,255,0.9)"/>
+                  </filter>
+                  <linearGradient id="wire" x1="0" y1="0" x2="1" y2="0">
+                    <stop offset="0%" stop-color="#B873FF"/>
+                    <stop offset="100%" stop-color="#7C3AED"/>
+                  </linearGradient>
+                </defs>
+
+                <!-- Connections -->
+                <path id="p1" d="M150 180 C 230 180, 280 120, 360 120" stroke="url(#wire)" stroke-width="4" fill="none" stroke-linecap="round" stroke-dasharray="10 10" opacity="0.85"/>
+                <path id="p2" d="M360 120 C 460 120, 500 240, 600 240" stroke="url(#wire)" stroke-width="4" fill="none" stroke-linecap="round" stroke-dasharray="10 10" opacity="0.85"/>
+                <path id="p3" d="M600 240 C 700 240, 720 160, 800 160" stroke="url(#wire)" stroke-width="4" fill="none" stroke-linecap="round" stroke-dasharray="10 10" opacity="0.85"/>
+
+                <!-- Nodes -->
+                <g class="node" transform="translate(80,160)" tabindex="0" role="group" aria-label="You">
+                  <circle r="44" fill="none" stroke="url(#wire)" stroke-width="2.5" filter="url(#glow)"/>
+                  <text x="0" y="6" text-anchor="middle" fill="currentColor" style="font-weight:800">You</text>
+                </g>
+
+                <g class="node" transform="translate(360,100)" tabindex="0" role="group" aria-label="Secure Device">
+                  <rect x="-60" y="-40" rx="12" ry="12" width="120" height="80" fill="none" stroke="url(#wire)" stroke-width="2.5" filter="url(#glow)"/>
+                  <text x="0" y="6" text-anchor="middle" fill="currentColor" style="font-weight:800">Secure Device</text>
+                </g>
+
+                <g class="node" transform="translate(600,240)" tabindex="0" role="group" aria-label="Encrypted Cloud">
+                  <path d="M-68,10c0-20,16-36,36-36,10,0,18,4,24,10,4-10,14-16,26-16,16,0,30,14,30,30s-10,28-26,28h-78c-8,0-12-8-12-16z" fill="none" stroke="url(#wire)" stroke-width="2.5" filter="url(#glow)"/>
+                  <text x="0" y="48" text-anchor="middle" fill="currentColor" style="font-weight:800">Encrypted Cloud</text>
+                </g>
+
+                <g class="node" transform="translate(820,160)" tabindex="0" role="group" aria-label="Salmar">
+                  <path d="M0-52l52 26v34c0 32-20 60-52 72-32-12-52-40-52-72v-34l52-26z" fill="none" stroke="url(#wire)" stroke-width="2.5" filter="url(#glow)"/>
+                  <text x="0" y="64" text-anchor="middle" fill="currentColor" style="font-weight:800">Salmar</text>
+                </g>
+
+                <!-- Particles traveling along paths -->
+                <circle id="dot1" r="5" fill="#B873FF" filter="url(#glow)"/>
+                <circle id="dot2" r="5" fill="#B873FF" filter="url(#glow)"/>
+                <circle id="dot3" r="5" fill="#B873FF" filter="url(#glow)"/>
+              </svg>
+            </div>
+            <div class="controls" aria-label="Diagram controls">
+              <button class="btn" id="playFlow" type="button" aria-label="Play data flow animation">Play Flow</button>
+              <button class="btn secondary" id="pauseFlow" type="button" aria-label="Pause data flow animation">Pause</button>
+              <button class="btn secondary" id="resetFlow" type="button" aria-label="Reset animation">Reset</button>
+            </div>
+          </div>
+
+          <div class="badges" aria-label="Trust badges">
+            <div class="badge">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M12 3l8 4v5c0 5-3.5 9-8 9s-8-4-8-9V7l8-4Z" fill="none"></path>
+                <path d="M8 12l3 3 5-6" fill="none" stroke="#5CF2B8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+              </svg>
+              GDPR Compliant
+            </div>
+            <div class="badge">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <rect x="4" y="11" width="16" height="9" rx="2" ry="2" fill="none"></rect>
+                <path d="M7 11V8a5 5 0 0 1 10 0v3" fill="none"></path>
+              </svg>
+              CCPA Ready
+            </div>
+            <div class="badge">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M12 3l8 4v5c0 5-3.5 9-8 9s-8-4-8-9V7l8-4Z" fill="none"></path>
+                <path d="M9 13h6" fill="none"></path>
+              </svg>
+              Encrypted by Design
+            </div>
+          </div>
+        </section>
+
+        <p class="closing reveal">The Future is Purple. The Future is Private.</p>
+      </section>
+    </main>
+
+    <footer role="contentinfo">
+      <div class="footer-line">© <span id="year"></span> Salmar. All rights reserved.</div>
+    </footer>
+  </div>
+
+  <!-- Back to top -->
+  <div class="backtop" id="backtop">
+    <button class="fab" type="button" aria-label="Back to top">
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M6 15l6-6 6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+      </svg>
+    </button>
+  </div>
+
+  <script>
+    // Helper: prefers-color-scheme for default
+    (function initTheme() {
+      try {
+        const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+        const root = document.documentElement;
+        const existing = root.getAttribute('data-theme');
+        if (!existing) root.setAttribute('data-theme', prefersDark ? 'dark' : 'light');
+        const darkBtn = document.getElementById('theme-dark');
+        const lightBtn = document.getElementById('theme-light');
+        function setTheme(mode) {
+          const root = document.documentElement;
+          root.setAttribute('data-theme', mode);
+          // update pressed states
+          darkBtn.setAttribute('aria-pressed', mode === 'dark' ? 'true' : 'false');
+          lightBtn.setAttribute('aria-pressed', mode === 'light' ? 'true' : 'false');
+          // update theme-color for mobile UI
+          const metaColor = document.querySelector('meta[name="color-scheme"]');
+          if (metaColor) metaColor.setAttribute('content', mode);
+        }
+        darkBtn.addEventListener('click', () => setTheme('dark'), { passive: true });
+        lightBtn.addEventListener('click', () => setTheme('light'), { passive: true });
+        setTheme(existing || (prefersDark ? 'dark' : 'light'));
+      } catch (e) {
+        // fail silently in restricted environments
+      }
+    })();
+
+    // Back-to-top visibility
+    (function backTop() {
+      const bt = document.getElementById('backtop');
+      const onScroll = () => {
+        if (window.scrollY > 260) {
+          bt.classList.add('show');
+        } else {
+          bt.classList.remove('show');
+        }
+      };
+      document.addEventListener('scroll', onScroll, { passive: true });
+      bt.querySelector('button').addEventListener('click', () => {
+        try {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        } catch {
+          window.scrollTo(0,0);
+        }
+      });
+      onScroll();
+    })();
+
+    // Reveal on scroll
+    (function reveal() {
+      const els = document.querySelectorAll('.reveal');
+      const io = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('in');
+            io.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.15 });
+      els.forEach(el => io.observe(el));
+    })();
+
+    // Cookie toggles accessible activation on label click area
+    (function enhanceSwitches() {
+      document.querySelectorAll('.switch').forEach(sw => {
+        const input = sw.querySelector('input[type="checkbox"]');
+        const track = sw.querySelector('.toggle');
+        // Ensure clicking the track toggles
+        track.addEventListener('click', () => {
+          if (input.disabled) return;
+          input.checked = !input.checked;
+          // Example: fire custom event for analytics preferences (no persistence)
+          const evt = new CustomEvent('preference-change', { detail: { id: input.id, value: input.checked } });
+          window.dispatchEvent(evt);
+        });
+      });
+    })();
+
+    // Data flow animation along paths (no external libs)
+    (function dataFlow() {
+      const svg = document.getElementById('flow');
+      const paths = ['p1','p2','p3'].map(id => document.getElementById(id));
+      const dots = ['dot1','dot2','dot3'].map(id => document.getElementById(id));
+      let rafId = null;
+      let start = null;
+      let paused = false;
+      let progress = 0; // 0..1
+
+      function pathPoint(pathEl, t) {
+        const len = pathEl.getTotalLength();
+        const p = pathEl.getPointAtLength(t * len);
+        return p;
+      }
+      function step(ts) {
+        if (paused) { rafId = requestAnimationFrame(step); return; }
+        if (!start) start = ts;
+        const dur = 6000; // 6s loop
+        const elapsed = (ts - start) % dur;
+        progress = elapsed / dur;
+
+        // Move dots across each segment (splitting progress roughly equally)
+        const seg = 1/3;
+        const p1 = Math.min(1, progress / seg);
+        const p2 = Math.max(0, Math.min(1, (progress - seg) / seg));
+        const p3 = Math.max(0, Math.min(1, (progress - 2*seg) / seg));
+
+        const a = pathPoint(paths[0], p1);
+        const b = pathPoint(paths[1], p2);
+        const c = pathPoint(paths[2], p3);
+
+        dots[0].setAttribute('cx', a.x); dots[0].setAttribute('cy', a.y);
+        dots[1].setAttribute('cx', b.x); dots[1].setAttribute('cy', b.y);
+        dots[2].setAttribute('cx', c.x); dots[2].setAttribute('cy', c.y);
+
+        // Slight pulsing opacity for wires
+        const blink = 0.75 + 0.25 * Math.sin((elapsed/dur) * Math.PI * 2);
+        paths.forEach(p => p.style.opacity = String(blink));
+
+        rafId = requestAnimationFrame(step);
+      }
+
+      function play() {
+        paused = false;
+        if (!rafId) rafId = requestAnimationFrame(step);
+      }
+      function pause() { paused = true; }
+      function reset() {
+        start = null;
+        progress = 0;
+        paused = true;
+        // place dots at start
+        const pA = pathPoint(paths[0], 0);
+        const pB = pathPoint(paths[1], 0);
+        const pC = pathPoint(paths[2], 0);
+        dots[0].setAttribute('cx', pA.x); dots[0].setAttribute('cy', pA.y);
+        dots[1].setAttribute('cx', pB.x); dots[1].setAttribute('cy', pB.y);
+        dots[2].setAttribute('cx', pC.x); dots[2].setAttribute('cy', pC.y);
+      }
+
+      // Controls
+      document.getElementById('playFlow').addEventListener('click', play);
+      document.getElementById('pauseFlow').addEventListener('click', pause);
+      document.getElementById('resetFlow').addEventListener('click', reset);
+
+      // Start animation when in view
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) play();
+          else pause();
+        });
+      }, { threshold: 0.3 });
+      observer.observe(svg);
+
+      // Initialize
+      reset();
+    })();
+
+    // Year
+    document.getElementById('year').textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>

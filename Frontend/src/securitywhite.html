@@ -1,0 +1,918 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Salmar Security Whitepaper · v1.0</title>
+  <meta name="description" content="Salmar Security Whitepaper: privacy, integrity, resilience. A clean, professional, PDF-ready document with diagrams and compliance notes." />
+  <meta name="color-scheme" content="light only" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@300;400;600;700&family=Source+Code+Pro:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --primary: #7C3AED;   /* Grape */
+      --primary-600:#6D28D9;
+      --primary-700:#5B21B6;
+      --deep:    #312E81;    /* Indigo deep */
+      --accent:  #C4B5FD;    /* Soft purple */
+      --light:   #F3F4F6;    /* Light gray */
+      --ink:     #111827;    /* Neutral ink */
+      --muted:   #4B5563;    /* Gray 600 */
+      --line:    #E5E7EB;    /* Divider */
+      --bg:      #FFFFFF;
+
+      --maxw: 1040px;
+      --page-margin-v: 20mm;
+      --page-margin-h: 15mm;
+    }
+
+    /* Base */
+    html,body{
+      background: var(--bg);
+      color: var(--ink);
+      font-family: "Source Sans 3", system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+      line-height: 1.55;
+      text-rendering: optimizeLegibility;
+      -webkit-font-smoothing: antialiased;
+    }
+    body{
+      margin: 0;
+    }
+    a{
+      color: var(--primary-600);
+      text-decoration: none;
+    }
+    a:hover,a:focus{
+      text-decoration: underline;
+      outline: none;
+    }
+    .container{
+      max-width: var(--maxw);
+      margin: 0 auto;
+      padding: 24px;
+    }
+
+    /* Subtle geometric background (low-ink) */
+    body::before{
+      content:"";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background:
+        radial-gradient(1200px 800px at 90% -10%, rgba(124,58,237,0.06), transparent 60%),
+        radial-gradient(800px 600px at -10% 110%, rgba(196,181,253,0.10), transparent 60%),
+        linear-gradient(to right, rgba(124,58,237,0.05) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(124,58,237,0.05) 1px, transparent 1px);
+      background-size: auto, auto, 56px 56px, 56px 56px;
+      mask-image: radial-gradient(1200px 800px at 50% 10%, rgba(0,0,0,0.5), rgba(0,0,0,1));
+      z-index: 0;
+    }
+
+    /* Header */
+    header[role="banner"]{
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      background: linear-gradient(180deg, rgba(255,255,255,0.96), rgba(255,255,255,0.88));
+      -webkit-backdrop-filter: saturate(1.1) blur(6px);
+      backdrop-filter: saturate(1.1) blur(6px);
+      border-bottom: 1px solid var(--line);
+    }
+    .brand{
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .logo{
+      width: 40px; height: 40px;
+      display: inline-block;
+    }
+    .title{
+      font-weight: 700;
+      letter-spacing: 0.2px;
+      color: var(--deep);
+      font-size: 20px;
+      line-height: 1.2;
+    }
+    .subtitle{
+      font-size: 13px;
+      color: var(--muted);
+    }
+    .actions{
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      margin-left: auto;
+    }
+    .btn{
+      appearance: none;
+      border: 1px solid rgba(17,24,39,0.12);
+      color: white;
+      background: linear-gradient(135deg,var(--primary),var(--primary-700));
+      border-radius: 10px;
+      padding: 10px 14px;
+      font-weight: 600;
+      font-size: 14px;
+      cursor: pointer;
+      box-shadow: 0 6px 14px rgba(124,58,237,0.28), inset 0 1px 0 rgba(255,255,255,0.18);
+    }
+    .btn:focus-visible{ outline: 2px solid var(--primary); outline-offset: 2px; }
+    .btn.secondary{
+      background: #fff;
+      color: var(--ink);
+      border-color: var(--line);
+      box-shadow: 0 4px 10px rgba(17,24,39,0.06);
+    }
+
+    /* Cover */
+    .cover{
+      position: relative;
+      padding: 56px 0 30px;
+    }
+    .cover h1{
+      font-size: 44px;
+      line-height: 1.1;
+      margin: 16px 0 8px;
+      color: var(--ink);
+      letter-spacing: -0.2px;
+    }
+    .tagline{
+      font-size: 18px;
+      color: var(--muted);
+      max-width: 760px;
+    }
+    .meta{
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px 22px;
+      margin-top: 18px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+    .badge{
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background:
+        linear-gradient(180deg, rgba(124,58,237,0.12), rgba(124,58,237,0.08));
+      border: 1px solid rgba(124,58,237,0.25);
+      color: var(--deep);
+      font-weight: 600;
+      font-size: 13px;
+    }
+
+    /* Section */
+    main{
+      position: relative;
+      z-index: 1;
+    }
+    section{
+      margin: 28px auto;
+      background: #fff;
+      border-radius: 16px;
+      border: 1px solid var(--line);
+      box-shadow: 0 10px 24px rgba(17,24,39,0.06);
+      overflow: clip;
+    }
+    .section-inner{
+      padding: 22px 22px 8px;
+    }
+    .section-head{
+      padding: 18px 22px;
+      background:
+        linear-gradient(180deg, rgba(124,58,237,0.12), rgba(124,58,237,0.04));
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .section-num{
+      font-family: "Source Code Pro", ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+      font-weight: 600;
+      color: var(--primary-700);
+      background: linear-gradient(135deg, var(--primary), var(--primary-700));
+      color: white;
+      border-radius: 8px;
+      padding: 6px 10px;
+      font-size: 13px;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.2);
+    }
+    .section-title{
+      margin: 0;
+      font-size: 20px;
+      color: var(--deep);
+      letter-spacing: 0.2px;
+    }
+    .divider{
+      height: 1px;
+      background: linear-gradient(to right, rgba(124,58,237,0.45), rgba(124,58,237,0.05));
+      margin: 16px 0 22px;
+    }
+    h3{
+      font-size: 17px;
+      color: var(--ink);
+      margin: 18px 0 8px;
+    }
+    p{
+      margin: 8px 0 8px;
+      color: var(--ink);
+    }
+    ul,ol{
+      margin: 8px 0 14px 1.25em;
+      padding: 0;
+    }
+    li{ margin: 6px 0; }
+
+    .callout{
+      border: 1px dashed rgba(124,58,237,0.35);
+      background: linear-gradient(180deg, rgba(196,181,253,0.14), rgba(196,181,253,0.06));
+      border-radius: 12px;
+      padding: 14px 16px;
+      color: var(--deep);
+    }
+    blockquote.pull{
+      margin: 16px 0;
+      padding: 14px 16px;
+      border-left: 4px solid var(--primary);
+      background: linear-gradient(90deg, rgba(124,58,237,0.10), rgba(124,58,237,0.02));
+      border-radius: 8px;
+      color: var(--deep);
+      font-weight: 600;
+    }
+    .small{
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    /* Table of Contents */
+    .toc{
+      margin: 20px 0 10px;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      overflow: hidden;
+      background: #fff;
+      box-shadow: 0 8px 20px rgba(17,24,39,0.06);
+    }
+    .toc summary{
+      cursor: pointer;
+      list-style: none;
+      padding: 16px 18px;
+      font-weight: 700;
+      color: var(--deep);
+      background: linear-gradient(180deg, rgba(124,58,237,0.10), rgba(124,58,237,0.04));
+      border-bottom: 1px solid var(--line);
+    }
+    .toc summary::-webkit-details-marker{ display: none; }
+    .toc nav{
+      padding: 6px 12px 10px;
+    }
+    .toc ol{
+      margin: 0;
+      padding: 0 8px 12px 22px;
+      columns: 1;
+      column-gap: 24px;
+    }
+    .toc a{ color: var(--ink); text-decoration: none; }
+    .toc a:hover{ color: var(--primary); text-decoration: underline; }
+
+    /* Figures */
+    figure{
+      margin: 16px 0;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      overflow: hidden;
+      background: #fff;
+    }
+    figcaption{
+      padding: 10px 12px;
+      font-size: 13px;
+      color: var(--muted);
+      border-top: 1px solid var(--line);
+      background: linear-gradient(180deg, rgba(124,58,237,0.06), rgba(124,58,237,0.02));
+    }
+    .figure-body{
+      padding: 12px;
+    }
+    svg{ max-width: 100%; height: auto; display: block; }
+
+    /* Footer (screen) */
+    footer[role="contentinfo"]{
+      margin: 40px auto 12px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    /* Running header/footer for print via Paged.js */
+    .running-header{
+      position: running(header);
+      font-size: 12px;
+      color: #334155;
+      padding: 8px 0;
+      border-bottom: 1px solid #E5E7EB;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .running-footer{
+      position: running(footer);
+      font-size: 12px;
+      color: #334155;
+      padding: 8px 0;
+      border-top: 1px solid #E5E7EB;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* Print styles */
+    @media print{
+      @page{
+        size: A4;
+        margin: var(--page-margin-v) var(--page-margin-h);
+      }
+      header[role="banner"], .no-print{ display: none !important; }
+      body{
+        background: #fff !important;
+      }
+      .container{ padding: 0; }
+      body::before{ display: none !important; }
+
+      /* Ensure TOC is open when printing */
+      details.toc[open] > summary{ border-bottom: 1px solid var(--line); }
+      details.toc{ break-inside: avoid; }
+      details.toc > summary{
+        background: none;
+        padding-left: 0;
+      }
+      details.toc nav{
+        padding-left: 0;
+      }
+
+      /* Running header/footer placement */
+      @page{
+        @top-center{ content: element(header); }
+        @bottom-center{ content: element(footer); }
+      }
+
+      /* Avoid broken elements over pages */
+      h2, .section-head, figure, .callout, blockquote.pull{ break-inside: avoid; }
+      section{ box-shadow: none; border: none; margin: 0 0 10mm 0; }
+      .section-inner{ padding: 12px 0 0; }
+      .section-head{
+        background: none;
+        padding: 0 0 6px;
+        border-bottom: 1px solid #E5E7EB;
+      }
+      .divider{ display: none; }
+      .cover{
+        padding: 0;
+        border: none;
+      }
+      .toc{
+        border: none;
+        box-shadow: none;
+      }
+    }
+
+    /* Responsive */
+    @media (max-width: 720px){
+      .title{ font-size: 18px; }
+      .cover h1{ font-size: 34px; }
+      .toc ol{ columns: 1; }
+      .actions{ width: 100%; justify-content: flex-start; flex-wrap: wrap; }
+    }
+
+    /* Accessibility helpers */
+    .skip-link{
+      position: absolute;
+      left: -9999px;
+      top: auto;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+    }
+    .skip-link:focus{
+      position: fixed;
+      left: 12px;
+      top: 12px;
+      width: auto;
+      height: auto;
+      padding: 10px 12px;
+      background: #fff;
+      color: var(--ink);
+      border: 2px solid var(--primary);
+      border-radius: 8px;
+      z-index: 1000;
+    }
+    .kibitz{
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--muted);
+    }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#content">Skip to content</a>
+
+  <!-- Screen header -->
+  <header role="banner" aria-label="Document header">
+    <div class="container" style="display:flex; align-items:center; gap: 18px;">
+      <div class="brand" aria-label="Salmar Security">
+        <svg class="logo" viewBox="0 0 64 64" aria-hidden="true" focusable="false">
+          <defs>
+            <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0" stop-color="#7C3AED"/>
+              <stop offset="1" stop-color="#5B21B6"/>
+            </linearGradient>
+          </defs>
+          <rect x="8" y="6" width="48" height="52" rx="10" fill="url(#g)" opacity="0.18"/>
+          <path d="M32 8c8 4 16 4 16 4v14c0 8.8-6.1 16.7-16 20-9.9-3.3-16-11.2-16-20V12s8 0 16-4Z" fill="url(#g)" stroke="#7C3AED" stroke-opacity="0.35" stroke-width="1"/>
+          <path d="M22 22c0-1.1.9-2 2-2h16a2 2 0 0 1 0 4H24a2 2 0 0 1-2-2Zm0 8c0-1.1.9-2 2-2h12a2 2 0 1 1 0 4H24a2 2 0 0 1-2-2Zm0 8c0-1.1.9-2 2-2h18a2 2 0 0 1 0 4H24a2 2 0 0 1-2-2Z" fill="#ffffff" opacity="0.9"/>
+          <text x="24" y="28" font-size="12" font-family="Source Code Pro, monospace" fill="#ffffff" opacity="0.0">S</text>
+        </svg>
+        <div>
+          <div class="title">Salmar Security Whitepaper</div>
+          <div class="subtitle">Privacy · Integrity · Resilience</div>
+        </div>
+      </div>
+      <div class="actions">
+        <button class="btn" id="printBtn" aria-label="Download PDF">Download PDF</button>
+        <span class="kibitz" aria-label="Document version">
+          <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 1.75a10.25 10.25 0 1 0 0 20.5a10.25 10.25 0 0 0 0-20.5m.75 5.5a.75.75 0 0 0-1.5 0v5c0 .414.336.75.75.75h4a.75.75 0 0 0 0-1.5h-3.25z"/></svg>
+          v1.0 · 2025-09-18
+        </span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Running header/footer for print -->
+  <div class="container" aria-hidden="true" style="height:0; overflow:hidden;">
+    <div class="running-header" id="runningHeader">
+      <strong>Salmar Security Whitepaper</strong>
+      <span aria-hidden="true" style="opacity:0.6">·</span>
+      <span>v1.0</span>
+    </div>
+    <div class="running-footer" id="runningFooter">
+      <span>Salmar Security · salmar.example</span>
+      <span>Page <span class="pageNumber"></span> of <span class="totalPages"></span></span>
+    </div>
+  </div>
+
+  <main id="content" class="container" role="main">
+    <!-- Cover -->
+    <section class="cover" aria-label="Cover">
+      <span class="badge" aria-label="Brand color cue">
+        <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><path fill="#7C3AED" d="M12 2L2 7l10 5l10-5z"/><path fill="#A78BFA" d="M2 17l10 5l10-5"/></svg>
+        Purple-first Identity
+      </span>
+      <h1>Security by Design</h1>
+      <p class="tagline">Salmar is designed with privacy, integrity, and resilience at its core. Security is not a feature; it is the foundation.</p>
+      <div class="meta" aria-label="Document metadata">
+        <span>Version: v1.0</span>
+        <span>Last updated: 2025-09-18</span>
+        <span>Audience: Enterprise buyers, Security & Compliance teams</span>
+      </div>
+
+      <details class="toc" open role="navigation" aria-label="Table of contents">
+        <summary>Table of Contents</summary>
+        <nav>
+          <ol>
+            <li><a href="#sec1">1. Executive Summary</a></li>
+            <li><a href="#sec2">2. Security Principles</a></li>
+            <li><a href="#sec3">3. Data Protection &amp; Privacy</a></li>
+            <li><a href="#sec4">4. Authentication &amp; Access Control</a></li>
+            <li><a href="#sec5">5. Infrastructure Security</a></li>
+            <li><a href="#sec6">6. AI Safety &amp; Transparency</a></li>
+            <li><a href="#sec7">7. Compliance &amp; Certifications</a></li>
+            <li><a href="#sec8">8. Incident Response &amp; Recovery</a></li>
+            <li><a href="#sec9">9. Future Roadmap</a></li>
+            <li><a href="#sec10">10. Conclusion</a></li>
+            <li><a href="#appendix">Appendices</a></li>
+          </ol>
+        </nav>
+      </details>
+    </section>
+
+    <!-- 1. Executive Summary -->
+    <section id="sec1" aria-labelledby="sec1-title">
+      <div class="section-head">
+        <span class="section-num">1</span>
+        <h2 class="section-title" id="sec1-title">Executive Summary</h2>
+      </div>
+      <div class="section-inner">
+        <p>Salmar is an AI platform built on the premise that trust is earned through verifiable security. We engineer for confidentiality, integrity, and availability—augmented by transparency and user control. Our layered defense model extends from cryptography and infrastructure to AI safety, incident response, and compliance.</p>
+        <blockquote class="pull">“Salmar is designed with privacy, integrity, and resilience at its core. Security is not a feature; it is the foundation.”</blockquote>
+        <div class="divider"></div>
+        <h3>Highlights</h3>
+        <ul>
+          <li>End-to-end encryption for data in transit and at rest.</li>
+          <li>Tamper-resistant, verifiable logs for auditability.</li>
+          <li>Redundant architecture with measurable SLOs and disaster recovery.</li>
+          <li>User-centric controls: consent, transparency, and data minimization.</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- 2. Security Principles -->
+    <section id="sec2" aria-labelledby="sec2-title">
+      <div class="section-head">
+        <span class="section-num">2</span>
+        <h2 class="section-title" id="sec2-title">Security Principles</h2>
+      </div>
+      <div class="section-inner">
+        <h3>Confidentiality</h3>
+        <p>We employ strong cryptography and access controls so data remains protected end-to-end. Access is restricted on a least-privilege basis.</p>
+        <h3>Integrity</h3>
+        <p>Critical operations are logged immutably with integrity checks and cryptographic signing to deter tampering and support forensics.</p>
+        <h3>Availability</h3>
+        <p>Salmar’s services are designed for resilience: multi-region redundancy, autoscaling, and robust DDoS defenses ensure continuity.</p>
+        <h3>User Control</h3>
+        <p>Privacy by default: transparent processing, clear consent, and self-service data controls.</p>
+      </div>
+    </section>
+
+    <!-- 3. Data Protection & Privacy -->
+    <section id="sec3" aria-labelledby="sec3-title">
+      <div class="section-head">
+        <span class="section-num">3</span>
+        <h2 class="section-title" id="sec3-title">Data Protection &amp; Privacy</h2>
+      </div>
+      <div class="section-inner">
+        <h3>Encryption Standards</h3>
+        <ul>
+          <li>Data in transit: TLS 1.3 with modern cipher suites and forward secrecy.</li>
+          <li>Data at rest: AES-256 with envelope encryption and key rotation.</li>
+          <li>Key management: Segregated KMS, HSM-backed keys where applicable.</li>
+        </ul>
+        <h3>Privacy-First Design</h3>
+        <ul>
+          <li>Minimal data collection aligned to purpose limitation.</li>
+          <li>Structured anonymization and pseudonymization of datasets.</li>
+          <li>Data retention with deletion SLAs and regional residency options.</li>
+        </ul>
+        <div class="callout" role="note" aria-label="Biometric authentication note">
+          <strong>Biometric Authentication</strong><br />
+          Stored only on device. Never uploaded to Salmar servers. Platform-native secure enclaves (e.g., Secure Enclave, TPM) enforce isolation. Salmar receives only proof-of-presence or platform attestation—never raw biometric data.
+        </div>
+
+        <figure role="group" aria-labelledby="fig-dataflow-title fig-dataflow-desc">
+          <div class="figure-body">
+            <svg viewBox="0 0 760 200" role="img" aria-labelledby="fig-dataflow-title fig-dataflow-desc">
+              <title id="fig-dataflow-title">Data Flow: User to Salmar AI</title>
+              <desc id="fig-dataflow-desc">User connects via encrypted tunnel to Salmar AI, which processes securely and returns the response.</desc>
+              <defs>
+                <linearGradient id="gradPurple" x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0" stop-color="#7C3AED"/>
+                  <stop offset="1" stop-color="#5B21B6"/>
+                </linearGradient>
+                <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+                  <feDropShadow dx="0" dy="2" stdDeviation="2" flood-color="#7C3AED" flood-opacity="0.15"/>
+                </filter>
+              </defs>
+              <!-- User -->
+              <rect x="20" y="50" rx="10" ry="10" width="160" height="100" fill="#ffffff" stroke="#C4B5FD" filter="url(#shadow)"/>
+              <text x="100" y="95" text-anchor="middle" font-size="16" fill="#111827" font-weight="700">User</text>
+              <text x="100" y="115" text-anchor="middle" font-size="12" fill="#4B5563">Client App</text>
+
+              <!-- Encrypted Tunnel -->
+              <rect x="220" y="50" rx="10" ry="10" width="200" height="100" fill="#ffffff" stroke="#C4B5FD" filter="url(#shadow)"/>
+              <text x="320" y="88" text-anchor="middle" font-size="15" fill="#111827" font-weight="700">Encrypted Tunnel</text>
+              <text x="320" y="108" text-anchor="middle" font-size="12" fill="#4B5563">TLS 1.3 + F.S.</text>
+              <g>
+                <path d="M260 120 h120" stroke="url(#gradPurple)" stroke-width="3" stroke-linecap="round"/>
+                <path d="M385 120 l10-6v12z" fill="url(#gradPurple)"/>
+                <circle cx="280" cy="120" r="3" fill="#7C3AED"/>
+                <circle cx="300" cy="120" r="3" fill="#7C3AED"/>
+                <circle cx="320" cy="120" r="3" fill="#7C3AED"/>
+                <circle cx="340" cy="120" r="3" fill="#7C3AED"/>
+              </g>
+
+              <!-- Salmar AI -->
+              <rect x="460" y="30" rx="14" ry="14" width="280" height="140" fill="#ffffff" stroke="#C4B5FD" filter="url(#shadow)"/>
+              <text x="600" y="68" text-anchor="middle" font-size="15" fill="#111827" font-weight="700">Salmar AI</text>
+              <text x="600" y="88" text-anchor="middle" font-size="12" fill="#4B5563">Isolated Compute + Guardrails</text>
+              <!-- Neural lines -->
+              <path d="M500,120 C530,90 570,90 600,120 S670,150 700,120" fill="none" stroke="url(#gradPurple)" stroke-opacity="0.7" stroke-width="2"/>
+              <path d="M500,140 C535,110 565,110 600,140 S665,170 700,140" fill="none" stroke="url(#gradPurple)" stroke-opacity="0.35" stroke-width="2"/>
+
+              <!-- Response arrow -->
+              <path d="M640 150 h70" stroke="#7C3AED" stroke-width="3" stroke-linecap="round"/>
+              <path d="M715 150 l10-6v12z" fill="#7C3AED"/>
+              <text x="690" y="170" text-anchor="end" font-size="12" fill="#4B5563">Response</text>
+
+              <!-- Inbound arrow -->
+              <path d="M180 100 h30" stroke="#7C3AED" stroke-width="3" stroke-linecap="round"/>
+              <path d="M215 100 l10-6v12z" fill="#7C3AED"/>
+            </svg>
+          </div>
+          <figcaption>Figure 1. Data flow: User → Encrypted Tunnel → Salmar AI → Response.</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <!-- 4. Authentication & Access Control -->
+    <section id="sec4" aria-labelledby="sec4-title">
+      <div class="section-head">
+        <span class="section-num">4</span>
+        <h2 class="section-title" id="sec4-title">Authentication &amp; Access Control</h2>
+      </div>
+      <div class="section-inner">
+        <h3>Authentication</h3>
+        <ul>
+          <li>Multi-factor authentication (MFA): TOTP, WebAuthn security keys, enterprise SSO.</li>
+          <li>Biometric login: Fingerprint, Face ID, Windows Hello via platform authenticators.</li>
+        </ul>
+        <h3>Authorization</h3>
+        <ul>
+          <li>Role-based access (RBAC) with hierarchical scopes and service accounts.</li>
+          <li>Just-in-time elevation with approvals and time-bound policies.</li>
+        </ul>
+        <h3>Session Security</h3>
+        <ul>
+          <li>Short-lived tokens with audience binding and rotation.</li>
+          <li>Automatic session expiration and revocation on risk signals.</li>
+        </ul>
+
+        <figure role="group" aria-labelledby="fig-auth-title fig-auth-desc">
+          <div class="figure-body">
+            <svg viewBox="0 0 840 260" role="img" aria-labelledby="fig-auth-title fig-auth-desc">
+              <title id="fig-auth-title">Authentication and Session Flow</title>
+              <desc id="fig-auth-desc">Credentials and MFA/biometrics produce tokens which are checked against roles; session is short-lived with rotation.</desc>
+              <defs>
+                <linearGradient id="grad2" x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0" stop-color="#A78BFA"/>
+                  <stop offset="1" stop-color="#7C3AED"/>
+                </linearGradient>
+                <filter id="shadow2" x="-20%" y="-20%" width="140%" height="140%">
+                  <feDropShadow dx="0" dy="2" stdDeviation="2" flood-color="#7C3AED" flood-opacity="0.15"/>
+                </filter>
+              </defs>
+              <!-- Nodes -->
+              <g>
+                <rect x="20" y="50" rx="10" ry="10" width="160" height="60" fill="#fff" stroke="#C4B5FD" filter="url(#shadow2)"/>
+                <text x="100" y="85" text-anchor="middle" font-size="14" fill="#111827" font-weight="700">Credentials</text>
+              </g>
+              <g>
+                <rect x="220" y="30" rx="10" ry="10" width="160" height="60" fill="#fff" stroke="#C4B5FD" filter="url(#shadow2)"/>
+                <text x="300" y="65" text-anchor="middle" font-size="14" fill="#111827" font-weight="700">MFA</text>
+                <rect x="220" y="110" rx="10" ry="10" width="160" height="60" fill="#fff" stroke="#C4B5FD" filter="url(#shadow2)"/>
+                <text x="300" y="145" text-anchor="middle" font-size="14" fill="#111827" font-weight="700">Biometric</text>
+              </g>
+              <g>
+                <rect x="420" y="70" rx="10" ry="10" width="170" height="60" fill="#fff" stroke="#C4B5FD" filter="url(#shadow2)"/>
+                <text x="505" y="105" text-anchor="middle" font-size="14" fill="#111827" font-weight="700">Token Issuance</text>
+              </g>
+              <g>
+                <rect x="620" y="20" rx="10" ry="10" width="200" height="60" fill="#fff" stroke="#C4B5FD" filter="url(#shadow2)"/>
+                <text x="720" y="55" text-anchor="middle" font-size="14" fill="#111827" font-weight="700">RBAC Checks</text>
+                <rect x="620" y="100" rx="10" ry="10" width="200" height="60" fill="#fff" stroke="#C4B5FD" filter="url(#shadow2)"/>
+                <text x="720" y="135" text-anchor="middle" font-size="14" fill="#111827" font-weight="700">Policy Engine</text>
+                <rect x="620" y="180" rx="10" ry="10" width="200" height="60" fill="#fff" stroke="#C4B5FD" filter="url(#shadow2)"/>
+                <text x="720" y="215" text-anchor="middle" font-size="14" fill="#111827" font-weight="700">Short-lived Session</text>
+              </g>
+
+              <!-- Arrows -->
+              <g stroke="url(#grad2)" stroke-width="3" stroke-linecap="round">
+                <path d="M180 80 H220"/>
+                <path d="M380 60 H420"/>
+                <path d="M380 140 H420"/>
+                <path d="M590 100 H620"/>
+              </g>
+              <g fill="url(#grad2)">
+                <path d="M216 80 l10-6v12z"/>
+                <path d="M416 60 l10-6v12z"/>
+                <path d="M416 140 l10-6v12z"/>
+                <path d="M616 100 l10-6v12z"/>
+              </g>
+              <!-- Token fan-out -->
+              <path d="M505 130 C540 150, 560 160, 620 190" stroke="#7C3AED" stroke-width="2" fill="none" stroke-dasharray="4 3"/>
+              <path d="M505 130 C550 110, 570 90, 620 130" stroke="#7C3AED" stroke-width="2" fill="none" stroke-dasharray="4 3"/>
+              <path d="M505 130 C555 80, 575 60, 620 50" stroke="#7C3AED" stroke-width="2" fill="none" stroke-dasharray="4 3"/>
+            </svg>
+          </div>
+          <figcaption>Figure 2. Authentication flow with optional biometric, token issuance, RBAC checks, and short-lived sessions.</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <!-- 5. Infrastructure Security -->
+    <section id="sec5" aria-labelledby="sec5-title">
+      <div class="section-head">
+        <span class="section-num">5</span>
+        <h2 class="section-title" id="sec5-title">Infrastructure Security</h2>
+      </div>
+      <div class="section-inner">
+        <ul>
+          <li>Cloud provider certifications: ISO 27001, SOC 2, GDPR-aligned processing.</li>
+          <li>Network segmentation, private subnets, WAF and layer-7 firewalls.</li>
+          <li>DDoS protection and anomaly detection with automated mitigation.</li>
+          <li>Continuous monitoring (SIEM), runtime security, and automated response.</li>
+        </ul>
+        <div class="callout small">
+          Note: References to certifications indicate provider and program participation at time of writing. See Compliance section for scope and latest status.
+        </div>
+      </div>
+    </section>
+
+    <!-- 6. AI Safety & Transparency -->
+    <section id="sec6" aria-labelledby="sec6-title">
+      <div class="section-head">
+        <span class="section-num">6</span>
+        <h2 class="section-title" id="sec6-title">AI Safety &amp; Transparency</h2>
+      </div>
+      <div class="section-inner">
+        <ul>
+          <li>Guardrails to reduce harmful, biased, or insecure outputs; safety tests and red-teaming.</li>
+          <li>Secure sandboxing of AI prompts and tools; resource quotas and isolation.</li>
+          <li>Structured logging for accountability and auditability with privacy filters.</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- 7. Compliance & Certifications -->
+    <section id="sec7" aria-labelledby="sec7-title">
+      <div class="section-head">
+        <span class="section-num">7</span>
+        <h2 class="section-title" id="sec7-title">Compliance &amp; Certifications</h2>
+      </div>
+      <div class="section-inner">
+        <ul>
+          <li>GDPR and CCPA-aligned data subject rights and disclosures.</li>
+          <li>ISO-aligned controls; SOC 2 reports for enterprise (under NDA where applicable).</li>
+          <li>Industry readiness: HIPAA (if healthcare is targeted) with Business Associate Agreements.</li>
+        </ul>
+        <p class="small">Regular third-party audits and penetration tests are scheduled; reports available upon request.</p>
+      </div>
+    </section>
+
+    <!-- 8. Incident Response & Recovery -->
+    <section id="sec8" aria-labelledby="sec8-title">
+      <div class="section-head">
+        <span class="section-num">8</span>
+        <h2 class="section-title" id="sec8-title">Incident Response &amp; Recovery</h2>
+      </div>
+      <div class="section-inner">
+        <ul>
+          <li>24/7 monitoring with on-call rotation and defined SLAs for severity classes.</li>
+          <li>Disaster recovery: encrypted backups, tested restoration, multi-region replication.</li>
+          <li>Transparency: responsible disclosure policy and customer notifications on material incidents.</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- 9. Future Roadmap -->
+    <section id="sec9" aria-labelledby="sec9-title">
+      <div class="section-head">
+        <span class="section-num">9</span>
+        <h2 class="section-title" id="sec9-title">Future Roadmap</h2>
+      </div>
+      <div class="section-inner">
+        <ul>
+          <li>Post-quantum cryptography (PQC) research and phased adoption aligned with NIST standards.</li>
+          <li>AI-driven intrusion detection and adaptive threat modeling.</li>
+          <li>Zero-knowledge proofs for sensitive workflows and verifiable claims.</li>
+        </ul>
+        <blockquote class="pull">“The future is purple. The future is secure.”</blockquote>
+      </div>
+    </section>
+
+    <!-- 10. Conclusion -->
+    <section id="sec10" aria-labelledby="sec10-title">
+      <div class="section-head">
+        <span class="section-num">10</span>
+        <h2 class="section-title" id="sec10-title">Conclusion</h2>
+      </div>
+      <div class="section-inner">
+        <p>Security is not static. Salmar evolves continuously to meet tomorrow’s challenges while keeping your trust at the center. Our approach integrates rigorous engineering with transparent processes so customers can verify the promises we make.</p>
+        <blockquote class="pull">“Your identity is yours. Salmar only protects it.”</blockquote>
+      </div>
+    </section>
+
+    <!-- Appendices -->
+    <section id="appendix" aria-labelledby="appendix-title">
+      <div class="section-head">
+        <span class="section-num">A</span>
+        <h2 class="section-title" id="appendix-title">Appendices</h2>
+      </div>
+      <div class="section-inner">
+        <h3>A.1 Glossary</h3>
+        <ul>
+          <li><strong>Forward Secrecy:</strong> A property of secure communication protocols where compromise of long-term keys does not compromise past session keys.</li>
+          <li><strong>WebAuthn:</strong> A W3C standard enabling strong, phishing-resistant authentication using public-key cryptography.</li>
+          <li><strong>RBAC:</strong> Role-Based Access Control, assigning permissions to roles rather than individuals.</li>
+        </ul>
+
+        <h3>A.2 Data Retention &amp; Deletion</h3>
+        <ul>
+          <li>Default retention minimized; customer-configurable retention windows.</li>
+          <li>Cryptographic erasure for keys protecting data scheduled for deletion.</li>
+          <li>Deletion SLAs documented in enterprise agreements.</li>
+        </ul>
+
+        <h3>A.3 Change Log</h3>
+        <ul class="small">
+          <li>v1.0 (2025-09-18): Initial publication.</li>
+        </ul>
+
+        <h3>A.4 References</h3>
+        <ul class="small">
+          <li>NIST SP 800-63, SP 800-53 (Identity, controls)</li>
+          <li>RFC 8446 (TLS 1.3)</li>
+          <li>NIST PQC standardization (CRYSTALS-Kyber, Dilithium)</li>
+        </ul>
+      </div>
+    </section>
+
+    <footer role="contentinfo" aria-label="Footer">
+      <div class="divider"></div>
+      <p>© Salmar Security. All rights reserved. This document describes current state and roadmap items which may change without notice. Certifications and compliance coverage vary by region and deployment model.</p>
+      <p class="small">Contact: security@salmar.example · Website: https://salmar.example</p>
+    </footer>
+  </main>
+
+  <!-- Paged.js for PDF pagination (page numbers and running header/footer) -->
+  <script>
+    (function(){
+      // Smooth anchor scroll (reduced-motion aware)
+      try{
+        const prefersReduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        if(!prefersReduced){
+          document.addEventListener('click', (e) => {
+            const a = e.target.closest('a[href^="#"]');
+            if(a){
+              const id = a.getAttribute('href').slice(1);
+              const el = document.getElementById(id);
+              if(el){
+                e.preventDefault();
+                el.scrollIntoView({behavior:'smooth', block:'start'});
+                history.replaceState(null, '', '#'+id);
+              }
+            }
+          });
+        }
+      }catch(_e){/* noop */}
+      // Print button
+      try{
+        const printBtn = document.getElementById('printBtn');
+        if(printBtn){
+          printBtn.addEventListener('click', () => {
+            // Ensure ToC is open before print
+            const toc = document.querySelector('details.toc');
+            if(toc) toc.open = true;
+            window.print();
+          });
+        }
+      }catch(_e){/* noop */}
+      // Show page counters in running footer when Paged.js not available (fallback for print preview)
+      try{
+        const pn = document.querySelector('.pageNumber');
+        const tp = document.querySelector('.totalPages');
+        if(pn && tp){
+          // When not printing, show placeholders
+          pn.textContent = '1';
+          tp.textContent = '—';
+          window.addEventListener('afterprint', () => {
+            pn.textContent = '1'; tp.textContent = '—';
+          });
+        }
+      }catch(_e){/* noop */}
+      // beforeprint: open ToC to avoid missing entries
+      try{
+        window.addEventListener('beforeprint', () => {
+          const toc = document.querySelector('details.toc');
+          if(toc) toc.open = true;
+        });
+      }catch(_e){/* noop */}
+    })();
+  </script>
+  <script src="https://unpkg.com/pagedjs/dist/paged.polyfill.js" integrity="sha384-1" crossorigin="anonymous"></script>
+  <script>
+    // Paged.js hooks to set page numbers in running footer content
+    (function(){
+      if(!window.Paged) return;
+      class SalmarHandler extends Paged.Handler {
+        afterRendered(pages){
+          try{
+            // Inject page/total into running footer clones
+            const total = pages.length;
+            document.querySelectorAll('.pagedjs_page .pagedjs_margin-bottom .running-footer').forEach((footer, idx) => {
+              const localPage = idx + 1;
+              const num = footer.querySelector('.pageNumber');
+              const tot = footer.querySelector('.totalPages');
+              if(num) num.textContent = String(localPage);
+              if(tot) tot.textContent = String(total);
+            });
+          }catch(_e){/* noop */}
+        }
+      }
+      try{ Paged.registerHandlers(SalmarHandler); }catch(_e){/* noop */}
+    })();
+  </script>
+</body>
+</html>

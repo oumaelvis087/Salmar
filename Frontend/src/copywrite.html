@@ -1,0 +1,968 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Salmar AI - Copyright & Legal</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --bg-primary: #1a0b2e;
+      --bg-secondary: #0f0a1e;
+      --text-primary: #FFFFFF;
+      --text-secondary: #E0E0E0;
+      --accent-primary: #9D4EDD;
+      --accent-secondary: #C77DFF;
+      --accent-glow: rgba(157, 78, 221, 0.3);
+      --card-bg: rgba(255, 255, 255, 0.05);
+      --card-border: rgba(157, 78, 221, 0.2);
+    }
+
+    [data-theme="light"] {
+      --bg-primary: #F5F3FF;
+      --bg-secondary: #E9E3FF;
+      --text-primary: #2D2D2D;
+      --text-secondary: #4A4A4A;
+      --accent-primary: #6B2D9D;
+      --accent-secondary: #9D4EDD;
+      --accent-glow: rgba(107, 45, 157, 0.2);
+      --card-bg: rgba(255, 255, 255, 0.8);
+      --card-border: rgba(107, 45, 157, 0.3);
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
+      color: var(--text-secondary);
+      line-height: 1.6;
+      overflow-x: hidden;
+      position: relative;
+      min-height: 100vh;
+      transition: all 0.5s ease;
+    }
+
+    .particles {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .particle {
+      position: absolute;
+      width: 3px;
+      height: 3px;
+      background: var(--accent-primary);
+      border-radius: 50%;
+      opacity: 0.4;
+      animation: float linear infinite;
+      box-shadow: 0 0 10px var(--accent-glow);
+    }
+
+    @keyframes float {
+      0% {
+        transform: translateY(100vh) rotate(0deg);
+        opacity: 0;
+      }
+
+      10% {
+        opacity: 0.4;
+      }
+
+      90% {
+        opacity: 0.4;
+      }
+
+      100% {
+        transform: translateY(-100px) rotate(360deg);
+        opacity: 0;
+      }
+    }
+
+    .theme-toggle {
+      position: fixed;
+      top: 30px;
+      right: 30px;
+      z-index: 1000;
+      background: var(--card-bg);
+      border: 2px solid var(--card-border);
+      backdrop-filter: blur(10px);
+      border-radius: 50px;
+      padding: 12px 20px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      transition: all 0.3s ease;
+      box-shadow: 0 8px 32px var(--accent-glow);
+    }
+
+    .theme-toggle:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 40px var(--accent-glow);
+    }
+
+    .theme-toggle i {
+      color: var(--accent-primary);
+      font-size: 20px;
+      transition: all 0.3s ease;
+    }
+
+    .theme-toggle:hover i {
+      transform: rotate(20deg);
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 20px;
+      position: relative;
+      z-index: 2;
+    }
+
+    header {
+      text-align: center;
+      padding: 100px 20px 60px;
+      position: relative;
+    }
+
+    .orb-container {
+      width: 150px;
+      height: 150px;
+      margin: 0 auto 30px;
+      position: relative;
+      animation: orbFloat 6s ease-in-out infinite;
+    }
+
+    @keyframes orbFloat {
+
+      0%,
+      100% {
+        transform: translateY(0px);
+      }
+
+      50% {
+        transform: translateY(-20px);
+      }
+    }
+
+    .orb {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      background: radial-gradient(circle at 30% 30%, var(--accent-secondary), var(--accent-primary));
+      box-shadow:
+        0 0 60px var(--accent-glow),
+        0 0 100px var(--accent-glow),
+        inset 0 0 40px rgba(255, 255, 255, 0.1);
+      position: relative;
+      animation: orbRotate 10s linear infinite;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    @keyframes orbRotate {
+      0% {
+        transform: rotate(0deg);
+      }
+
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+
+    .orb::before {
+      content: 'S';
+      font-size: 70px;
+      font-weight: bold;
+      color: var(--text-primary);
+      text-shadow: 0 0 20px rgba(255, 255, 255, 0.8);
+      animation: orbRotate 10s linear infinite reverse;
+    }
+
+    .orb::after {
+      content: '';
+      position: absolute;
+      top: 10%;
+      left: 15%;
+      width: 40%;
+      height: 40%;
+      background: radial-gradient(circle, rgba(255, 255, 255, 0.4), transparent);
+      border-radius: 50%;
+      filter: blur(10px);
+    }
+
+    h1 {
+      font-size: 3.5rem;
+      color: var(--text-primary);
+      margin-bottom: 15px;
+      position: relative;
+      display: inline-block;
+      animation: fadeInDown 1s ease;
+    }
+
+    h1::after {
+      content: '';
+      position: absolute;
+      bottom: -10px;
+      left: 0;
+      width: 100%;
+      height: 3px;
+      background: linear-gradient(90deg, transparent, var(--accent-primary), transparent);
+      box-shadow: 0 0 20px var(--accent-glow);
+      animation: glowPulse 2s ease-in-out infinite;
+    }
+
+    @keyframes glowPulse {
+
+      0%,
+      100% {
+        opacity: 0.6;
+      }
+
+      50% {
+        opacity: 1;
+      }
+    }
+
+    @keyframes fadeInDown {
+      from {
+        opacity: 0;
+        transform: translateY(-30px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .subtitle {
+      font-size: 1.3rem;
+      color: var(--text-secondary);
+      margin-top: 25px;
+      animation: fadeInUp 1s ease 0.3s both;
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .section {
+      margin: 60px 0;
+      opacity: 0;
+      transform: translateY(40px);
+      transition: all 0.8s ease;
+    }
+
+    .section.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 20px;
+      padding: 40px;
+      margin-bottom: 30px;
+      backdrop-filter: blur(10px);
+      transition: all 0.4s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, var(--accent-glow), transparent);
+      transition: left 0.6s ease;
+    }
+
+    .card:hover::before {
+      left: 100%;
+    }
+
+    .card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 20px 60px var(--accent-glow);
+      border-color: var(--accent-primary);
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      margin-bottom: 25px;
+    }
+
+    .card-icon {
+      width: 60px;
+      height: 60px;
+      background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+      border-radius: 15px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+      color: var(--text-primary);
+      box-shadow: 0 8px 25px var(--accent-glow);
+      transition: all 0.3s ease;
+    }
+
+    .card:hover .card-icon {
+      transform: rotateY(360deg);
+    }
+
+    .card h2 {
+      font-size: 2rem;
+      color: var(--text-primary);
+      margin: 0;
+    }
+
+    .card-content {
+      color: var(--text-secondary);
+      font-size: 1.1rem;
+      line-height: 1.8;
+    }
+
+    .card-content p {
+      margin-bottom: 15px;
+    }
+
+    .card-content ul {
+      list-style: none;
+      padding-left: 0;
+    }
+
+    .card-content li {
+      padding: 12px 0;
+      padding-left: 35px;
+      position: relative;
+    }
+
+    .card-content li::before {
+      content: '▸';
+      position: absolute;
+      left: 0;
+      color: var(--accent-primary);
+      font-size: 1.3rem;
+      font-weight: bold;
+    }
+
+    .highlight {
+      color: var(--accent-primary);
+      font-weight: 600;
+    }
+
+    .contact-info {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 25px;
+      margin-top: 30px;
+    }
+
+    .contact-item {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 15px;
+      padding: 25px;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      transition: all 0.3s ease;
+      backdrop-filter: blur(10px);
+    }
+
+    .contact-item:hover {
+      transform: translateX(10px);
+      box-shadow: 0 10px 30px var(--accent-glow);
+    }
+
+    .contact-item i {
+      font-size: 30px;
+      color: var(--accent-primary);
+    }
+
+    .contact-item div {
+      flex: 1;
+    }
+
+    .contact-item strong {
+      display: block;
+      color: var(--text-primary);
+      margin-bottom: 5px;
+      font-size: 1.1rem;
+    }
+
+    .contact-item span {
+      color: var(--text-secondary);
+    }
+
+    footer {
+      text-align: center;
+      padding: 60px 20px 40px;
+      border-top: 1px solid var(--card-border);
+      margin-top: 80px;
+      position: relative;
+    }
+
+    .footer-links {
+      display: flex;
+      justify-content: center;
+      gap: 30px;
+      margin-bottom: 25px;
+      flex-wrap: wrap;
+    }
+
+    .footer-links a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      transition: all 0.3s ease;
+      position: relative;
+      padding: 5px 0;
+    }
+
+    .footer-links a::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: var(--accent-primary);
+      transition: width 0.3s ease;
+    }
+
+    .footer-links a:hover {
+      color: var(--accent-primary);
+    }
+
+    .footer-links a:hover::after {
+      width: 100%;
+    }
+
+    .copyright {
+      color: var(--text-secondary);
+      font-size: 0.95rem;
+      margin-top: 20px;
+    }
+
+    .badge {
+      display: inline-block;
+      background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+      color: var(--text-primary);
+      padding: 8px 20px;
+      border-radius: 25px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      margin: 10px 5px;
+      box-shadow: 0 4px 15px var(--accent-glow);
+      transition: all 0.3s ease;
+    }
+
+    .badge:hover {
+      transform: scale(1.05);
+      box-shadow: 0 6px 25px var(--accent-glow);
+    }
+
+    @media (max-width: 768px) {
+      h1 {
+        font-size: 2.5rem;
+      }
+
+      .subtitle {
+        font-size: 1.1rem;
+      }
+
+      .card {
+        padding: 25px;
+      }
+
+      .card h2 {
+        font-size: 1.6rem;
+      }
+
+      .card-header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .orb-container {
+        width: 120px;
+        height: 120px;
+      }
+
+      .orb::before {
+        font-size: 50px;
+      }
+
+      .theme-toggle {
+        top: 20px;
+        right: 20px;
+        padding: 10px 15px;
+      }
+
+      .contact-info {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 480px) {
+      h1 {
+        font-size: 2rem;
+      }
+
+      header {
+        padding: 80px 20px 40px;
+      }
+
+      .card-icon {
+        width: 50px;
+        height: 50px;
+        font-size: 24px;
+      }
+    }
+
+    .scroll-indicator {
+      position: fixed;
+      bottom: 40px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 100;
+      animation: bounce 2s infinite;
+    }
+
+    .scroll-indicator i {
+      font-size: 30px;
+      color: var(--accent-primary);
+      filter: drop-shadow(0 0 10px var(--accent-glow));
+    }
+
+    @keyframes bounce {
+
+      0%,
+      20%,
+      50%,
+      80%,
+      100% {
+        transform: translateX(-50%) translateY(0);
+      }
+
+      40% {
+        transform: translateX(-50%) translateY(-15px);
+      }
+
+      60% {
+        transform: translateX(-50%) translateY(-8px);
+      }
+    }
+
+    .intro-section {
+      text-align: center;
+      max-width: 900px;
+      margin: 0 auto 60px;
+      padding: 40px;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 20px;
+      backdrop-filter: blur(10px);
+    }
+
+    .intro-section p {
+      font-size: 1.2rem;
+      line-height: 1.9;
+      color: var(--text-secondary);
+    }
+  </style>
+</head>
+
+<body>
+  <div class="particles" id="particles"></div>
+
+  
+
+  <div class="container">
+    <header>
+      <div class="orb-container">
+        <div class="orb"></div>
+      </div>
+      <h1>Copyright & Legal</h1>
+      <p class="subtitle">Protecting Innovation, Ensuring Transparency</p>
+    </header>
+
+    <div class="intro-section section">
+      <p>🟣 Welcome to the <span class="highlight">Copyright Page of Salmar AI</span>. This page outlines the ownership
+        of intellectual property, user rights, and limitations regarding the use of Salmar AI, its technology, branding,
+        and content.</p>
+    </div>
+
+    <div class="section">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-icon">
+            <i class="fas fa-copyright"></i>
+          </div>
+          <h2>Ownership of Content</h2>
+        </div>
+        <div class="card-content">
+          <p>All content, code, branding elements (including the glowing <span class="highlight">"S" logo</span>, Salmar
+            Orb visuals, animations, and color scheme), and AI responses generated by Salmar are property of <span
+              class="highlight">Salmar Technologies</span> unless stated otherwise.</p>
+          <p>Users may interact with and use outputs for personal, educational, or professional purposes, subject to
+            fair use and applicable licensing.</p>
+          <div style="margin-top: 20px;">
+            <span class="badge">🎨 Branding Protected</span>
+            <span class="badge">💻 Code Ownership</span>
+            <span class="badge">🤖 AI Responses</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-icon">
+            <i class="fas fa-user-edit"></i>
+          </div>
+          <h2>User-Generated Content</h2>
+        </div>
+        <div class="card-content">
+          <p><span class="highlight">Conversations with Salmar belong to the user.</span></p>
+          <p>However, Salmar Technologies retains the right to use anonymized data (if opted in by the user) to improve
+            AI performance, unless privacy settings restrict this.</p>
+          <ul>
+            <li>Your conversations are yours to keep and use</li>
+            <li>Anonymized data helps improve AI accuracy</li>
+            <li>Full privacy controls available in settings</li>
+            <li>Opt-out options respected at all times</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-icon">
+            <i class="fas fa-trademark"></i>
+          </div>
+          <h2>Trademarks & Branding</h2>
+        </div>
+        <div class="card-content">
+          <p><span class="highlight">"Salmar AI"</span>, the <span class="highlight">"S Orb Logo"</span>, and the <span
+              class="highlight">purple identity theme</span> are registered trademarks of Salmar Technologies.</p>
+          <p>These cannot be copied, imitated, or redistributed without explicit written permission.</p>
+          <div style="margin-top: 20px;">
+            <span class="badge">🟣 Purple Theme™</span>
+            <span class="badge">⭕ S Orb Logo™</span>
+            <span class="badge">🏷️ Salmar AI™</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-icon">
+            <i class="fas fa-ban"></i>
+          </div>
+          <h2>Restrictions</h2>
+        </div>
+        <div class="card-content">
+          <p>Users agree <span class="highlight">not to</span>:</p>
+          <ul>
+            <li>Copy or redistribute Salmar's code, models, or platform for unauthorized purposes</li>
+            <li>Use Salmar-generated content in violation of intellectual property laws</li>
+            <li>Attempt to reverse-engineer or replicate Salmar AI's architecture without authorization</li>
+            <li>Misrepresent Salmar's branding or create derivative works without permission</li>
+            <li>Use the platform for illegal, harmful, or malicious activities</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-icon">
+            <i class="fas fa-file-contract"></i>
+          </div>
+          <h2>Licensing</h2>
+        </div>
+        <div class="card-content">
+          <p>Salmar AI's <span class="highlight">free and paid plans</span> include limited user licenses to interact
+            with the AI.</p>
+          <p>Enterprise clients may access custom licensing agreements for integrations, research, and development.</p>
+          <ul>
+            <li><strong>Free Plan:</strong> Personal use license with standard limitations</li>
+            <li><strong>Pro Plan:</strong> Extended usage rights for professionals</li>
+            <li><strong>Enterprise:</strong> Custom licensing for organizations</li>
+            <li><strong>Academic:</strong> Special licensing for educational institutions</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-icon">
+            <i class="fas fa-shield-alt"></i>
+          </div>
+          <h2>Copyright Protection</h2>
+        </div>
+        <div class="card-content">
+          <p><span class="highlight">Protected under international copyright law.</span></p>
+          <p>Violations may result in account suspension, legal action, or financial penalties.</p>
+          <ul>
+            <li>DMCA compliance and takedown procedures in place</li>
+            <li>International copyright treaties respected</li>
+            <li>Regular monitoring for unauthorized use</li>
+            <li>Swift action against infringement</li>
+          </ul>
+          <div style="margin-top: 20px;">
+            <span class="badge">⚖️ Legal Protection</span>
+            <span class="badge">🌍 International Coverage</span>
+            <span class="badge">🔒 Secure Rights</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-icon">
+            <i class="fas fa-envelope"></i>
+          </div>
+          <h2>Contact for Permissions</h2>
+        </div>
+        <div class="card-content">
+          <p>For licensing, partnerships, or copyright permissions, please reach out to our legal team:</p>
+          <div class="contact-info">
+            <div class="contact-item">
+              <i class="fas fa-envelope"></i>
+              <div>
+                <strong>Email</strong>
+                <span>legal@salmar.ai</span>
+              </div>
+            </div>
+            <div class="contact-item">
+              <i class="fas fa-building"></i>
+              <div>
+                <strong>Headquarters</strong>
+                <span>Salmar Technologies HQ</span>
+              </div>
+            </div>
+            <div class="contact-item">
+              <i class="fas fa-phone"></i>
+              <div>
+                <strong>Legal Department</strong>
+                <span>+1 (555) 123-4567</span>
+              </div>
+            </div>
+            <div class="contact-item">
+              <i class="fas fa-clock"></i>
+              <div>
+                <strong>Response Time</strong>
+                <span>24-48 hours</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <footer>
+      <div class="footer-links">
+        <a href="privacy.html">Privacy Policy</a>
+        <a href="terms.html">Terms of Service</a>
+        <a href="security.html">Security</a>
+        <a href="accessibility.html">Accessibility</a>
+        <a href="About.html">About Salmar</a>
+      </div>
+      <div class="copyright">
+        <p>© 2025 Salmar Technologies. All rights reserved.</p>
+        <p style="margin-top: 10px; font-size: 0.9rem;">Protected by international copyright law. Unauthorized
+          reproduction strictly prohibited.</p>
+      </div>
+    </footer>
+  </div>
+
+  <div class="scroll-indicator" id="scrollIndicator">
+    <i class="fas fa-chevron-down"></i>
+  </div>
+
+  <script>
+    // Particle System
+    function createParticles() {
+      const particlesContainer = document.getElementById('particles');
+      const particleCount = 50;
+
+      for (let i = 0; i < particleCount; i++) {
+        const particle = document.createElement('div');
+        particle.className = 'particle';
+        particle.style.left = Math.random() * 100 + '%';
+        particle.style.animationDuration = (Math.random() * 10 + 10) + 's';
+        particle.style.animationDelay = Math.random() * 5 + 's';
+        particlesContainer.appendChild(particle);
+      }
+    }
+
+    // Theme toggle removed: dark mode enforced by default
+
+    // Scroll Animations
+    const observerOptions = {
+      threshold: 0.1,
+      rootMargin: '0px 0px -50px 0px'
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, observerOptions);
+
+    document.querySelectorAll('.section').forEach(section => {
+      observer.observe(section);
+    });
+
+    // Scroll Indicator
+    const scrollIndicator = document.getElementById('scrollIndicator');
+
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 300) {
+        scrollIndicator.style.opacity = '0';
+        scrollIndicator.style.pointerEvents = 'none';
+      } else {
+        scrollIndicator.style.opacity = '1';
+        scrollIndicator.style.pointerEvents = 'auto';
+      }
+    });
+
+    scrollIndicator.addEventListener('click', () => {
+      window.scrollTo({
+        top: window.innerHeight,
+        behavior: 'smooth'
+      });
+    });
+
+    // Smooth Scroll for Footer Links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+          target.scrollIntoView({
+            behavior: 'smooth',
+            block: 'start'
+          });
+        }
+      });
+    });
+
+    // Card Hover Effect Enhancement
+    document.querySelectorAll('.card').forEach(card => {
+      card.addEventListener('mousemove', (e) => {
+        const rect = card.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+
+        card.style.setProperty('--mouse-x', x + 'px');
+        card.style.setProperty('--mouse-y', y + 'px');
+      });
+    });
+
+    // Initialize
+    createParticles();
+
+    // Add floating animation to badges
+    document.querySelectorAll('.badge').forEach((badge, index) => {
+      badge.style.animationDelay = (index * 0.1) + 's';
+    });
+
+    // Parallax effect for orb
+    window.addEventListener('scroll', () => {
+      const scrolled = window.pageYOffset;
+      const orb = document.querySelector('.orb-container');
+      if (orb) {
+        orb.style.transform = `translateY(${scrolled * 0.3}px)`;
+      }
+    });
+
+    // Contact item animation on hover
+    document.querySelectorAll('.contact-item').forEach(item => {
+      item.addEventListener('mouseenter', function () {
+        this.querySelector('i').style.transform = 'scale(1.2) rotate(10deg)';
+      });
+
+      item.addEventListener('mouseleave', function () {
+        this.querySelector('i').style.transform = 'scale(1) rotate(0deg)';
+      });
+    });
+
+    // Add ripple effect to cards on click
+    document.querySelectorAll('.card').forEach(card => {
+      card.addEventListener('click', function (e) {
+        const ripple = document.createElement('div');
+        ripple.style.position = 'absolute';
+        ripple.style.borderRadius = '50%';
+        ripple.style.background = 'rgba(157, 78, 221, 0.3)';
+        ripple.style.width = '20px';
+        ripple.style.height = '20px';
+        ripple.style.left = e.offsetX + 'px';
+        ripple.style.top = e.offsetY + 'px';
+        ripple.style.transform = 'translate(-50%, -50%)';
+        ripple.style.animation = 'ripple 0.6s ease-out';
+        ripple.style.pointerEvents = 'none';
+
+        this.appendChild(ripple);
+
+        setTimeout(() => ripple.remove(), 600);
+      });
+    });
+
+    // Add ripple animation
+    const style = document.createElement('style');
+    style.textContent = `
+            @keyframes ripple {
+                to {
+                    width: 200px;
+                    height: 200px;
+                    opacity: 0;
+                }
+            }
+        `;
+    document.head.appendChild(style);
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,940 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Salmar AI - Accessibility</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --deep-violet: #3C096C;
+            --neon-lavender: #C77DFF;
+            --soft-purple: #9D4EDD;
+            --light-purple: #E0AAFF;
+            --dark-bg: #240046;
+            --darker-bg: #10002B;
+            --white: #FFFFFF;
+            --light-gray: #F8F9FA;
+            --glow-purple: rgba(199, 125, 255, 0.4);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, var(--darker-bg) 0%, var(--deep-violet) 50%, var(--dark-bg) 100%);
+            color: var(--white);
+            overflow-x: hidden;
+            position: relative;
+            min-height: 100vh;
+        }
+
+        body.light-mode {
+            background: linear-gradient(135deg, #F8F9FA 0%, #E0AAFF 50%, #C77DFF 100%);
+            color: #240046;
+        }
+
+        /* Animated Background */
+        .bg-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.3;
+            animation: float 20s infinite ease-in-out;
+        }
+
+        .orb1 {
+            width: 400px;
+            height: 400px;
+            background: var(--neon-lavender);
+            top: -100px;
+            left: -100px;
+            animation-delay: 0s;
+        }
+
+        .orb2 {
+            width: 300px;
+            height: 300px;
+            background: var(--soft-purple);
+            bottom: -50px;
+            right: -50px;
+            animation-delay: 5s;
+        }
+
+        .orb3 {
+            width: 350px;
+            height: 350px;
+            background: var(--light-purple);
+            top: 50%;
+            left: 50%;
+            animation-delay: 10s;
+        }
+
+        @keyframes float {
+
+            0%,
+            100% {
+                transform: translate(0, 0) scale(1);
+            }
+
+            25% {
+                transform: translate(50px, -50px) scale(1.1);
+            }
+
+            50% {
+                transform: translate(-30px, 30px) scale(0.9);
+            }
+
+            75% {
+                transform: translate(30px, 50px) scale(1.05);
+            }
+        }
+
+        /* Header */
+        header {
+            position: relative;
+            z-index: 100;
+            padding: 1.5rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            backdrop-filter: blur(10px);
+            background: rgba(36, 0, 70, 0.3);
+            border-bottom: 1px solid rgba(199, 125, 255, 0.2);
+        }
+
+        body.light-mode header {
+            background: rgba(255, 255, 255, 0.3);
+            border-bottom: 1px solid rgba(157, 78, 221, 0.3);
+        }
+
+        .logo {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--neon-lavender);
+            text-shadow: 0 0 20px var(--glow-purple);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        body.light-mode .logo {
+            color: var(--deep-violet);
+            text-shadow: 0 0 10px rgba(157, 78, 221, 0.3);
+        }
+
+        .theme-toggle {
+            background: rgba(199, 125, 255, 0.2);
+            border: 2px solid var(--neon-lavender);
+            color: var(--white);
+            padding: 0.7rem 1.5rem;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        body.light-mode .theme-toggle {
+            background: rgba(157, 78, 221, 0.2);
+            border-color: var(--deep-violet);
+            color: var(--deep-violet);
+        }
+
+        .theme-toggle:hover {
+            background: var(--neon-lavender);
+            color: var(--darker-bg);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px var(--glow-purple);
+        }
+
+        /* Main Container */
+        .container {
+            position: relative;
+            z-index: 10;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 4rem 5%;
+        }
+
+        /* Hero Section */
+        .hero {
+            text-align: center;
+            padding: 4rem 0;
+            margin-bottom: 4rem;
+        }
+
+        .hero-icon {
+            font-size: 5rem;
+            margin-bottom: 1.5rem;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+
+            50% {
+                transform: scale(1.1);
+                opacity: 0.8;
+            }
+        }
+
+        .hero h1 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            font-weight: 800;
+            color: var(--neon-lavender);
+            text-shadow: 0 0 30px var(--glow-purple);
+            margin-bottom: 1.5rem;
+            line-height: 1.2;
+        }
+
+        body.light-mode .hero h1 {
+            color: var(--deep-violet);
+            text-shadow: 0 0 20px rgba(157, 78, 221, 0.3);
+        }
+
+        .hero p {
+            font-size: clamp(1.1rem, 2vw, 1.3rem);
+            line-height: 1.8;
+            max-width: 900px;
+            margin: 0 auto;
+            opacity: 0.95;
+        }
+
+        body.light-mode .hero p {
+            color: #240046;
+        }
+
+        /* Section Styling */
+        .section {
+            margin-bottom: 5rem;
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeInUp 0.8s forwards;
+        }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .section:nth-child(1) {
+            animation-delay: 0.1s;
+        }
+
+        .section:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .section:nth-child(3) {
+            animation-delay: 0.3s;
+        }
+
+        .section:nth-child(4) {
+            animation-delay: 0.4s;
+        }
+
+        .section:nth-child(5) {
+            animation-delay: 0.5s;
+        }
+
+        .section-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: clamp(2rem, 4vw, 2.8rem);
+            font-weight: 700;
+            color: var(--neon-lavender);
+            margin-bottom: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            text-shadow: 0 0 20px var(--glow-purple);
+        }
+
+        body.light-mode .section-title {
+            color: var(--deep-violet);
+            text-shadow: 0 0 15px rgba(157, 78, 221, 0.2);
+        }
+
+        /* Principle Cards */
+        .principles-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .principle-card {
+            background: rgba(199, 125, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(199, 125, 255, 0.3);
+            border-radius: 20px;
+            padding: 2.5rem;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        body.light-mode .principle-card {
+            background: rgba(255, 255, 255, 0.7);
+            border-color: rgba(157, 78, 221, 0.4);
+        }
+
+        .principle-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, transparent, var(--glow-purple));
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .principle-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--neon-lavender);
+            box-shadow: 0 20px 60px var(--glow-purple);
+        }
+
+        .principle-card:hover::before {
+            opacity: 0.2;
+        }
+
+        .principle-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        .principle-card h3 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.5rem;
+            color: var(--neon-lavender);
+            margin-bottom: 1rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        body.light-mode .principle-card h3 {
+            color: var(--deep-violet);
+        }
+
+        .principle-card p {
+            line-height: 1.7;
+            opacity: 0.9;
+            position: relative;
+            z-index: 1;
+        }
+
+        body.light-mode .principle-card p {
+            color: #240046;
+        }
+
+        /* Features Section */
+        .features-list {
+            display: grid;
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .feature-item {
+            background: rgba(157, 78, 221, 0.1);
+            backdrop-filter: blur(10px);
+            border-left: 4px solid var(--neon-lavender);
+            border-radius: 15px;
+            padding: 2rem;
+            transition: all 0.3s ease;
+        }
+
+        body.light-mode .feature-item {
+            background: rgba(255, 255, 255, 0.6);
+            border-left-color: var(--deep-violet);
+        }
+
+        .feature-item:hover {
+            transform: translateX(10px);
+            background: rgba(199, 125, 255, 0.15);
+            box-shadow: 0 10px 40px var(--glow-purple);
+        }
+
+        .feature-item h3 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.6rem;
+            color: var(--neon-lavender);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        body.light-mode .feature-item h3 {
+            color: var(--deep-violet);
+        }
+
+        .feature-item ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .feature-item li {
+            padding: 0.5rem 0;
+            padding-left: 2rem;
+            position: relative;
+            line-height: 1.7;
+        }
+
+        .feature-item li::before {
+            content: '🟣';
+            position: absolute;
+            left: 0;
+        }
+
+        body.light-mode .feature-item li {
+            color: #240046;
+        }
+
+        /* Commitment Section */
+        .commitment-list {
+            background: rgba(199, 125, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(199, 125, 255, 0.3);
+            border-radius: 20px;
+            padding: 2.5rem;
+            margin-top: 2rem;
+        }
+
+        body.light-mode .commitment-list {
+            background: rgba(255, 255, 255, 0.7);
+            border-color: rgba(157, 78, 221, 0.4);
+        }
+
+        .commitment-list ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .commitment-list li {
+            padding: 1rem 0;
+            padding-left: 3rem;
+            position: relative;
+            font-size: 1.1rem;
+            line-height: 1.7;
+            border-bottom: 1px solid rgba(199, 125, 255, 0.2);
+        }
+
+        .commitment-list li:last-child {
+            border-bottom: none;
+        }
+
+        .commitment-list li::before {
+            content: '✨';
+            position: absolute;
+            left: 0;
+            font-size: 1.5rem;
+        }
+
+        body.light-mode .commitment-list li {
+            color: #240046;
+            border-bottom-color: rgba(157, 78, 221, 0.2);
+        }
+
+        /* Contact Section */
+        .contact-box {
+            background: linear-gradient(135deg, rgba(199, 125, 255, 0.2), rgba(157, 78, 221, 0.2));
+            backdrop-filter: blur(10px);
+            border: 2px solid var(--neon-lavender);
+            border-radius: 25px;
+            padding: 3rem;
+            text-align: center;
+            margin-top: 2rem;
+            box-shadow: 0 20px 60px var(--glow-purple);
+        }
+
+        body.light-mode .contact-box {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.8), rgba(224, 170, 255, 0.4));
+            border-color: var(--deep-violet);
+        }
+
+        .contact-box h3 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.8rem;
+            color: var(--neon-lavender);
+            margin-bottom: 1.5rem;
+        }
+
+        body.light-mode .contact-box h3 {
+            color: var(--deep-violet);
+        }
+
+        .contact-info {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            align-items: center;
+            margin-top: 1.5rem;
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            font-size: 1.2rem;
+            background: rgba(199, 125, 255, 0.2);
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            transition: all 0.3s ease;
+        }
+
+        body.light-mode .contact-item {
+            background: rgba(157, 78, 221, 0.2);
+            color: #240046;
+        }
+
+        .contact-item:hover {
+            background: var(--neon-lavender);
+            color: var(--darker-bg);
+            transform: scale(1.05);
+        }
+
+        /* Footer */
+        footer {
+            position: relative;
+            z-index: 10;
+            text-align: center;
+            padding: 3rem 5%;
+            background: rgba(36, 0, 70, 0.5);
+            backdrop-filter: blur(10px);
+            border-top: 1px solid rgba(199, 125, 255, 0.2);
+            margin-top: 5rem;
+        }
+
+        body.light-mode footer {
+            background: rgba(255, 255, 255, 0.5);
+            border-top-color: rgba(157, 78, 221, 0.3);
+        }
+
+        footer p {
+            font-size: 1rem;
+            opacity: 0.8;
+        }
+
+        body.light-mode footer p {
+            color: #240046;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-top: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .footer-links a {
+            color: var(--neon-lavender);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        body.light-mode .footer-links a {
+            color: var(--deep-violet);
+        }
+
+        .footer-links a:hover {
+            color: var(--light-purple);
+            text-shadow: 0 0 10px var(--glow-purple);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                padding: 2rem 5%;
+            }
+
+            .hero {
+                padding: 2rem 0;
+            }
+
+            .principles-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .section-title {
+                font-size: 1.8rem;
+            }
+
+            .contact-info {
+                gap: 0.8rem;
+            }
+
+            .contact-item {
+                font-size: 1rem;
+                padding: 0.8rem 1.5rem;
+            }
+
+            header {
+                flex-direction: column;
+                gap: 1rem;
+            }
+        }
+
+        /* Accessibility Enhancements */
+        .skip-link {
+            position: absolute;
+            top: -40px;
+            left: 0;
+            background: var(--neon-lavender);
+            color: var(--darker-bg);
+            padding: 8px;
+            text-decoration: none;
+            z-index: 1000;
+        }
+
+        .skip-link:focus {
+            top: 0;
+        }
+
+        /* Focus Styles */
+        *:focus {
+            outline: 3px solid var(--neon-lavender);
+            outline-offset: 3px;
+        }
+
+        body.light-mode *:focus {
+            outline-color: var(--deep-violet);
+        }
+    </style>
+</head>
+
+<body>
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+
+    <!-- Animated Background -->
+    <div class="bg-animation">
+        <div class="orb orb1"></div>
+        <div class="orb orb2"></div>
+        <div class="orb orb3"></div>
+    </div>
+
+    <!-- Header -->
+    <header role="banner">
+        <div class="logo" aria-label="Salmar AI Logo">
+            <span>🟣</span>
+            <span>Salmar AI</span>
+        </div>
+        <button class="theme-toggle" id="themeToggle" aria-label="Toggle light and dark mode">
+            <i class="fas fa-sun" id="themeIcon"></i>
+            <span id="themeText">Light Mode</span>
+        </button>
+    </header>
+
+    <!-- Main Content -->
+    <main id="main-content" class="container">
+        <!-- Hero Section -->
+        <section class="hero" aria-labelledby="hero-title">
+            <div class="hero-icon" role="img" aria-label="Accessibility Icon">♿</div>
+            <h1 id="hero-title">Accessibility at Salmar AI</h1>
+            <p>At Salmar AI, accessibility is a core part of our vision. We believe that technology should empower
+                everyone, regardless of ability, background, or circumstance. This page outlines how Salmar AI is
+                designed to be inclusive and accessible for all users.</p>
+        </section>
+
+        <!-- Accessible Design Principles -->
+        <section class="section" aria-labelledby="principles-title">
+            <h2 class="section-title" id="principles-title">
+                <span>🔹</span>
+                Accessible Design Principles
+            </h2>
+            <p style="font-size: 1.1rem; line-height: 1.8; margin-bottom: 2rem;">
+                Salmar AI follows WCAG 2.1 AA and international accessibility standards. Our key principles include:
+            </p>
+            <div class="principles-grid">
+                <article class="principle-card">
+                    <span class="principle-icon" role="img" aria-label="Eye icon">👁️</span>
+                    <h3>Perceivable</h3>
+                    <p>Clear fonts, optimal color contrast, and text-to-speech options ensure that information is
+                        accessible to all users, including those with visual impairments.</p>
+                </article>
+                <article class="principle-card">
+                    <span class="principle-icon" role="img" aria-label="Hand pointer icon">👆</span>
+                    <h3>Operable</h3>
+                    <p>Full keyboard navigation, voice commands, and adaptive UI make Salmar AI usable for everyone,
+                        regardless of input method.</p>
+                </article>
+                <article class="principle-card">
+                    <span class="principle-icon" role="img" aria-label="Brain icon">🧠</span>
+                    <h3>Understandable</h3>
+                    <p>Simple instructions, consistent layouts, and intuitive flows ensure that all users can navigate
+                        and understand our platform easily.</p>
+                </article>
+                <article class="principle-card">
+                    <span class="principle-icon" role="img" aria-label="Gear icon">⚙️</span>
+                    <h3>Robust</h3>
+                    <p>Full compatibility with assistive technologies like screen readers, magnifiers, and alternative
+                        input devices ensures reliable access for all.</p>
+                </article>
+            </div>
+        </section>
+
+        <!-- Features for Accessibility -->
+        <section class="section" aria-labelledby="features-title">
+            <h2 class="section-title" id="features-title">
+                <span>🔹</span>
+                Features for Accessibility
+            </h2>
+            <div class="features-list">
+                <article class="feature-item">
+                    <h3><span role="img" aria-label="Microphone">🎙️</span> Text-to-Speech & Speech-to-Text</h3>
+                    <ul>
+                        <li>Salmar can read out responses in a natural, human-like voice</li>
+                        <li>Users can speak commands instead of typing, making interaction seamless and hands-free</li>
+                        <li>Multiple language support for global accessibility</li>
+                    </ul>
+                </article>
+
+                <article class="feature-item">
+                    <h3><span role="img" aria-label="Eye">👁️</span> Visual Accessibility</h3>
+                    <ul>
+                        <li>High-contrast purple-on-dark theme optimized for low-vision users</li>
+                        <li>Adjustable font sizes with fluid typography for comfortable reading</li>
+                        <li>Option for dyslexia-friendly fonts (OpenDyslexic support)</li>
+                        <li>Clear visual hierarchy and spacing for easy navigation</li>
+                    </ul>
+                </article>
+
+                <article class="feature-item">
+                    <h3><span role="img" aria-label="Headphones">🎧</span> Hearing Accessibility</h3>
+                    <ul>
+                        <li>All sounds (like Salmar Orb hums) include visual indicators</li>
+                        <li>Closed captions for all audio outputs</li>
+                        <li>Visual feedback for all system notifications and alerts</li>
+                    </ul>
+                </article>
+
+                <article class="feature-item">
+                    <h3><span role="img" aria-label="Keyboard">⌨️</span> Motor Accessibility</h3>
+                    <ul>
+                        <li>Full keyboard navigation support with logical tab order</li>
+                        <li>One-click shortcuts for common tasks and actions</li>
+                        <li>Adaptive interface for eye-tracking and voice-only navigation</li>
+                        <li>Large, easy-to-click interactive elements with generous spacing</li>
+                    </ul>
+                </article>
+
+                <article class="feature-item">
+                    <h3><span role="img" aria-label="Lightbulb">💡</span> Cognitive Support</h3>
+                    <ul>
+                        <li>Clear, step-by-step instructions in our comprehensive Help Center</li>
+                        <li>Simplified mode for users who prefer short, direct answers</li>
+                        <li>Color-coded visual cues for different contexts (processing, ready, error)</li>
+                        <li>Consistent interface patterns to reduce cognitive load</li>
+                    </ul>
+                </article>
+            </div>
+        </section>
+
+        <!-- Ongoing Improvements -->
+        <section class="section" aria-labelledby="improvements-title">
+            <h2 class="section-title" id="improvements-title">
+                <span>🔹</span>
+                Ongoing Improvements
+            </h2>
+            <p style="font-size: 1.1rem; line-height: 1.8; margin-bottom: 1.5rem;">
+                Accessibility is an ongoing journey, not a finished product. We are committed to continuous improvement
+                and innovation.
+            </p>
+            <div class="commitment-list">
+                <ul>
+                    <li>Regular audits of Salmar AI's accessibility features by independent experts</li>
+                    <li>Active feedback loops with users who rely on assistive technologies</li>
+                    <li>Partnering with global accessibility organizations and advocacy groups</li>
+                    <li>Implementing cutting-edge accessibility technologies as they emerge</li>
+                    <li>Training our team on accessibility best practices and inclusive design</li>
+                    <li>Publishing annual accessibility reports to track our progress</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- Contact Support -->
+        <section class="section" aria-labelledby="support-title">
+            <h2 class="section-title" id="support-title">
+                <span>🔹</span>
+                How to Request Accessibility Support
+            </h2>
+            <div class="contact-box">
+                <h3>We're Here to Help</h3>
+                <p style="font-size: 1.1rem; line-height: 1.8;">
+                    If you encounter barriers while using Salmar AI, please don't hesitate to reach out. We will work
+                    directly with you to find solutions and improve our platform.
+                </p>
+                <div class="contact-info">
+                    <div class="contact-item">
+                        <i class="fas fa-envelope"></i>
+                        <span>accessibility@salmar.ai</span>
+                    </div>
+                    <div class="contact-item">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <span>Accessibility Team, Salmar Technologies</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer role="contentinfo">
+        <p>&copy; 2024 Salmar AI. Committed to Fairness, Inclusivity, and Human Capability.</p>
+        <div class="footer-links">
+            <a href="#" aria-label="Privacy Policy">Privacy Policy</a>
+            <a href="#" aria-label="Terms of Service">Terms of Service</a>
+            <a href="#" aria-label="Contact Us">Contact Us</a>
+            <a href="#" aria-label="Help Center">Help Center</a>
+        </div>
+    </footer>
+
+    <script>
+        // Theme Toggle Functionality
+        const themeToggle = document.getElementById('themeToggle');
+        const themeIcon = document.getElementById('themeIcon');
+        const themeText = document.getElementById('themeText');
+        const body = document.body;
+
+        // Check for saved theme preference
+        const currentTheme = localStorage.getItem('theme') || 'dark';
+        if (currentTheme === 'light') {
+            body.classList.add('light-mode');
+            themeIcon.className = 'fas fa-moon';
+            themeText.textContent = 'Dark Mode';
+        }
+
+        themeToggle.addEventListener('click', () => {
+            body.classList.toggle('light-mode');
+
+            if (body.classList.contains('light-mode')) {
+                themeIcon.className = 'fas fa-moon';
+                themeText.textContent = 'Dark Mode';
+                localStorage.setItem('theme', 'light');
+            } else {
+                themeIcon.className = 'fas fa-sun';
+                themeText.textContent = 'Light Mode';
+                localStorage.setItem('theme', 'dark');
+            }
+        });
+
+        // Smooth scroll for skip link
+        document.querySelector('.skip-link').addEventListener('click', (e) => {
+            e.preventDefault();
+            document.getElementById('main-content').focus();
+            document.getElementById('main-content').scrollIntoView({ behavior: 'smooth' });
+        });
+
+        // Intersection Observer for scroll animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.section').forEach(section => {
+            observer.observe(section);
+        });
+
+        // Enhanced keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            // Alt + T for theme toggle
+            if (e.altKey && e.key === 't') {
+                e.preventDefault();
+                themeToggle.click();
+            }
+
+            // Alt + H for home/top
+            if (e.altKey && e.key === 'h') {
+                e.preventDefault();
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        });
+
+        // Add hover effects with reduced motion support
+        const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+        if (!prefersReducedMotion.matches) {
+            // Add parallax effect to orbs
+            document.addEventListener('mousemove', (e) => {
+                const orbs = document.querySelectorAll('.orb');
+                const x = e.clientX / window.innerWidth;
+                const y = e.clientY / window.innerHeight;
+
+                orbs.forEach((orb, index) => {
+                    const speed = (index + 1) * 20;
+                    orb.style.transform = `translate(${x * speed}px, ${y * speed}px)`;
+                });
+            });
+        }
+
+        // Announce page changes for screen readers
+        const announcer = document.createElement('div');
+        announcer.setAttribute('role', 'status');
+        announcer.setAttribute('aria-live', 'polite');
+        announcer.setAttribute('aria-atomic', 'true');
+        announcer.style.position = 'absolute';
+        announcer.style.left = '-10000px';
+        announcer.style.width = '1px';
+        announcer.style.height = '1px';
+        announcer.style.overflow = 'hidden';
+        document.body.appendChild(announcer);
+
+        // Announce theme changes
+        themeToggle.addEventListener('click', () => {
+            setTimeout(() => {
+                announcer.textContent = body.classList.contains('light-mode')
+                    ? 'Light mode activated'
+                    : 'Dark mode activated';
+            }, 100);
+        });
+    </script>
+</body>
+
+</html>

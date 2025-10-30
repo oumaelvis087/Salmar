@@ -1,0 +1,1123 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Security at Salmar — The AI That Does Everything</title>
+  <meta name="description"
+    content="Security at Salmar: End-to-end encryption, biometric protection, privacy-first data storage, compliance, monitoring, and responsible AI." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&display=swap"
+    rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: ['class', '[data-theme="dark"]'],
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'] },
+          colors: {
+            purpleNeon: {
+              50: '#f6f3ff',
+              100: '#ede9fe',
+              200: '#ddd6fe',
+              300: '#c4b5fd',
+              400: '#a78bfa',
+              500: '#8b5cf6',
+              600: '#7c3aed',
+              700: '#6d28d9',
+              800: '#5b21b6',
+              900: '#4c1d95',
+            },
+            salmar: {
+              bgDark: '#0b0715',
+              bgDark2: '#150e28',
+              bgLight: '#f7f5ff',
+              textDark: '#eae6ff',
+              textLight: '#1b1030',
+              accent: '#c084fc',
+              accent2: '#22d3ee'
+            }
+          },
+          boxShadow: {
+            'neo': '8px 8px 18px rgba(0,0,0,0.4), -8px -8px 18px rgba(255,255,255,0.02)',
+            'neo-inset': 'inset 6px 6px 16px rgba(0,0,0,0.5), inset -6px -6px 16px rgba(255,255,255,0.06)',
+            'glow': '0 0 15px rgba(167,139,250,0.7), 0 0 40px rgba(167,139,250,0.4)',
+            'glow-soft': '0 0 10px rgba(167,139,250,0.5)',
+          },
+          backdropBlur: { xs: '2px' },
+          animation: {
+            'pulse-soft': 'pulseSoft 3s ease-in-out infinite',
+            'float-slow': 'floatSlow 8s ease-in-out infinite',
+            'spin-slow': 'spin 16s linear infinite',
+            'twinkle': 'twinkle 6s ease-in-out infinite',
+          },
+          keyframes: {
+            pulseSoft: {
+              '0%, 100%': { transform: 'scale(1)', filter: 'brightness(1)' },
+              '50%': { transform: 'scale(1.03)', filter: 'brightness(1.25)' },
+            },
+            floatSlow: {
+              '0%, 100%': { transform: 'translateY(0px)' },
+              '50%': { transform: 'translateY(-12px)' },
+            },
+            twinkle: {
+              '0%, 100%': { opacity: 0.25, transform: 'translateY(0px) scale(1)' },
+              '50%': { opacity: 0.55, transform: 'translateY(-4px) scale(1.02)' },
+            },
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    :root {
+      --bg-1: #0b0715;
+      --bg-2: #150e28;
+      --text: #eae6ff;
+      --muted: #b9a8ff;
+      --card: rgba(255, 255, 255, 0.06);
+      --cardStroke: rgba(255, 255, 255, 0.15);
+      --glass: rgba(255, 255, 255, 0.06);
+      --accent: #c084fc;
+      /* purple 400-500 */
+      --accent-2: #22d3ee;
+      /* cyan */
+      --success: #22c55e;
+      --warn: #f59e0b;
+      --danger: #ef4444;
+    }
+
+    [data-theme="light"] {
+      --bg-1: #f7f5ff;
+      --bg-2: #efeafd;
+      --text: #1b1030;
+      --muted: #3c2a78;
+      --card: rgba(255, 255, 255, 0.8);
+      --cardStroke: rgba(0, 0, 0, 0.08);
+      --glass: rgba(255, 255, 255, 0.85);
+      --accent: #7c3aed;
+      --accent-2: #0891b2;
+      --success: #16a34a;
+      --warn: #d97706;
+      --danger: #dc2626;
+    }
+
+    html,
+    body {
+      background: radial-gradient(1200px 800px at 10% -10%, var(--bg-2), transparent 60%),
+        radial-gradient(1000px 700px at 100% 0%, #230b44, transparent 60%),
+        linear-gradient(180deg, var(--bg-1), #0a0612 60%, var(--bg-1));
+      color: var(--text);
+      overflow-x: hidden;
+    }
+
+    .noise-overlay {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      opacity: .06;
+      mix-blend-mode: soft-light;
+      z-index: 10;
+      background-image: url('data:image/svg+xml;utf8,\
+      <svg xmlns="http://www.w3.org/2000/svg" width="160" height="160" viewBox="0 0 160 160">\
+        <filter id="n">\
+          <feTurbulence type="fractalNoise" baseFrequency="0.95" numOctaves="2" stitchTiles="stitch"/>\
+          <feColorMatrix type="saturate" values="0"/>\
+          <feComponentTransfer><feFuncA type="table" tableValues="0 0.45"/></feComponentTransfer>\
+        </filter>\
+        <rect width="100%" height="100%" filter="url(%23n)"/>\
+      </svg>');
+      background-size: 160px 160px;
+    }
+
+    .glass {
+      background: var(--glass);
+      border: 1px solid var(--cardStroke);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+    }
+
+    .neo {
+      box-shadow: 8px 8px 22px rgba(0, 0, 0, .45), -8px -8px 22px rgba(255, 255, 255, .03);
+      border: 1px solid var(--cardStroke);
+      background: linear-gradient(145deg, rgba(255, 255, 255, 0.06), rgba(0, 0, 0, 0.12));
+    }
+
+    .halo {
+      position: relative;
+      isolation: isolate;
+    }
+
+    .halo::before {
+      content: "";
+      position: absolute;
+      inset: -2px;
+      background: conic-gradient(from 90deg, rgba(192, 132, 252, .45), rgba(34, 211, 238, .4), rgba(192, 132, 252, .45));
+      filter: blur(18px);
+      z-index: -1;
+      border-radius: inherit;
+      opacity: .7;
+    }
+
+    .status-indicator[data-state="secure"] {
+      --state: var(--success);
+      --state-glow: rgba(34, 197, 94, .45);
+    }
+
+    .status-indicator[data-state="maintenance"] {
+      --state: var(--warn);
+      --state-glow: rgba(245, 158, 11, .45);
+    }
+
+    .status-indicator[data-state="incident"] {
+      --state: var(--danger);
+      --state-glow: rgba(239, 68, 68, .45);
+    }
+
+    .status-indicator {
+      background: linear-gradient(180deg, rgba(255, 255, 255, .06), rgba(0, 0, 0, .2));
+      border: 1px solid var(--cardStroke);
+      box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.03), 0 0 28px var(--state-glow);
+    }
+
+    .focus-ring:focus-visible {
+      outline: 2px dashed var(--accent);
+      outline-offset: 3px;
+      border-radius: .5rem;
+    }
+
+    .bg-icon {
+      opacity: .25;
+      filter: drop-shadow(0 0 10px rgba(167, 139, 250, 0.25));
+      transition: transform .8s ease, opacity .8s ease;
+      will-change: transform;
+    }
+
+    .bg-icon:hover {
+      opacity: .45;
+      transform: scale(1.05);
+    }
+
+    .orb {
+      --size: 22rem;
+      width: var(--size);
+      height: var(--size);
+      border-radius: 50%;
+      position: relative;
+      background: radial-gradient(closest-side, rgba(167, 139, 250, .6), rgba(192, 132, 252, .25) 45%, rgba(255, 255, 255, .08) 48%, transparent 50%),
+        radial-gradient(circle at 30% 30%, rgba(255, 255, 255, .55), rgba(255, 255, 255, 0) 40%),
+        radial-gradient(circle at 70% 70%, rgba(34, 211, 238, .35), rgba(255, 255, 255, 0) 35%),
+        linear-gradient(135deg, rgba(167, 139, 250, .25), rgba(34, 211, 238, .25));
+      box-shadow: inset 0 0 40px rgba(167, 139, 250, .35), 0 0 60px rgba(167, 139, 250, .35), 0 0 120px rgba(34, 211, 238, .2);
+      overflow: visible;
+    }
+
+    .orb .ring {
+      position: absolute;
+      inset: -12%;
+      border-radius: 50%;
+      border: 2px solid rgba(192, 132, 252, .2);
+      filter: drop-shadow(0 0 10px rgba(192, 132, 252, .5));
+      animation: spin 12s linear infinite;
+    }
+
+    .orb .ring:nth-child(2) {
+      inset: -20%;
+      border-color: rgba(34, 211, 238, .18);
+      animation-direction: reverse;
+      animation-duration: 18s;
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg)
+      }
+    }
+
+    .shield {
+      position: absolute;
+      inset: 18%;
+      margin: auto;
+      filter: drop-shadow(0 0 20px rgba(192, 132, 252, .75));
+    }
+
+    .shield svg {
+      width: 100%;
+      height: 100%;
+    }
+
+    .section-title {
+      background: linear-gradient(90deg, var(--text), var(--accent));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    /* Accessible custom tooltip (no external lib) */
+    .tip {
+      position: relative;
+    }
+
+    .tip:hover .tip-card,
+    .tip:focus-within .tip-card {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: auto;
+    }
+
+    .tip-card {
+      position: absolute;
+      z-index: 50;
+      pointer-events: none;
+      transform: translateY(6px);
+      transition: all .2s ease;
+      opacity: 0;
+      min-width: 14rem;
+    }
+
+    /* SVG neon strokes */
+    .glow-stroke {
+      stroke: url(#gradGlow);
+      filter: drop-shadow(0 0 6px rgba(167, 139, 250, .6)) drop-shadow(0 0 16px rgba(34, 211, 238, .4));
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    /* Light/dark adaptive images */
+    .adaptive-img {
+      mix-blend-mode: screen;
+      opacity: .8;
+    }
+
+    [data-theme="light"] .adaptive-img {
+      mix-blend-mode: multiply;
+      opacity: .9;
+    }
+
+    /* Scrollbar styling for desktop */
+    @media (hover: hover) and (pointer: fine) {
+      *::-webkit-scrollbar {
+        height: 10px;
+        width: 10px;
+      }
+
+      *::-webkit-scrollbar-thumb {
+        background: linear-gradient(180deg, rgba(167, 139, 250, .9), rgba(34, 211, 238, .9));
+        border-radius: 8px;
+        border: 2px solid transparent;
+        background-clip: padding-box;
+      }
+
+      *::-webkit-scrollbar-track {
+        background: rgba(255, 255, 255, .05)
+      }
+    }
+  </style>
+</head>
+
+<body class="font-sans antialiased selection:bg-purpleNeon-600/30 selection:text-salmar-textDark">
+  <a href="#main" class="sr-only focus:not-sr-only focus-ring fixed top-3 left-3 z-50 px-3 py-2 rounded-lg glass">Skip
+    to content</a>
+
+  <!-- Background decorative SVG icons (constellation-like) -->
+  <svg class="pointer-events-none fixed inset-0 -z-10" viewBox="0 0 1920 1080" aria-hidden="true">
+    <defs>
+      <linearGradient id="gradLock" x1="0" x2="1">
+        <stop offset="0%" stop-color="#a78bfa" stop-opacity="0.7" />
+        <stop offset="100%" stop-color="#22d3ee" stop-opacity="0.7" />
+      </linearGradient>
+      <linearGradient id="gradShield" x1="0" x2="1">
+        <stop offset="0%" stop-color="#22d3ee" stop-opacity="0.6" />
+        <stop offset="100%" stop-color="#a78bfa" stop-opacity="0.6" />
+      </linearGradient>
+      <g id="icon-lock">
+        <path
+          d="M14 10V7a6 6 0 1 0-12 0v3H1a1 1 0 0 0-1 1v8a3 3 0 0 0 3 3h12a3 3 0 0 0 3-3v-8a1 1 0 0 0-1-1h-3ZM4 7a4 4 0 1 1 8 0v3H4V7Zm6 7.268V16a2 2 0 1 1-4 0v-1.732a2 2 0 1 1 4 0Z"
+          fill="url(#gradLock)" />
+      </g>
+      <g id="icon-shield">
+        <path
+          d="M9 1.5c.3 0 .6.08.86.23l6 3.23c.44.24.64.78.47 1.26l-3.2 9.6a3 3 0 0 1-1.88 1.92l-2.63.95a1.7 1.7 0 0 1-1.12 0l-2.63-.95a3 3 0 0 1-1.88-1.92l-3.2-9.6a1.2 1.2 0 0 1 .47-1.26l6-3.23c.26-.15.56-.23.86-.23Z"
+          fill="url(#gradShield)" />
+        <path d="M6.5 9.5l2 2 4-4" fill="none" stroke="white" stroke-width="1.5" stroke-linecap="round" opacity=".9" />
+      </g>
+      <radialGradient id="blob" r="1">
+        <stop offset="0%" stop-color="#c084fc" stop-opacity="0.7" />
+        <stop offset="100%" stop-color="#c084fc" stop-opacity="0" />
+      </radialGradient>
+    </defs>
+    <!-- Randomly placed icons -->
+    <g class="bg-icon">
+      <!-- A set of shields and locks scattered -->
+      <use href="#icon-lock" x="200" y="140" transform="scale(2.2)" opacity=".3">
+        <animate attributeName="opacity" values=".18;.45;.2" dur="10s" repeatCount="indefinite" />
+        <animateTransform attributeName="transform" attributeType="XML" type="translate" values="0 0; 0 -6; 0 0"
+          dur="12s" repeatCount="indefinite" />
+      </use>
+      <use href="#icon-shield" x="1600" y="120" transform="scale(2.6)" opacity=".28">
+        <animateTransform attributeName="transform" attributeType="XML" type="translate" values="0 0; 0 8; 0 0"
+          dur="11s" repeatCount="indefinite" />
+      </use>
+      <use href="#icon-lock" x="1320" y="540" transform="scale(1.8)" opacity=".22">
+        <animate attributeName="opacity" values=".15;.4;.15" dur="9s" repeatCount="indefinite" />
+      </use>
+      <use href="#icon-shield" x="320" y="720" transform="scale(2.0)" opacity=".22">
+        <animate attributeName="opacity" values=".2;.5;.2" dur="12s" repeatCount="indefinite" />
+      </use>
+      <use href="#icon-lock" x="980" y="260" transform="scale(2.4)" opacity=".24">
+        <animateTransform attributeName="transform" type="translate" values="0 0; 0 -5; 0 0" dur="13s"
+          repeatCount="indefinite" />
+      </use>
+      <use href="#icon-shield" x="140" y="980" transform="scale(2.2)" opacity=".24" />
+      <!-- soft blobs -->
+      <circle cx="1450" cy="400" r="180" fill="url(#blob)" opacity=".22">
+        <animate attributeName="r" values="160;190;160" dur="16s" repeatCount="indefinite" />
+      </circle>
+      <circle cx="450" cy="220" r="130" fill="url(#blob)" opacity=".20">
+        <animate attributeName="r" values="110;140;110" dur="18s" repeatCount="indefinite" />
+      </circle>
+    </g>
+  </svg>
+
+  <div class="noise-overlay"></div>
+
+  <!-- Top Status Banner -->
+  <div class="status-indicator glass fixed top-0 left-0 right-0 z-40" data-state="secure" role="status"
+    aria-live="polite">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between py-2">
+        <div class="flex items-center gap-3">
+          <span class="inline-flex h-3 w-3 rounded-full"
+            style="background: var(--state); box-shadow: 0 0 12px var(--state);"></span>
+          <p id="statusText" class="text-sm sm:text-base font-medium" aria-atomic="true">
+            🟢 All Systems Secure
+          </p>
+        </div>
+        <div class="flex items-center gap-2">
+          <button id="statusCycle"
+            class="focus-ring text-xs sm:text-sm px-3 py-1.5 rounded-md glass hover:shadow-glow-soft transition"
+            aria-label="Cycle status mode">
+            Cycle Status
+          </button>
+          
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Header / Hero -->
+  <header class="relative pt-20 sm:pt-24 md:pt-28">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid lg:grid-cols-2 gap-8 lg:gap-16 items-center">
+        <div class="space-y-6">
+          <span class="inline-flex items-center gap-2 px-3 py-1 rounded-full glass text-xs sm:text-sm tracking-wide">
+            <span class="h-1.5 w-1.5 rounded-full"
+              style="background: var(--accent); box-shadow: 0 0 10px var(--accent)"></span>
+            Security at Salmar
+          </span>
+          <h1 class="section-title text-4xl sm:text-5xl md:text-6xl font-black leading-tight">Your data, identity, and
+            trust are safeguarded by next‑generation protection.</h1>
+          <p class="text-lg sm:text-xl text-purpleNeon-200/90 [color:var(--muted)]">
+            Built on encryption, privacy-by-design, and responsible AI. The foundation of Salmar is security.
+          </p>
+          <div class="flex flex-wrap gap-3">
+            <a href="#data-flow"
+              class="focus-ring inline-flex items-center gap-2 px-5 py-3 rounded-xl halo glass hover:shadow-glow transition text-sm font-semibold">
+              Explore Data Flow
+              <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8">
+                <path d="M3 9h12M9 3l6 6-6 6" />
+              </svg>
+            </a>
+            <a href="securitywhite.html" target="_blank"
+              class="focus-ring inline-flex items-center gap-2 px-5 py-3 rounded-xl glass hover:shadow-glow-soft transition text-sm font-semibold">
+              Security Whitepaper
+              <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8">
+                <path d="M4 4h10v10H4zM9 1v4M9 15v4" />
+              </svg>
+            </a>
+          </div>
+          <div class="flex items-center gap-6 pt-2">
+            <div class="tip">
+              <button class="focus-ring inline-flex items-center gap-2 text-sm px-2 py-1 rounded-md glass"
+                aria-describedby="uptime-tip">
+                <span class="h-2 w-2 rounded-full"
+                  style="background: var(--success); box-shadow: 0 0 10px var(--success)"></span>
+                99.99% Uptime
+              </button>
+              <div role="tooltip" id="uptime-tip" class="tip-card left-0 mt-2 glass rounded-lg p-3 text-sm">
+                Redundant, monitored infrastructure with auto-failover.
+              </div>
+            </div>
+            <div class="tip">
+              <button class="focus-ring inline-flex items-center gap-2 text-sm px-2 py-1 rounded-md glass"
+                aria-describedby="latency-tip">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+                  <path d="M3 12h18M12 3v18" stroke="currentColor" stroke-width="2" />
+                </svg>
+                <span>Low Latency</span>
+              </button>
+              <div role="tooltip" id="latency-tip" class="tip-card left-0 mt-2 glass rounded-lg p-3 text-sm">
+                Optimized edge routing and encrypted channels keep interactions snappy.
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Orb + Shield -->
+        <div class="relative flex justify-center items-center min-h-[26rem]">
+          <div class="relative orb animate-pulse-soft">
+            <div class="ring"></div>
+            <div class="ring"></div>
+            <div class="shield animate-float-slow">
+              <svg viewBox="0 0 200 200" aria-hidden="true">
+                <defs>
+                  <linearGradient id="orbGrad" x1="0" x2="1">
+                    <stop offset="0%" stop-color="#a78bfa" />
+                    <stop offset="100%" stop-color="#22d3ee" />
+                  </linearGradient>
+                  <filter id="softGlow" x="-50%" y="-50%" width="200%" height="200%">
+                    <feGaussianBlur in="SourceGraphic" stdDeviation="3" result="blur" />
+                    <feMerge>
+                      <feMergeNode in="blur" />
+                      <feMergeNode in="SourceGraphic" />
+                    </feMerge>
+                  </filter>
+                </defs>
+                <!-- Salmar orb -->
+                <circle cx="100" cy="100" r="46" fill="url(#orbGrad)" opacity=".9" filter="url(#softGlow)">
+                  <animate attributeName="r" values="46;50;46" dur="5s" repeatCount="indefinite" />
+                </circle>
+                <!-- Shield outline -->
+                <path
+                  d="M100 26c2.4 0 4.8.66 6.8 1.93l49 26.4c3.6 1.94 5.4 6.24 4 10.1l-26.1 69.9c-2.1 5.6-6.4 10-11.9 12.1l-18.3 6.7c-2.5.9-5.2.9-7.7 0l-18.3-6.7c-5.5-2.1-9.8-6.5-11.9-12.1L40.1 64.35c-1.4-3.87.3-8.17 3.9-10.1l49-26.4c2-1.27 4.4-1.93 6.8-1.93Z"
+                  fill="none" stroke="url(#orbGrad)" stroke-width="3" />
+                <path d="M75 105l18 18 36-36" fill="none" stroke="#fff" stroke-width="7" stroke-linecap="round"
+                  stroke-linejoin="round" opacity=".95" />
+              </svg>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main id="main" class="relative">
+    <!-- Quick Highlights Cards -->
+    <section class="relative py-14 sm:py-16 md:py-20">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid md:grid-cols-3 gap-6">
+        <div class="neo rounded-2xl p-6 glass">
+          <h3 class="text-xl font-semibold mb-2">End-to-End Encryption</h3>
+          <p class="text-purpleNeon-200/90 [color:var(--muted)]">Every interaction with Salmar is encrypted, from your
+            device to our servers.</p>
+          <div class="mt-5">
+            <svg viewBox="0 0 500 120" class="w-full h-24" aria-hidden="true">
+              <defs>
+                <linearGradient id="gradGlow" x1="0" x2="1">
+                  <stop offset="0%" stop-color="#a78bfa" />
+                  <stop offset="100%" stop-color="#22d3ee" />
+                </linearGradient>
+              </defs>
+              <polyline class="glow-stroke" fill="none" stroke-width="4" stroke-dasharray="12 10"
+                points="10,60 90,25 160,60 240,30 320,80 410,45 490,60">
+                <animate attributeName="stroke-dashoffset" values="0; -120" dur="4s" repeatCount="indefinite" />
+              </polyline>
+            </svg>
+          </div>
+        </div>
+        <div class="neo rounded-2xl p-6 glass">
+          <h3 class="text-xl font-semibold mb-2">Biometric Protection</h3>
+          <p class="[color:var(--muted)]">Fingerprint, Face ID, or Windows Hello. Your biometric identity never leaves
+            your device — only you hold the key.</p>
+          <div class="mt-5 flex items-center gap-4">
+            <span class="inline-flex h-10 w-10 items-center justify-center rounded-xl halo">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                <path d="M12 12a5 5 0 1 0-5-5M7 12c0 6 10 6 10 0" stroke="currentColor" stroke-width="1.8" />
+              </svg>
+            </span>
+            <span class="inline-flex h-10 w-10 items-center justify-center rounded-xl halo">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                <path d="M4 4h4v2H4zM16 4h4v2h-4zM4 18h4v2H4zM16 18h4v2h-4zM6 6h12v12H6z" stroke="currentColor"
+                  stroke-width="1.8" />
+              </svg>
+            </span>
+          </div>
+        </div>
+        <div class="neo rounded-2xl p-6 glass">
+          <h3 class="text-xl font-semibold mb-2">Privacy-First Storage</h3>
+          <p class="[color:var(--muted)]">GDPR, CCPA, and ISO-certified infrastructure. We never sell your data. Ever.
+          </p>
+          <img src="https://picsum.photos/seed/compliance/640/320" alt="Abstract secure datacenter illustration"
+            class="adaptive-img mt-4 w-full h-28 object-cover rounded-xl">
+        </div>
+      </div>
+    </section>
+
+    <!-- Deep Sections -->
+    <section class="relative py-8 sm:py-12 md:py-16">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid lg:grid-cols-2 gap-8 lg:gap-16">
+        <div class="neo rounded-2xl p-8 glass">
+          <h2 class="section-title text-3xl sm:text-4xl font-extrabold mb-4">AI Transparency & Safety</h2>
+          <p class="text-purpleNeon-200/90 [color:var(--muted)] leading-relaxed">
+            We build AI responsibly: powerful, but safe. Guardrails, content filters, and red‑team evaluations are
+            applied throughout training and deployment to prevent misuse. We log safety‑relevant events and continuously
+            improve our defenses.
+          </p>
+          <ul class="mt-5 space-y-3 text-sm">
+            <li class="flex items-start gap-3"><span class="h-2 w-2 rounded-full"
+                style="background: var(--accent)"></span> Alignment checks and output moderation</li>
+            <li class="flex items-start gap-3"><span class="h-2 w-2 rounded-full"
+                style="background: var(--accent)"></span> Abuse detection and rate limiting</li>
+            <li class="flex items-start gap-3"><span class="h-2 w-2 rounded-full"
+                style="background: var(--accent)"></span> Transparent update notes for policy changes</li>
+          </ul>
+        </div>
+        <div class="neo rounded-2xl p-8 glass">
+          <h2 class="section-title text-3xl sm:text-4xl font-extrabold mb-4">Threat Detection & Monitoring</h2>
+          <p class="[color:var(--muted)] leading-relaxed">We continuously monitor for intrusions with anomaly detection,
+            automated alerts, and proactive defenses.</p>
+          <div class="mt-6 grid sm:grid-cols-3 gap-4">
+            <div class="rounded-xl p-4 glass text-sm">
+              <p class="font-semibold">Anomaly Detection</p>
+              <p class="opacity-80 mt-1">Model‑driven behavioral baselines</p>
+            </div>
+            <div class="rounded-xl p-4 glass text-sm">
+              <p class="font-semibold">SIEM + Alerts</p>
+              <p class="opacity-80 mt-1">24/7 monitoring & response</p>
+            </div>
+            <div class="rounded-xl p-4 glass text-sm">
+              <p class="font-semibold">Zero Trust</p>
+              <p class="opacity-80 mt-1">Least privilege everywhere</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- User controls & Data -->
+    <section class="relative py-8 sm:py-12 md:py-16">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid lg:grid-cols-2 gap-8 lg:gap-16">
+        <div class="neo rounded-2xl p-8 glass">
+          <h2 class="section-title text-3xl sm:text-4xl font-extrabold mb-4">User Controls</h2>
+          <p class="[color:var(--muted)]">You have control over your account and data.</p>
+          <div class="mt-6 space-y-4">
+            <div class="flex items-center justify-between p-4 rounded-xl glass">
+              <div>
+                <p class="font-semibold">Data Export</p>
+                <p class="text-sm opacity-80">Download a machine‑readable copy of your data anytime.</p>
+              </div>
+              <button class="focus-ring px-4 py-2 rounded-lg halo glass hover:shadow-glow-soft text-sm"
+                id="exportDataBtn">Export</button>
+            </div>
+            <div class="flex items-center justify-between p-4 rounded-xl glass">
+              <div>
+                <p class="font-semibold">Cookie Consent</p>
+                <p class="text-sm opacity-80">Opt‑in to analytics — strictly optional.</p>
+              </div>
+              <label class="inline-flex items-center cursor-pointer">
+                <input id="cookieToggle" type="checkbox" class="peer sr-only" aria-label="Toggle analytics cookies">
+                <span
+                  class="w-12 h-6 rounded-full glass relative transition after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:w-5 after:h-5 after:bg-white after:rounded-full after:transition peer-checked:after:translate-x-6"
+                  style="--tw-shadow:0 0 10px rgba(167,139,250,.6); box-shadow: var(--tw-shadow);"></span>
+              </label>
+            </div>
+            <div class="flex items-center justify-between p-4 rounded-xl glass">
+              <div>
+                <p class="font-semibold">Delete Account</p>
+                <p class="text-sm opacity-80">You can permanently delete your account at any time.</p>
+              </div>
+              <button
+                class="focus-ring px-4 py-2 rounded-lg glass hover:shadow-glow-soft text-sm border border-red-400/40 text-red-300"
+                id="deleteAccountBtn">Delete</button>
+            </div>
+          </div>
+        </div>
+        <div class="neo rounded-2xl p-8 glass">
+          <h2 class="section-title text-3xl sm:text-4xl font-extrabold mb-4">Data Storage & Privacy</h2>
+          <ul class="space-y-3">
+            <li class="flex items-start gap-3"><span class="h-2 w-2 rounded-full"
+                style="background: var(--accent)"></span> All sensitive data stored on secure, compliant servers</li>
+            <li class="flex items-start gap-3"><span class="h-2 w-2 rounded-full"
+                style="background: var(--accent)"></span> GDPR • CCPA • SOC2 • ISO 27001 aligned</li>
+            <li class="flex items-start gap-3"><span class="h-2 w-2 rounded-full"
+                style="background: var(--accent)"></span> Transparent retention & deletion policies</li>
+          </ul>
+          <div class="mt-6">
+            <figure class="rounded-xl overflow-hidden glass">
+              <img src="https://picsum.photos/seed/datavault/1200/720" alt="Secure storage layers abstract visual"
+                class="w-full h-48 object-cover adaptive-img">
+            </figure>
+            <blockquote class="mt-4 text-lg font-semibold">We never sell your data. Ever.</blockquote>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Compliance & Certifications -->
+    <section class="relative py-10 sm:py-14 md:py-20">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <h2 class="section-title text-3xl sm:text-4xl font-extrabold mb-8">Compliance & Certifications</h2>
+        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
+          <!-- Badge component -->
+          <button class="focus-ring group relative p-5 rounded-2xl glass halo hover:shadow-glow-soft text-center"
+            data-badge="GDPR">
+            <span class="absolute inset-0 rounded-2xl pointer-events-none opacity-0 group-hover:opacity-100 transition"
+              style="box-shadow: 0 0 25px rgba(167,139,250,.4)"></span>
+            <svg width="44" height="44" viewBox="0 0 24 24" class="mx-auto mb-2">
+              <use href="#icon-shield"></use>
+            </svg>
+            <span class="font-semibold">GDPR</span>
+          </button>
+          <button class="focus-ring group relative p-5 rounded-2xl glass halo hover:shadow-glow-soft text-center"
+            data-badge="CCPA">
+            <svg width="44" height="44" viewBox="0 0 24 24" class="mx-auto mb-2">
+              <use href="#icon-shield"></use>
+            </svg>
+            <span class="font-semibold">CCPA</span>
+          </button>
+          <button class="focus-ring group relative p-5 rounded-2xl glass halo hover:shadow-glow-soft text-center"
+            data-badge="SOC 2">
+            <svg width="44" height="44" viewBox="0 0 24 24" class="mx-auto mb-2">
+              <use href="#icon-lock"></use>
+            </svg>
+            <span class="font-semibold">SOC 2</span>
+          </button>
+          <button class="focus-ring group relative p-5 rounded-2xl glass halo hover:shadow-glow-soft text-center"
+            data-badge="ISO 27001">
+            <svg width="44" height="44" viewBox="0 0 24 24" class="mx-auto mb-2">
+              <use href="#icon-lock"></use>
+            </svg>
+            <span class="font-semibold">ISO 27001</span>
+          </button>
+          <button class="focus-ring group relative p-5 rounded-2xl glass halo hover:shadow-glow-soft text-center"
+            data-badge="PCI DSS">
+            <svg width="44" height="44" viewBox="0 0 24 24" class="mx-auto mb-2">
+              <use href="#icon-lock"></use>
+            </svg>
+            <span class="font-semibold">PCI DSS</span>
+          </button>
+          <button class="focus-ring group relative p-5 rounded-2xl glass halo hover:shadow-glow-soft text-center"
+            data-badge="HIPAA">
+            <svg width="44" height="44" viewBox="0 0 24 24" class="mx-auto mb-2">
+              <use href="#icon-shield"></use>
+            </svg>
+            <span class="font-semibold">HIPAA</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Modal for badges -->
+      <div id="badgeModal" class="hidden fixed inset-0 z-50 items-center justify-center p-4">
+        <div class="absolute inset-0 bg-black/60 backdrop-blur-sm"></div>
+        <div class="relative max-w-lg w-full rounded-2xl glass neo p-6">
+          <div class="flex items-start justify-between gap-4">
+            <div>
+              <h3 id="badgeTitle" class="text-2xl font-extrabold section-title">Certification</h3>
+              <p id="badgeDesc" class="mt-2 text-sm [color:var(--muted)]">Details about this certification.</p>
+            </div>
+            <button id="badgeClose" class="focus-ring p-2 rounded-lg glass hover:shadow-glow-soft"
+              aria-label="Close dialog">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                <path d="M6 6l12 12M6 18L18 6" stroke="currentColor" stroke-width="2" />
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Incident Response -->
+    <section class="relative py-10 sm:py-14 md:py-20">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid lg:grid-cols-3 gap-8">
+        <div class="lg:col-span-2 neo rounded-2xl p-8 glass">
+          <h2 class="section-title text-3xl sm:text-4xl font-extrabold mb-4">Incident Response</h2>
+          <p class="[color:var(--muted)] leading-relaxed">
+            If something goes wrong, our dedicated security response team acts immediately to keep you safe. We follow a
+            rigorous runbook: triage, containment, eradication, recovery, and post‑incident review. You are notified
+            promptly and transparently.
+          </p>
+          <div class="mt-6 grid sm:grid-cols-3 gap-4 text-sm">
+            <div class="rounded-xl p-4 glass">
+              <p class="font-semibold">MTTD</p>
+              <p class="opacity-80">Under 5 mins</p>
+            </div>
+            <div class="rounded-xl p-4 glass">
+              <p class="font-semibold">MTTR</p>
+              <p class="opacity-80">Under 1 hour</p>
+            </div>
+            <div class="rounded-xl p-4 glass">
+              <p class="font-semibold">Playbooks</p>
+              <p class="opacity-80">Reviewed monthly</p>
+            </div>
+          </div>
+        </div>
+        <div class="neo rounded-2xl p-8 glass">
+          <h2 class="section-title text-3xl sm:text-4xl font-extrabold mb-4">Commitment to Security</h2>
+          <p class="[color:var(--muted)]">Security isn’t an afterthought. It’s the foundation of Salmar.</p>
+          <ul class="mt-4 space-y-2 text-sm">
+            <li class="flex items-center gap-2"><span class="h-1.5 w-1.5 rounded-full"
+                style="background: var(--accent)"></span> Regular third‑party penetration testing</li>
+            <li class="flex items-center gap-2"><span class="h-1.5 w-1.5 rounded-full"
+                style="background: var(--accent)"></span> Employee security training</li>
+            <li class="flex items-center gap-2"><span class="h-1.5 w-1.5 rounded-full"
+                style="background: var(--accent)"></span> Security reviews across SDLC</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- Interactive Data Flow Diagram -->
+    <section id="data-flow" class="relative py-12 sm:py-16 md:py-24">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <h2 class="section-title text-3xl sm:text-4xl font-extrabold mb-6">How Your Data Flows — Securely</h2>
+        <p class="mb-8 [color:var(--muted)]">From your device to response, encrypted pathways and strict controls
+          protect every step.</p>
+        <div class="relative glass rounded-3xl p-6 md:p-10 halo overflow-hidden">
+          <svg viewBox="0 0 1200 540" class="w-full h-[22rem] md:h-[28rem]" role="img"
+            aria-label="Secure data flow diagram">
+            <defs>
+              <linearGradient id="pathGrad" x1="0" x2="1">
+                <stop offset="0%" stop-color="#a78bfa" />
+                <stop offset="100%" stop-color="#22d3ee" />
+              </linearGradient>
+              <filter id="glowPath" x="-50%" y="-50%" width="200%" height="200%">
+                <feGaussianBlur stdDeviation="3.5" result="b" />
+                <feMerge>
+                  <feMergeNode in="b" />
+                  <feMergeNode in="SourceGraphic" />
+                </feMerge>
+              </filter>
+            </defs>
+
+            <!-- Nodes -->
+            <g id="nodes" font-size="12" text-anchor="middle" fill="currentColor">
+              <!-- Device -->
+              <g class="node" data-node="Device" transform="translate(120,270)">
+                <rect x="-90" y="-40" rx="16" ry="16" width="180" height="80" class="glass" stroke="url(#pathGrad)"
+                  stroke-width="1.2"></rect>
+                <text y="5" class="font-semibold">Your Device</text>
+              </g>
+
+              <!-- TLS -->
+              <g class="node" data-node="TLS" transform="translate(340,150)">
+                <rect x="-90" y="-40" rx="16" ry="16" width="180" height="80" class="glass" stroke="url(#pathGrad)"
+                  stroke-width="1.2"></rect>
+                <text y="5" class="font-semibold">Transport Encryption</text>
+              </g>
+
+              <!-- Edge -->
+              <g class="node" data-node="Edge" transform="translate(560,270)">
+                <rect x="-90" y="-40" rx="16" ry="16" width="180" height="80" class="glass" stroke="url(#pathGrad)"
+                  stroke-width="1.2"></rect>
+                <text y="5" class="font-semibold">Salmar Edge</text>
+              </g>
+
+              <!-- Core AI -->
+              <g class="node" data-node="Core AI" transform="translate(780,150)">
+                <rect x="-90" y="-40" rx="16" ry="16" width="180" height="80" class="glass" stroke="url(#pathGrad)"
+                  stroke-width="1.2"></rect>
+                <text y="5" class="font-semibold">Core AI</text>
+              </g>
+
+              <!-- Storage -->
+              <g class="node" data-node="Storage" transform="translate(1000,270)">
+                <rect x="-90" y="-40" rx="16" ry="16" width="180" height="80" class="glass" stroke="url(#pathGrad)"
+                  stroke-width="1.2"></rect>
+                <text y="5" class="font-semibold">Secure Storage</text>
+              </g>
+            </g>
+
+            <!-- Paths -->
+            <g id="paths" stroke="url(#pathGrad)" stroke-width="3" fill="none" filter="url(#glowPath)">
+              <path id="p1" class="flow" d="M210,270 C260,270 300,220 340,190" stroke-dasharray="10 12"></path>
+              <path id="p2" class="flow" d="M430,150 C480,150 520,220 560,240" stroke-dasharray="10 12"></path>
+              <path id="p3" class="flow" d="M650,270 C700,270 740,220 780,190" stroke-dasharray="10 12"></path>
+              <path id="p4" class="flow" d="M870,150 C920,150 960,220 1000,240" stroke-dasharray="10 12"></path>
+              <path id="p5" class="flow" d="M1000,300 C950,360 830,360 560,300 C430,270 340,320 210,300"
+                stroke-dasharray="10 12"></path>
+            </g>
+
+            <!-- Moving glow dots -->
+            <circle r="6" fill="#c084fc">
+              <animateMotion dur="7s" repeatCount="indefinite" rotate="auto">
+                <mpath href="#p1" />
+              </animateMotion>
+            </circle>
+            <circle r="6" fill="#22d3ee" opacity=".9">
+              <animateMotion dur="6s" repeatCount="indefinite" rotate="auto">
+                <mpath href="#p2" />
+              </animateMotion>
+            </circle>
+            <circle r="6" fill="#c084fc">
+              <animateMotion dur="7s" repeatCount="indefinite" rotate="auto">
+                <mpath href="#p3" />
+              </animateMotion>
+            </circle>
+            <circle r="6" fill="#22d3ee">
+              <animateMotion dur="6s" repeatCount="indefinite" rotate="auto">
+                <mpath href="#p4" />
+              </animateMotion>
+            </circle>
+            <circle r="6" fill="#a78bfa" opacity=".9">
+              <animateMotion dur="9s" repeatCount="indefinite" rotate="auto">
+                <mpath href="#p5" />
+              </animateMotion>
+            </circle>
+          </svg>
+
+          <!-- Legend -->
+          <div class="mt-6 grid sm:grid-cols-3 gap-4 text-sm">
+            <div class="rounded-xl p-4 glass flex items-center gap-3">
+              <span class="h-2.5 w-2.5 rounded-full" style="background: #c084fc; box-shadow: 0 0 12px #c084fc"></span>
+              <span>Encrypted Request</span>
+            </div>
+            <div class="rounded-xl p-4 glass flex items-center gap-3">
+              <span class="h-2.5 w-2.5 rounded-full" style="background: #22d3ee; box-shadow: 0 0 12px #22d3ee"></span>
+              <span>Secure Processing</span>
+            </div>
+            <div class="rounded-xl p-4 glass flex items-center gap-3">
+              <span class="h-2.5 w-2.5 rounded-full"
+                style="background: linear-gradient(90deg,#a78bfa,#22d3ee); box-shadow: 0 0 12px rgba(167,139,250,.7)"></span>
+              <span>Encrypted Response</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Transparency & Safety small grid -->
+    <section class="relative py-8 sm:py-12 md:py-16">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid md:grid-cols-3 gap-6">
+        <div class="rounded-2xl p-6 glass neo">
+          <h3 class="font-semibold text-lg mb-2">Responsible AI</h3>
+          <p class="text-sm [color:var(--muted)]">Guardrails, evaluations, and human oversight ensure safe interactions.
+          </p>
+        </div>
+        <div class="rounded-2xl p-6 glass neo">
+          <h3 class="font-semibold text-lg mb-2">Access Controls</h3>
+          <p class="text-sm [color:var(--muted)]">SAML/SSO, MFA, and granular role‑based access.</p>
+        </div>
+        <div class="rounded-2xl p-6 glass neo">
+          <h3 class="font-semibold text-lg mb-2">Auditability</h3>
+          <p class="text-sm [color:var(--muted)]">All critical actions are logged for compliance and forensics.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="relative pt-10 pb-16">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid md:grid-cols-2 gap-8 items-center">
+        <div>
+          <h3 class="text-2xl sm:text-3xl font-extrabold section-title">The Future is Purple. The Future is Secure.</h3>
+          <p class="mt-3 [color:var(--muted)]">Salmar protects your data with cutting‑edge security and unwavering
+            transparency.</p>
+        </div>
+        <div class="flex items-center justify-start md:justify-end gap-3">
+          <a href="securitystatus.html"
+            class="focus-ring px-4 py-2 rounded-xl glass hover:shadow-glow-soft text-sm">Security Status</a>
+          <a href="report.html" class="focus-ring px-4 py-2 rounded-xl glass hover:shadow-glow-soft text-sm">Report an
+            Issue</a>
+        </div>
+      </div>
+      <div class="mt-8 text-xs opacity-80">© <span id="year"></span> Salmar. All rights reserved.</div>
+    </div>
+  </footer>
+
+  <!-- Confirm dialog (Export/Delete) -->
+  <div id="confirmModal" class="hidden fixed inset-0 z-50 items-center justify-center p-4">
+    <div class="absolute inset-0 bg-black/60 backdrop-blur-sm"></div>
+    <div class="relative max-w-md w-full rounded-2xl glass neo p-6">
+      <h3 id="confirmTitle" class="text-xl font-bold mb-2">Confirm</h3>
+      <p id="confirmDesc" class="text-sm [color:var(--muted)]">Are you sure?</p>
+      <div class="mt-6 flex items-center justify-end gap-3">
+        <button id="confirmCancel" class="focus-ring px-4 py-2 rounded-lg glass">Cancel</button>
+        <button id="confirmOk" class="focus-ring px-4 py-2 rounded-lg halo glass">OK</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"
+    integrity="sha512-qul84fz8dGQqbe2qTFf1D9qVhsG0z+q9urZk8CgXzJ7m3Zsh0+7w1qJ6Spc7WbU6vEmw1kJ1h0bW7BC2cc3QTA=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"
+    integrity="sha512-aD3KpCqQjQ/az7nKMwOvT+CmY5x2tfz9ci8H4TltLzdjF7a9MwX6V2S5qM9r7/0UsO8iP4r5d+1p8w9l8I8CjQ=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script>
+      (function () {
+        const root = document.documentElement;
+        const body = document.body;
+        const setTheme = (mode) => {
+          if (mode === 'light') root.setAttribute('data-theme', 'light');
+          else root.setAttribute('data-theme', 'dark');
+          try { if ('localStorage' in window) localStorage.setItem('salmar_theme', mode); } catch (e) { /* sandbox safe */ }
+        };
+        // Initialize theme: force dark
+        setTheme('dark');
+
+        // Theme toggle removed; dark mode enforced
+
+        // Status banner behavior
+        const statusMap = [
+          { key: 'secure', text: '🟢 All Systems Secure' },
+          { key: 'maintenance', text: '🟡 Maintenance Mode' },
+          { key: 'incident', text: '🔴 Incident Reported' },
+        ];
+        const statusEl = document.querySelector('.status-indicator');
+        const statusText = document.getElementById('statusText');
+        const statusCycle = document.getElementById('statusCycle');
+        let statusIndex = 0;
+        function setStatus(i) {
+          const s = statusMap[i];
+          statusEl.setAttribute('data-state', s.key);
+          statusText.textContent = s.text;
+        }
+        setStatus(statusIndex);
+        statusCycle.addEventListener('click', () => {
+          statusIndex = (statusIndex + 1) % statusMap.length;
+          setStatus(statusIndex);
+        });
+        // Auto rotate status every 25s (simulated realtime)
+        setInterval(() => {
+          statusIndex = (statusIndex + 1) % statusMap.length;
+          setStatus(statusIndex);
+        }, 25000);
+
+        // Badge modal
+        const badgeModal = document.getElementById('badgeModal');
+        const badgeTitle = document.getElementById('badgeTitle');
+        const badgeDesc = document.getElementById('badgeDesc');
+        const badgeClose = document.getElementById('badgeClose');
+        const badgeDetails = {
+          'GDPR': 'We process data in accordance with GDPR principles: lawfulness, fairness, transparency, purpose limitation, and data minimization.',
+          'CCPA': 'CCPA-aligned controls: access, deletion, and opt-out rights for California residents.',
+          'SOC 2': 'Controls audited for Security, Availability, and Confidentiality trust service criteria.',
+          'ISO 27001': 'Information Security Management System aligned with ISO/IEC 27001 best practices.',
+          'PCI DSS': 'Industry-standard controls for handling payment-related data when applicable.',
+          'HIPAA': 'Administrative, technical, and physical safeguards for PHI where applicable.'
+        };
+        function openBadgeModal(name) {
+          badgeTitle.textContent = name;
+          badgeDesc.textContent = badgeDetails[name] || 'Details about this certification.';
+          badgeModal.classList.remove('hidden');
+          badgeModal.classList.add('flex');
+          badgeClose.focus();
+        }
+        function closeBadgeModal() {
+          badgeModal.classList.add('hidden');
+          badgeModal.classList.remove('flex');
+        }
+        document.querySelectorAll('[data-badge]').forEach(btn => {
+          btn.addEventListener('click', () => openBadgeModal(btn.dataset.badge));
+          btn.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openBadgeModal(btn.dataset.badge); }
+          });
+        });
+        badgeClose.addEventListener('click', closeBadgeModal);
+        badgeModal.addEventListener('click', (e) => { if (e.target === badgeModal) closeBadgeModal(); });
+        window.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeBadgeModal(); });
+
+        // Confirm modal for Export/Delete
+        const confirmModal = document.getElementById('confirmModal');
+        const confirmTitle = document.getElementById('confirmTitle');
+        const confirmDesc = document.getElementById('confirmDesc');
+        const confirmCancel = document.getElementById('confirmCancel');
+        const confirmOk = document.getElementById('confirmOk');
+        let confirmResolve = null;
+        function openConfirm(title, desc) {
+          confirmTitle.textContent = title;
+          confirmDesc.textContent = desc;
+          confirmModal.classList.remove('hidden');
+          confirmModal.classList.add('flex');
+          return new Promise((resolve) => {
+            confirmResolve = resolve;
+            confirmOk.focus();
+          });
+        }
+        function closeConfirm(result) {
+          confirmModal.classList.add('hidden');
+          confirmModal.classList.remove('flex');
+          if (confirmResolve) confirmResolve(result);
+          confirmResolve = null;
+        }
+        confirmCancel.addEventListener('click', () => closeConfirm(false));
+        confirmOk.addEventListener('click', () => closeConfirm(true));
+        confirmModal.addEventListener('click', (e) => { if (e.target === confirmModal) closeConfirm(false); });
+        window.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeConfirm(false); });
+
+        document.getElementById('exportDataBtn').addEventListener('click', async () => {
+          const ok = await openConfirm('Export Data', 'Generate a secure, machine‑readable export of your data?');
+          if (ok) {
+            // Simulate download
+            const blob = new Blob([JSON.stringify({ sample: 'export', date: new Date().toISOString() }, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url; a.download = 'salmar-data-export.json';
+            document.body.appendChild(a); a.click(); a.remove();
+            URL.revokeObjectURL(url);
+          }
+        });
+        document.getElementById('deleteAccountBtn').addEventListener('click', async () => {
+          const ok = await openConfirm('Delete Account', 'This will permanently remove your account and data. Proceed?');
+          if (ok) {
+            alert('Your account deletion request has been submitted securely.');
+          }
+        });
+
+        // Cookie toggle (no storage by default)
+        const cookieToggle = document.getElementById('cookieToggle');
+        cookieToggle.addEventListener('change', () => {
+          // Consent state can be persisted if desired.
+          try { localStorage.setItem('salmar_cookie_consent', cookieToggle.checked ? '1' : '0'); } catch (e) { }
+        });
+        try {
+          const c = localStorage.getItem('salmar_cookie_consent');
+          cookieToggle.checked = c === '1';
+        } catch (e) { }
+
+        // Set year
+        document.getElementById('year').textContent = new Date().getFullYear();
+
+        // GSAP animations on scroll (prefers-reduced-motion respected)
+        const prefersReduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        if (!prefersReduced && typeof gsap !== 'undefined') {
+          gsap.registerPlugin(ScrollTrigger);
+          gsap.utils.toArray('.neo').forEach((el, i) => {
+            gsap.fromTo(el, { y: 30, opacity: 0 }, {
+              y: 0, opacity: 1, duration: .8, ease: 'power2.out',
+              scrollTrigger: { trigger: el, start: 'top 85%' }
+            });
+          });
+          gsap.to('.flow', {
+            strokeDashoffset: -240,
+            repeat: -1,
+            ease: 'none',
+            duration: 6
+          });
+        }
+
+        // Keyboard focus trapping for modals (simple)
+        function trapFocus(container) {
+          const focusable = container.querySelectorAll('a, button, input, textarea, [tabindex]:not([tabindex="-1"])');
+          if (!focusable.length) return () => { };
+          const first = focusable[0], last = focusable[focusable.length - 1];
+          return (e) => {
+            if (e.key !== 'Tab') return;
+            if (e.shiftKey && document.activeElement === first) { last.focus(); e.preventDefault(); }
+            else if (!e.shiftKey && document.activeElement === last) { first.focus(); e.preventDefault(); }
+          };
+        }
+        const badgeTrap = trapFocus(document.getElementById('badgeModal'));
+        const confirmTrap = trapFocus(document.getElementById('confirmModal'));
+        window.addEventListener('keydown', (e) => {
+          if (!badgeModal.classList.contains('hidden')) badgeTrap(e);
+          if (!confirmModal.classList.contains('hidden')) confirmTrap(e);
+        });
+
+      })();
+  </script>
+</body>
+
+</html>

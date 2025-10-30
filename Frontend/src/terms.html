@@ -1,0 +1,876 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <title>Salmar — Terms of Service</title>
+  <meta name="color-scheme" content="dark light">
+  <meta name="description" content="Terms of Service for Salmar — The AI That Does Everything. Read our policies for responsible use, security, IP, content, and more." />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='128' height='128' viewBox='0 0 128 128'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' x2='1' y1='0' y2='1'%3E%3Cstop stop-color='%238a2be2'/%3E%3Cstop stop-color='%23d946ef' offset='1'/%3E%3C/linearGradient%3E%3C/defs%3E%3Ccircle cx='64' cy='64' r='62' fill='url(%23g)'/%3E%3Cpath d='M64 30a16 16 0 00-16 16v10h-6a6 6 0 00-6 6v28a6 6 0 006 6h44a6 6 0 006-6V62a6 6 0 00-6-6h-6V46a16 16 0 00-16-16zm-8 26V46a8 8 0 0116 0v10z' fill='%23fff' opacity='.9'/%3E%3C/svg%3E" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#faf5ff',
+              100: '#f3e8ff',
+              200: '#e9d5ff',
+              300: '#d8b4fe',
+              400: '#c084fc',
+              500: '#a855f7',
+              600: '#9333ea',
+              700: '#7e22ce',
+              800: '#6b21a8',
+              900: '#581c87',
+              950: '#3b0a54'
+            },
+            neon: {
+              purple: '#b26bff'
+            }
+          }
+        }
+      }
+    };
+  </script>
+  <style>
+    :root {
+      --bg: #0c0420;
+      --bg-2: #120631;
+      --card: rgba(255, 255, 255, 0.08);
+      --card-strong: rgba(255, 255, 255, 0.14);
+      --txt: #e9e7ee;
+      --txt-muted: #cfc7dc;
+      --accent: #a855f7;
+      --accent-2: #d946ef;
+      --shadow: 0 10px 30px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.06);
+      --glass-blur: saturate(1.2) blur(10px);
+      --ring: 0 0 0 2px rgba(168, 85, 247, 0.5), 0 0 35px rgba(168, 85, 247, 0.25);
+      --glow: 0 0 0px rgba(168, 85, 247, 0.0), 0 0 35px rgba(168, 85, 247, 0.25);
+      --border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .light {
+      --bg: #f7f6fb;
+      --bg-2: #ffffff;
+      --card: rgba(0, 0, 0, 0.06);
+      --card-strong: rgba(0, 0, 0, 0.08);
+      --txt: #1d1238;
+      --txt-muted: #493a78;
+      --accent: #7e22ce;
+      --accent-2: #a21caf;
+      --shadow: 0 10px 25px rgba(59, 10, 84, 0.12), inset 0 1px 0 rgba(255,255,255,0.6);
+      --glass-blur: saturate(1.15) blur(8px);
+      --ring: 0 0 0 2px rgba(126, 34, 206, 0.35), 0 0 25px rgba(126, 34, 206, 0.2);
+      --glow: 0 0 0px rgba(126, 34, 206, 0.0), 0 0 16px rgba(126, 34, 206, 0.2);
+      --border: 1px solid rgba(0,0,0,0.06);
+    }
+    html, body {
+      height: 100%;
+      background: radial-gradient(1200px 800px at 10% -10%, rgba(168, 85, 247, 0.25), transparent 60%),
+                  radial-gradient(900px 600px at 100% 10%, rgba(217, 70, 239, 0.25), transparent 60%),
+                  linear-gradient(160deg, var(--bg), var(--bg-2));
+      color: var(--txt);
+    }
+    /* Subtle procedural texture */
+    .texture:before {
+      content: "";
+      pointer-events: none;
+      position: fixed;
+      inset: -10vmax;
+      background-image:
+        radial-gradient(1px 1px at 10% 20%, rgba(255,255,255,0.025), transparent 70%),
+        radial-gradient(1px 1px at 80% 30%, rgba(255,255,255,0.018), transparent 70%),
+        radial-gradient(1px 1px at 30% 80%, rgba(255,255,255,0.02), transparent 70%),
+        radial-gradient(1px 1px at 90% 70%, rgba(255,255,255,0.016), transparent 70%);
+      mix-blend-mode: screen;
+      z-index: 0;
+    }
+    .panel {
+      backdrop-filter: var(--glass-blur);
+      -webkit-backdrop-filter: var(--glass-blur);
+      background: var(--card);
+      box-shadow: var(--shadow);
+      border: var(--border);
+    }
+    .panel-strong { background: var(--card-strong); }
+    .neumo {
+      box-shadow:
+        8px 8px 24px rgba(0,0,0,0.35),
+        -8px -8px 24px rgba(255,255,255,0.03),
+        inset 0 1px 0 rgba(255,255,255,0.04);
+      border-radius: 16px;
+    }
+    .glow { box-shadow: var(--glow); }
+    .ring-glow:focus-visible { box-shadow: var(--ring); outline: none; }
+    .title-glow {
+      text-shadow: 0 0 15px rgba(168, 85, 247, 0.45), 0 0 35px rgba(126,34,206,0.3);
+    }
+    .neon {
+      color: var(--accent);
+      text-shadow: 0 0 8px rgba(168, 85, 247, 0.6);
+    }
+    .link {
+      color: var(--accent);
+      position: relative;
+    }
+    .link:after {
+      content:"";
+      position:absolute;left:0;bottom:-2px;height:2px;width:0;
+      background: linear-gradient(90deg, var(--accent), var(--accent-2));
+      transition: width .25s ease;
+      border-radius:2px;
+    }
+    .link:focus-visible:after, .link:hover:after { width: 100%; }
+
+    /* Scroll progress */
+    .scroll-progress {
+      position: fixed;
+      top: 0; left: 0;
+      height: 3px;
+      width: 0%;
+      background: linear-gradient(90deg, #a855f7, #d946ef);
+      z-index: 60;
+      box-shadow: 0 0 18px rgba(168,85,247,0.65);
+      transition: width .1s linear;
+    }
+
+    /* Header orb + orbiting lock */
+    .orb {
+      --orb-size: 220px;
+      width: var(--orb-size);
+      height: var(--orb-size);
+      border-radius: 50%;
+      position: relative;
+      background: radial-gradient(circle at 30% 30%, #fff 0%, #d8b4fe 8%, #a855f7 30%, #3b0a54 75%);
+      box-shadow:
+        0 0 35px rgba(168,85,247,0.35),
+        inset 0 0 60px rgba(255,255,255,0.12),
+        0 40px 80px rgba(59,10,84,0.45);
+      overflow: visible;
+      isolation: isolate;
+    }
+    .orb:after {
+      content:"";
+      position:absolute; inset:-15%;
+      border-radius:50%;
+      background: conic-gradient(from 0deg, rgba(255,255,255,0.12), rgba(168,85,247,0.08), rgba(217,70,239,0.12), rgba(255,255,255,0.06));
+      filter: blur(24px);
+      animation: spin 12s linear infinite;
+      z-index:-1;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .orbit {
+      position: absolute;
+      top: 50%; left: 50%;
+      width: calc(var(--orb-size) + 80px);
+      height: calc(var(--orb-size) + 80px);
+      margin: calc((calc(var(--orb-size) + 80px) / -2)) 0 0 calc((calc(var(--orb-size) + 80px) / -2));
+      border-radius: 50%;
+      border: 1px dashed rgba(168,85,247,0.25);
+      animation: orbitSpin 10s linear infinite;
+    }
+    @keyframes orbitSpin { to { transform: rotate(360deg); } }
+    .lock {
+      position: absolute;
+      top: 0; left: 50%;
+      transform: translate(-50%, -50%);
+      width: 44px; height: 44px;
+      border-radius: 50%;
+      display: grid; place-items: center;
+      background: radial-gradient(circle at 35% 35%, #fff, #d8b4fe 35%, #a855f7 75%);
+      box-shadow: 0 0 20px rgba(168,85,247,0.55);
+    }
+
+    /* Floating contract icon */
+    .contract {
+      width: 70px; height: 90px;
+      border-radius: 10px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.9), rgba(216,180,254,0.35));
+      border: 1px solid rgba(255,255,255,0.4);
+      box-shadow: 0 10px 30px rgba(168,85,247,0.35);
+      position: absolute;
+      right: -20px; top: -20px;
+      transform: rotate(8deg);
+      display: grid; place-content: center;
+      animation: floaty 6s ease-in-out infinite;
+      backdrop-filter: blur(3px);
+    }
+    @keyframes floaty {
+      0%,100% { transform: translateY(0) rotate(8deg); }
+      50% { transform: translateY(-12px) rotate(6deg); }
+    }
+
+    /* Details accordion */
+    details.panel {
+      border-radius: 16px;
+      overflow: clip;
+      transition: box-shadow .35s ease, background .35s ease, border-color .35s ease;
+    }
+    details[open] {
+      box-shadow: 0 0 0 2px rgba(168,85,247,0.35), 0 20px 45px rgba(88,28,135,0.35);
+      background: linear-gradient(180deg, rgba(168,85,247,0.08), var(--card));
+      border-color: rgba(168,85,247,0.35);
+    }
+    details > summary {
+      display:flex; align-items:center; gap:.9rem;
+      cursor: pointer;
+      list-style: none;
+      padding: 1rem 1.25rem;
+      position: relative;
+      user-select: none;
+    }
+    details > summary::-webkit-details-marker { display:none; }
+    .caret {
+      transition: transform .35s ease;
+      width: 22px; height: 22px; border-radius: 50%;
+      display: inline-grid; place-items: center;
+      background: linear-gradient(135deg, rgba(168,85,247,0.15), rgba(217,70,239,0.15));
+      border: 1px solid rgba(168,85,247,0.35);
+      box-shadow: inset 0 0 8px rgba(168,85,247,0.25);
+    }
+    details[open] .caret { transform: rotate(90deg); }
+    .accordion-content {
+      overflow: hidden;
+      transition: grid-template-rows .35s ease, padding .35s ease;
+      display: grid;
+      grid-template-rows: 0fr;
+    }
+    details[open] .accordion-content { grid-template-rows: 1fr; }
+    .accordion-inner { min-height: 0; }
+
+    /* Quick nav */
+    .quick-nav {
+      position: fixed;
+      top: 50%;
+      transform: translateY(-50%);
+      right: 1rem;
+      z-index: 50;
+    }
+    @media (max-width: 1024px) {
+      .quick-nav { top: auto; bottom: .75rem; left: 50%; transform: translateX(-50%); right: auto; }
+    }
+    .nav-item {
+      display: grid; place-items:center;
+      width: 48px; height: 48px; border-radius: 14px;
+      background: var(--card);
+      border: var(--border);
+      box-shadow: var(--shadow);
+      color: var(--txt);
+      text-decoration: none;
+      transition: transform .2s ease, box-shadow .2s ease, background .2s ease, color .2s ease;
+    }
+    .nav-item:hover, .nav-item:focus-visible { transform: translateY(-2px); box-shadow: var(--ring); outline: none; }
+    .nav-item.active {
+      background: linear-gradient(180deg, rgba(168,85,247,0.15), rgba(217,70,239,0.15));
+      color: var(--accent);
+      box-shadow: 0 0 0 2px rgba(168,85,247,0.45), 0 10px 25px rgba(88,28,135,0.35);
+      border-color: rgba(168,85,247,0.45);
+    }
+
+    /* Starfield canvas sits behind everything */
+    #starfield {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      opacity: .45;
+      pointer-events: none;
+    }
+
+    /* Reduce motion */
+    @media (prefers-reduced-motion: reduce) {
+      .contract, .orbit, .orb:after { animation: none !important; }
+    }
+  </style>
+ </head>
+<body class="texture antialiased selection:bg-brand-700/40 selection:text-white relative min-h-screen">
+  <!-- Scroll progress -->
+  <div class="scroll-progress" aria-hidden="true"></div>
+
+  <!-- background canvas -->
+  <canvas id="starfield" aria-hidden="true"></canvas>
+
+  <!-- Skip link -->
+  <a href="#main" class="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-50 focus:px-3 focus:py-2 focus:rounded-md focus:bg-white/90 focus:text-black">Skip to content</a>
+
+  <!-- Header -->
+  <header class="relative z-10">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-14 pb-10">
+      <div class="grid lg:grid-cols-2 items-center gap-10">
+        <div class="relative p-6 panel neumo rounded-2xl">
+          <div class="contract" aria-hidden="true">
+            <svg width="40" height="40" viewBox="0 0 24 24" aria-hidden="true">
+              <defs>
+                <linearGradient id="g1" x1="0" x2="1" y1="0" y2="1">
+                  <stop stop-color="#a855f7"/>
+                  <stop offset="1" stop-color="#d946ef"/>
+                </linearGradient>
+              </defs>
+              <path d="M6 2h9l5 5v13a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2z" fill="url(#g1)" opacity=".35"/>
+              <path d="M15 2v5h5" stroke="url(#g1)" stroke-width="1.5" fill="none"/>
+              <path d="M7 10h10M7 14h10M7 18h6" stroke="#6b21a8" stroke-opacity=".9" stroke-width="1.6" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <div class="flex items-center gap-3">
+            <span class="inline-flex h-10 w-10 items-center justify-center rounded-full bg-brand-600/20 text-brand-300 shadow-inner shadow-brand-900/30 ring-1 ring-brand-500/50">📜</span>
+            <p class="uppercase tracking-widest text-xs text-brand-200/80">Salmar — The AI That Does Everything</p>
+          </div>
+          <h1 class="mt-3 text-4xl sm:text-5xl font-extrabold title-glow">Terms of Service</h1>
+          <p class="mt-4 text-base sm:text-lg text-brand-100/90">
+            By using Salmar, you’re stepping into the future responsibly. Here’s what you agree to when you join us.
+          </p>
+
+          <div class="mt-6 flex items-center gap-4">
+            <button id="themeToggle" class="panel ring-glow rounded-full px-4 py-2 text-sm font-medium flex items-center gap-2" aria-pressed="false" aria-label="Toggle dark mode">
+              <span class="w-2.5 h-2.5 rounded-full bg-brand-500 shadow-[0_0_12px_rgba(168,85,247,0.8)]"></span>
+              <span id="themeLabel">Dark</span> mode
+            </button>
+            <a href="#contact" class="link text-sm">Contact support</a>
+          </div>
+        </div>
+
+        <div class="relative grid place-items-center">
+          <div class="orb" aria-hidden="true">
+            <div class="orbit">
+              <div class="lock">
+                <svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true">
+                  <defs>
+                    <linearGradient id="g2" x1="0" x2="1" y1="0" y2="1">
+                      <stop stop-color="#ffffff"/>
+                      <stop offset="1" stop-color="#e9d5ff"/>
+                    </linearGradient>
+                  </defs>
+                  <path d="M17 8V7a5 5 0 1 0-10 0v1" fill="none" stroke="url(#g2)" stroke-width="1.6" stroke-linecap="round"/>
+                  <rect x="5" y="8" width="14" height="12" rx="3" fill="rgba(255,255,255,0.85)" stroke="#a855f7" stroke-opacity=".6"/>
+                  <circle cx="12" cy="14" r="1.5" fill="#7e22ce"/>
+                  <path d="M12 15.5v2.5" stroke="#6b21a8" stroke-width="1.6" stroke-linecap="round"/>
+                </svg>
+              </div>
+            </div>
+          </div>
+          <div class="absolute -bottom-4 text-center">
+            <p class="text-xs text-brand-200/75">Secure by design • Encrypted by default • User-first</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Quick Nav Sidebar -->
+  <aside class="quick-nav">
+    <nav aria-label="Quick navigation" class="panel neumo rounded-2xl p-2 flex lg:flex-col gap-2">
+      <a href="#use" class="nav-item" data-section="use" title="Use (⚡)" aria-label="Use">
+        ⚡
+      </a>
+      <a href="#accounts" class="nav-item" data-section="accounts" title="Accounts (🔑)" aria-label="Accounts">
+        🔑
+      </a>
+      <a href="#content" class="nav-item" data-section="content" title="Content (📚)" aria-label="Content">
+        📚
+      </a>
+      <a href="#law" class="nav-item" data-section="law" title="Law (⚖️)" aria-label="Law">
+        ⚖️
+      </a>
+    </nav>
+  </aside>
+
+  <!-- Main -->
+  <main id="main" class="relative z-10">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pb-24">
+      <!-- Controls -->
+      <section class="mt-6 mb-6 grid sm:grid-cols-2 gap-4">
+        <label class="panel neumo rounded-xl flex items-center gap-3 px-4 py-3">
+          <svg width="22" height="22" viewBox="0 0 24 24" class="text-brand-300" aria-hidden="true">
+            <path d="M11 19a8 8 0 1 1 0-16 8 8 0 0 1 0 16zm10 2-6-6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" fill="none"/>
+          </svg>
+          <input id="search" type="search" placeholder="Quick find: search these Terms…" class="bg-transparent outline-none w-full placeholder:text-brand-200/60 text-[15px]" aria-label="Search terms">
+        </label>
+        <div class="flex gap-3">
+          <button id="expandAll" class="panel neumo rounded-xl px-4 py-3 text-sm ring-glow">Expand all</button>
+          <button id="collapseAll" class="panel neumo rounded-xl px-4 py-3 text-sm ring-glow">Collapse all</button>
+        </div>
+      </section>
+
+      <section class="grid gap-4">
+        <!-- Introduction & Acceptance -->
+        <details id="intro" class="panel neumo rounded-2xl">
+          <summary class="group">
+            <span class="caret" aria-hidden="true">
+              <svg width="16" height="16" viewBox="0 0 24 24">
+                <path d="M9 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </span>
+            <span class="text-base sm:text-lg font-semibold neon">Introduction & Acceptance</span>
+            <span class="ml-auto text-xs text-brand-200/70">Effective: 2025-01-01</span>
+          </summary>
+          <div class="accordion-content">
+            <div class="accordion-inner p-4 pt-0">
+              <p class="text-brand-100/90 leading-relaxed">
+                By accessing Salmar, you agree to these Terms. If you don’t agree, please do not use our services.
+                These Terms form a binding agreement between you and Salmar, governing your use of our platform, APIs, apps, and services (“Services”).
+              </p>
+              <ul class="mt-3 list-disc pl-6 text-brand-100/90">
+                <li>Our Privacy Policy explains how we handle your data and is incorporated by reference.</li>
+                <li>Additional product-specific terms may apply; in case of conflict, those terms control for that product.</li>
+              </ul>
+            </div>
+          </div>
+        </details>
+
+        <!-- Eligibility & Account Creation -->
+        <details id="accounts" class="panel neumo rounded-2xl">
+          <summary class="group">
+            <span class="caret" aria-hidden="true">
+              <svg width="16" height="16" viewBox="0 0 24 24">
+                <path d="M9 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </span>
+            <span class="text-base sm:text-lg font-semibold neon">Eligibility & Account Creation</span>
+            <span class="ml-auto text-xs text-brand-200/70">Who can use Salmar</span>
+          </summary>
+          <div class="accordion-content">
+            <div class="accordion-inner p-4 pt-0">
+              <p class="text-brand-100/90 leading-relaxed">
+                You must meet the minimum age requirement in your region (typically 13+, or older where required by law). If you are under the age of majority, you must have parental or guardian consent.
+              </p>
+              <ul class="mt-3 list-disc pl-6 text-brand-100/90">
+                <li>Provide accurate, current, and complete information during sign-up.</li>
+                <li>Maintain the security of your login credentials and promptly notify us of any breach.</li>
+                <li>Account sharing is discouraged; you are responsible for all activity under your account.</li>
+              </ul>
+            </div>
+          </div>
+        </details>
+
+        <!-- Use of Salmar -->
+        <details id="use" class="panel neumo rounded-2xl" open>
+          <summary class="group">
+            <span class="caret" aria-hidden="true">
+              <svg width="16" height="16" viewBox="0 0 24 24">
+                <path d="M9 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </span>
+            <span class="text-base sm:text-lg font-semibold neon">Use of Salmar</span>
+            <span class="ml-auto text-xs text-brand-200/70">Permitted & Prohibited</span>
+          </summary>
+          <div class="accordion-content">
+            <div class="accordion-inner p-4 pt-0">
+              <p class="text-brand-100/90 leading-relaxed">Salmar empowers personal, educational, creative, research, and business use cases.</p>
+              <div class="grid md:grid-cols-2 gap-6 mt-3">
+                <div class="panel-strong rounded-xl p-4">
+                  <h3 class="font-semibold text-brand-100">Permitted Uses</h3>
+                  <ul class="mt-2 list-disc pl-5 text-brand-100/90">
+                    <li>Learning, prototyping, and experimentation</li>
+                    <li>Creative writing, design ideation, code assistance</li>
+                    <li>Business workflows, analysis, and productivity</li>
+                  </ul>
+                </div>
+                <div class="panel-strong rounded-xl p-4">
+                  <h3 class="font-semibold text-brand-100">Prohibited Uses</h3>
+                  <ul class="mt-2 list-disc pl-5 text-brand-100/90">
+                    <li>Illegal, harmful, or abusive activities</li>
+                    <li>Infringing, deceptive, or defamatory content</li>
+                    <li>Attempts to bypass safety, rate limits, or model guardrails</li>
+                    <li>Generating or disseminating malware or exploits</li>
+                  </ul>
+                </div>
+              </div>
+              <p class="mt-3 text-brand-100/90">We may restrict or throttle usage to maintain service quality and safety.</p>
+            </div>
+          </div>
+        </details>
+
+        <!-- Biometric & Security Access -->
+        <details id="security" class="panel neumo rounded-2xl">
+          <summary class="group">
+            <span class="caret" aria-hidden="true">
+              <svg width="16" height="16" viewBox="0 0 24 24">
+                <path d="M9 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </span>
+            <span class="text-base sm:text-lg font-semibold neon">Biometric & Security Access</span>
+            <span class="ml-auto text-xs text-brand-200/70">Optional & device-only</span>
+          </summary>
+          <div class="accordion-content">
+            <div class="accordion-inner p-4 pt-0">
+              <p class="text-brand-100/90">
+                Where supported, you may enable biometric login (e.g., Touch ID / Face ID). Biometric data is never sent to Salmar; verification occurs on your device. You’re responsible for securing your devices and sessions.
+              </p>
+              <ul class="mt-3 list-disc pl-6 text-brand-100/90">
+                <li>Use strong passwords and multi-factor authentication where available.</li>
+                <li>Log out of shared or public devices.</li>
+                <li>Notify us immediately if you suspect unauthorized access.</li>
+              </ul>
+            </div>
+          </div>
+        </details>
+
+        <!-- Intellectual Property -->
+        <details id="ip" class="panel neumo rounded-2xl">
+          <summary class="group">
+            <span class="caret" aria-hidden="true">
+              <svg width="16" height="16" viewBox="0 0 24 24">
+                <path d="M9 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </span>
+            <span class="text-base sm:text-lg font-semibold neon">Intellectual Property</span>
+            <span class="ml-auto text-xs text-brand-200/70">Ownership & license</span>
+          </summary>
+          <div class="accordion-content">
+            <div class="accordion-inner p-4 pt-0">
+              <p class="text-brand-100/90">
+                Salmar’s platform, models, software, visuals, and branding are the property of Salmar or its licensors. Users retain rights to their original content.
+              </p>
+              <p class="mt-2 text-brand-100/90">
+                By using our Services, you grant Salmar a limited license to host, process, and transform your content solely to deliver and improve the Services, subject to our Privacy Policy and applicable law.
+              </p>
+            </div>
+          </div>
+        </details>
+
+        <!-- User Content & Responsibilities -->
+        <details id="content" class="panel neumo rounded-2xl">
+          <summary class="group">
+            <span class="caret" aria-hidden="true">
+              <svg width="16" height="16" viewBox="0 0 24 24">
+                <path d="M9 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </span>
+            <span class="text-base sm:text-lg font-semibold neon">User Content & Responsibilities</span>
+            <span class="ml-auto text-xs text-brand-200/70">You own your data</span>
+          </summary>
+          <div class="accordion-content">
+            <div class="accordion-inner p-4 pt-0">
+              <p class="text-brand-100/90">
+                You are responsible for ensuring your content complies with laws, regulations, and these Terms. Do not upload harmful, sensitive without authorization, or infringing content.
+              </p>
+              <ul class="mt-3 list-disc pl-6 text-brand-100/90">
+                <li>Respect privacy and intellectual property rights of others.</li>
+                <li>Do not submit personal data you are not authorized to share.</li>
+                <li>Use caution when relying on AI-generated outputs; verify important information.</li>
+              </ul>
+            </div>
+          </div>
+        </details>
+
+        <!-- Service Availability & Updates -->
+        <details id="availability" class="panel neumo rounded-2xl">
+          <summary class="group">
+            <span class="caret" aria-hidden="true">
+              <svg width="16" height="16" viewBox="0 0 24 24">
+                <path d="M9 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </span>
+            <span class="text-base sm:text-lg font-semibold neon">Service Availability & Updates</span>
+            <span class="ml-auto text-xs text-brand-200/70">Constant improvements</span>
+          </summary>
+          <div class="accordion-content">
+            <div class="accordion-inner p-4 pt-0">
+              <p class="text-brand-100/90">
+                Salmar may be temporarily unavailable for maintenance, updates, or to address issues. We strive to minimize downtime and will continue improving performance, safety, and features.
+              </p>
+            </div>
+          </div>
+        </details>
+
+        <!-- Termination of Accounts -->
+        <details id="termination" class="panel neumo rounded-2xl">
+          <summary class="group">
+            <span class="caret" aria-hidden="true">
+              <svg width="16" height="16" viewBox="0 0 24 24">
+                <path d="M9 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </span>
+            <span class="text-base sm:text-lg font-semibold neon">Termination of Accounts</span>
+            <span class="ml-auto text-xs text-brand-200/70">Safety-first</span>
+          </summary>
+          <div class="accordion-content">
+            <div class="accordion-inner p-4 pt-0">
+              <p class="text-brand-100/90">
+                We may suspend or terminate accounts that violate these Terms or harm the integrity of the Services. You may delete your account at any time via settings; deletion may not remove logs needed for legal compliance.
+              </p>
+            </div>
+          </div>
+        </details>
+
+        <!-- Disclaimers & Limitations -->
+        <details id="disclaimers" class="panel neumo rounded-2xl">
+          <summary class="group">
+            <span class="caret" aria-hidden="true">
+              <svg width="16" height="16" viewBox="0 0 24 24">
+                <path d="M9 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </span>
+            <span class="text-base sm:text-lg font-semibold neon">Disclaimers & Limitations</span>
+            <span class="ml-auto text-xs text-brand-200/70">Know the limits</span>
+          </summary>
+          <div class="accordion-content">
+            <div class="accordion-inner p-4 pt-0">
+              <p class="text-brand-100/90">
+                “Salmar does everything — but not without limits.” The Services are provided “as is” and “as available.” To the fullest extent permitted by law, Salmar disclaims all warranties and is not liable for damages arising from misuse, downtime, or reliance on outputs.
+              </p>
+              <p class="mt-2 text-brand-100/90">
+                Some jurisdictions do not allow certain limitations; in those cases, the limitations apply to the maximum extent permitted.
+              </p>
+            </div>
+          </div>
+        </details>
+
+        <!-- Governing Law & Disputes -->
+        <details id="law" class="panel neumo rounded-2xl">
+          <summary class="group">
+            <span class="caret" aria-hidden="true">
+              <svg width="16" height="16" viewBox="0 0 24 24">
+                <path d="M9 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </span>
+            <span class="text-base sm:text-lg font-semibold neon">Governing Law & Disputes</span>
+            <span class="ml-auto text-xs text-brand-200/70">Venue & process</span>
+          </summary>
+          <div class="accordion-content">
+            <div class="accordion-inner p-4 pt-0">
+              <p class="text-brand-100/90">
+                These Terms are governed by the laws of your primary country of residence unless otherwise required. Disputes will be resolved through good-faith negotiations; if unresolved, binding arbitration or courts in the specified jurisdiction may apply.
+              </p>
+            </div>
+          </div>
+        </details>
+
+        <!-- Policy Updates -->
+        <details id="updates" class="panel neumo rounded-2xl">
+          <summary class="group">
+            <span class="caret" aria-hidden="true">
+              <svg width="16" height="16" viewBox="0 0 24 24">
+                <path d="M9 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </span>
+            <span class="text-base sm:text-lg font-semibold neon">Policy Updates</span>
+            <span class="ml-auto text-xs text-brand-200/70">Evolving responsibly</span>
+          </summary>
+          <div class="accordion-content">
+            <div class="accordion-inner p-4 pt-0">
+              <p class="text-brand-100/90">
+                Salmar evolves. When our Terms evolve, you’ll be notified through in-product notices, email, or our website. Continued use after changes constitutes acceptance of the updated Terms.
+              </p>
+            </div>
+          </div>
+        </details>
+
+        <!-- Contact Information -->
+        <details id="contact" class="panel neumo rounded-2xl">
+          <summary class="group">
+            <span class="caret" aria-hidden="true">
+              <svg width="16" height="16" viewBox="0 0 24 24">
+                <path d="M9 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </span>
+            <span class="text-base sm:text-lg font-semibold neon">Contact Information</span>
+            <span class="ml-auto text-xs text-brand-200/70">We’re here to help</span>
+          </summary>
+          <div class="accordion-content">
+            <div class="accordion-inner p-4 pt-0">
+              <p class="text-brand-100/90">Questions about these Terms?</p>
+              <ul class="mt-3 list-disc pl-6 text-brand-100/90">
+                <li>Email: <a href="mailto:support@salmar.ai" class="link">support@salmar.ai</a></li>
+                <li>Support portal: <a href="#" class="link">salmar.ai/support</a></li>
+              </ul>
+              <p class="mt-3 text-brand-100/90">“We’re here to empower you, responsibly.”</p>
+            </div>
+          </div>
+        </details>
+      </section>
+
+      <!-- Trust Footer -->
+      <section class="mt-10 panel neumo rounded-2xl p-6">
+        <div class="flex flex-wrap items-center gap-3">
+          <span class="px-3 py-1 rounded-full bg-brand-600/20 text-brand-100 shadow-inner border border-brand-500/30">🔒 Secure</span>
+          <span class="px-3 py-1 rounded-full bg-brand-600/20 text-brand-100 shadow-inner border border-brand-500/30">🧬 Encrypted</span>
+          <span class="px-3 py-1 rounded-full bg-brand-600/20 text-brand-100 shadow-inner border border-brand-500/30">🔎 Transparent</span>
+          <span class="px-3 py-1 rounded-full bg-brand-600/20 text-brand-100 shadow-inner border border-brand-500/30">🫶 User‑First</span>
+          <span class="ml-auto text-sm text-brand-200/75">The Future is Purple. The Future is Responsible.</span>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <footer class="relative z-10 border-t border-white/10">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 text-sm flex flex-col sm:flex-row gap-3 justify-between">
+      <p class="text-brand-200/70">© <span id="year"></span> Salmar. All rights reserved.</p>
+      <nav class="flex gap-4">
+        <a href="terms.html" class="link">Terms</a>
+        <a href="privacy.html" class="link">Privacy</a>
+        <a href="security.html" class="link">Security</a>
+      </nav>
+    </div>
+  </footer>
+
+  <!-- GSAP for subtle motion -->
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+  <script>
+    (function () {
+      const html = document.documentElement;
+      const themeToggle = document.getElementById('themeToggle');
+      const themeLabel = document.getElementById('themeLabel');
+
+      // Theme init with safe localStorage access
+      function getStoredTheme() {
+        try {
+          return window.localStorage ? localStorage.getItem('salmar-theme') : null;
+        } catch { return null; }
+      }
+      function storeTheme(val) {
+        try {
+          if (window.localStorage) localStorage.setItem('salmar-theme', val);
+        } catch { /* ignore */ }
+      }
+      function applyTheme(mode) {
+        if (mode === 'light') {
+          html.classList.add('light');
+          html.classList.remove('dark');
+          themeLabel.textContent = 'Light';
+          themeToggle.setAttribute('aria-pressed', 'true');
+        } else {
+          html.classList.remove('light');
+          html.classList.add('dark');
+          themeLabel.textContent = 'Dark';
+          themeToggle.setAttribute('aria-pressed', 'false');
+        }
+      }
+      const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+      applyTheme(getStoredTheme() || (prefersDark ? 'dark' : 'light'));
+
+      themeToggle.addEventListener('click', () => {
+        const isLight = html.classList.contains('light');
+        applyTheme(isLight ? 'dark' : 'light');
+        storeTheme(isLight ? 'dark' : 'light');
+      });
+
+      // Scroll progress
+      const progress = document.querySelector('.scroll-progress');
+      const onScroll = () => {
+        const sTop = document.documentElement.scrollTop || document.body.scrollTop;
+        const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+        const pct = Math.min(100, Math.max(0, (sTop / height) * 100));
+        progress.style.width = pct + '%';
+      };
+      window.addEventListener('scroll', onScroll, { passive: true });
+      onScroll();
+
+      // Intersection-based quick nav activation
+      const navItems = Array.from(document.querySelectorAll('.quick-nav a.nav-item'));
+      const map = new Map(navItems.map(a => [a.dataset.section, a]));
+      const observer = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+          const id = entry.target.id;
+          if (map.has(id) && entry.isIntersecting) {
+            navItems.forEach(n => n.classList.remove('active'));
+            map.get(id).classList.add('active');
+          }
+        });
+      }, { rootMargin: '-40% 0px -55% 0px', threshold: [0, 1] });
+      ['use','accounts','content','law'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) observer.observe(el);
+      });
+
+      // Search filter
+      const search = document.getElementById('search');
+      const detailBlocks = Array.from(document.querySelectorAll('details.panel'));
+      const normalize = s => s.toLowerCase().trim();
+      function applySearch(query) {
+        const q = normalize(query);
+        detailBlocks.forEach(d => {
+          const text = normalize(d.textContent || '');
+          const match = text.includes(q);
+          d.style.display = match ? '' : 'none';
+          // Auto-open matches if there's a query
+          if (q && match) d.setAttribute('open', 'open');
+        });
+      }
+      search.addEventListener('input', (e) => applySearch(e.target.value));
+
+      // Expand / Collapse all
+      document.getElementById('expandAll').addEventListener('click', () => {
+        detailBlocks.forEach(d => d.setAttribute('open', 'open'));
+      });
+      document.getElementById('collapseAll').addEventListener('click', () => {
+        detailBlocks.forEach(d => d.removeAttribute('open'));
+      });
+
+      // Smooth tiny motions with GSAP
+      try {
+        const orb = document.querySelector('.orb');
+        if (orb && window.gsap) {
+          gsap.to(orb, { y: -8, duration: 3, yoyo: true, repeat: -1, ease: 'sine.inOut' });
+        }
+        const contract = document.querySelector('.contract');
+        if (contract && window.gsap) {
+          gsap.to(contract, { x: 6, rotation: 10, duration: 4, yoyo: true, repeat: -1, ease: 'sine.inOut' });
+        }
+      } catch { /* ignore */ }
+
+      // Starfield background
+      const canvas = document.getElementById('starfield');
+      const ctx = canvas.getContext('2d');
+      let stars = [];
+      let RAF = null;
+
+      function resize() {
+        const dpr = Math.min(2, window.devicePixelRatio || 1);
+        canvas.width = Math.floor(window.innerWidth * dpr);
+        canvas.height = Math.floor(window.innerHeight * dpr);
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        createStars();
+      }
+      function createStars() {
+        const count = Math.floor((window.innerWidth * window.innerHeight) / 9000);
+        stars = Array.from({ length: count }, () => ({
+          x: Math.random() * window.innerWidth,
+          y: Math.random() * window.innerHeight,
+          r: Math.random() * 1.2 + 0.2,
+          tw: Math.random() * Math.PI * 2,
+          s: Math.random() * 0.4 + 0.1
+        }));
+      }
+      function draw() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        for (const star of stars) {
+          star.tw += star.s * 0.03;
+          const alpha = 0.5 + Math.sin(star.tw) * 0.4;
+          ctx.beginPath();
+          ctx.fillStyle = `rgba(216,180,254,${alpha.toFixed(3)})`;
+          ctx.arc(star.x, star.y, star.r, 0, Math.PI * 2);
+          ctx.fill();
+        }
+        RAF = requestAnimationFrame(draw);
+      }
+      function startStars() {
+        if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+        resize(); draw();
+      }
+      function stopStars() {
+        if (RAF) cancelAnimationFrame(RAF);
+      }
+      window.addEventListener('resize', resize);
+      startStars();
+
+      // Accessible keyboard toggling for details with Enter
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' && e.target instanceof HTMLElement && e.target.tagName.toLowerCase() === 'summary') {
+          e.preventDefault();
+          const parent = e.target.parentElement;
+          if (parent && parent.tagName.toLowerCase() === 'details') {
+            parent.open = !parent.open;
+          }
+        }
+      });
+
+      // Year
+      const y = document.getElementById('year');
+      if (y) y.textContent = new Date().getFullYear();
+
+    })();
+  </script>
+</body>
+</html>

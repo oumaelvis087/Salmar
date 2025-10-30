@@ -1,0 +1,1279 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Salmar — Sign Up</title>
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    // Tailwind config for runtime CDN
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            space: {
+              900: "#0a0612",
+              800: "#120a1f",
+              700: "#1b0f2f",
+              600: "#251140",
+              500: "#3a1b6f",
+              400: "#6a35c8",
+              300: "#9a6cff",
+              200: "#c3a5ff",
+              100: "#e6dbff"
+            },
+            neon: {
+              purple: "#8a2be2",
+              magenta: "#cf28ff",
+              pink: "#ff4dd2"
+            },
+            success: {
+              500: "#10b981",
+              400: "#34d399"
+            },
+            danger: {
+              500: "#ef4444",
+              400: "#f87171"
+            }
+          },
+          boxShadow: {
+            'glass': '0 10px 30px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.08)',
+            'neon-purple': '0 0 20px rgba(138,43,226,0.55), 0 0 60px rgba(138,43,226,0.25)',
+            'soft-inset': 'inset 3px 3px 6px rgba(0,0,0,0.3), inset -3px -3px 6px rgba(255,255,255,0.08)'
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Cloudflare Turnstile (CAPTCHA) -->
+  <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+
+  <!-- Auth wiring -->
+  <script type="module">
+    import { getSession, signUpEmail, isPasskeySupported, markPasskeyEnrolled, signInWithProvider, supabase, exchangeCodeFromUrl, registerPasskey } from './auth.js';
+    import { TURNSTILE_SITE_KEY } from './auth.config.js';
+
+    const form = document.getElementById('signupForm');
+    const nameInput = document.getElementById('username');
+    const emailInput = document.getElementById('email');
+    const passInput = document.getElementById('password');
+    const confirmInput = document.getElementById('confirmPassword');
+    const fingerBtn = document.getElementById('fingerBtn');
+    const faceBtn = document.getElementById('faceBtn');
+    const bioStatus = document.getElementById('bioStatus');
+    const startExploring = document.getElementById('startExploring');
+    const successOverlay = document.getElementById('successOverlay');
+    const googleBtn = document.querySelector('button[aria-label="Continue with Google"]');
+    const githubBtn = document.querySelector('button[aria-label="Continue with GitHub"]');
+    const discordBtn = document.querySelector('button[aria-label="Continue with Discord"]');
+    const redirectTo = 'salmar://auth-callback';
+
+    // Turnstile handling
+    let captchaToken = null;
+    function renderCaptcha() {
+      try {
+        if (!TURNSTILE_SITE_KEY) return;
+        const el = document.getElementById('cf-signup');
+        if (!el) return;
+        window.turnstile?.render(el, {
+          sitekey: TURNSTILE_SITE_KEY,
+          callback: (token) => { captchaToken = token; },
+          'error-callback': () => { captchaToken = null; },
+          'expired-callback': () => { captchaToken = null; },
+          size: 'invisible'
+        });
+      } catch {}
+    }
+    window.addEventListener('load', renderCaptcha);
+
+    // Redirect if already authenticated
+    (async () => {
+      const session = await getSession();
+      if (session) window.location.replace('AI.html');
+    })();
+
+    // Enforce dark theme (Future Mode removed)
+    document.body.classList.add('theme-dark');
+
+    // Biometric availability
+    const supported = await isPasskeySupported();
+    if (!supported) {
+      [fingerBtn, faceBtn].forEach(b => { b.setAttribute('disabled', 'true'); b.style.opacity = '0.5'; b.style.cursor = 'not-allowed'; });
+      bioStatus.textContent = 'Biometric login is not supported on this device.';
+    } else {
+      fingerBtn.addEventListener('click', async () => {
+        try {
+          bioStatus.textContent = 'Preparing biometric registration...';
+          const { data: { user } } = await supabase.auth.getUser();
+          if (!user) { bioStatus.textContent = 'Please complete sign up first.'; return; }
+          await registerPasskey();
+          await markPasskeyEnrolled(true);
+          bioStatus.textContent = 'Biometric registered. You can use it next time to log in.';
+        } catch (e) {
+          bioStatus.textContent = (e?.message) ? String(e.message) : 'Biometric registration failed.';
+        }
+      });
+      faceBtn.addEventListener('click', async () => {
+        try {
+          bioStatus.textContent = 'Preparing biometric registration...';
+          const { data: { user } } = await supabase.auth.getUser();
+          if (!user) { bioStatus.textContent = 'Please complete sign up first.'; return; }
+          await registerPasskey();
+          await markPasskeyEnrolled(true);
+          bioStatus.textContent = 'Biometric registered. You can use it next time to log in.';
+        } catch (e) {
+          bioStatus.textContent = (e?.message) ? String(e.message) : 'Biometric registration failed.';
+        }
+      });
+    }
+
+    // Username uniqueness check (debounced)
+    let usernameTimer = null;
+    nameInput.addEventListener('input', () => {
+      clearTimeout(usernameTimer);
+      nameError.textContent = '';
+      const v = nameInput.value.trim();
+      if (v.length < 3) return;
+      usernameTimer = setTimeout(async () => {
+        const { data, error } = await supabase.from('profiles').select('id').eq('username', v).maybeSingle();
+        if (!error && data) {
+          nameError.textContent = 'Username is already taken.';
+        }
+      }, 350);
+    });
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const username = nameInput.value.trim();
+      const email = emailInput.value.trim();
+      const password = passInput.value;
+      if (!username || !email || !password || password !== confirmInput.value) return;
+      // final unique check before submit
+      const { data: uExists } = await supabase.from('profiles').select('id').eq('username', username).maybeSingle();
+      if (uExists) { nameError.textContent = 'Username is already taken.'; return; }
+      try { window.turnstile?.execute?.(); } catch {}
+      const { data, error } = await signUpEmail({ email, password, username, captchaToken });
+      if (error) {
+        if (error.message && /username/i.test(error.message)) {
+          nameError.textContent = 'Username is already taken.';
+        } else {
+          alert(error.message);
+        }
+        return;
+      }
+      try {
+        const user = (data && data.user) || (await (await import('./auth.js')).getSession()).user;
+        if (user) {
+          await supabase.from('profiles').upsert({ id: user.id, email, username }, { onConflict: 'id' });
+        }
+      } catch {}
+      // Show success overlay then go to AI.html
+      successOverlay.classList.add('active');
+      startExploring.addEventListener('click', () => window.location.replace('AI.html'));
+      setTimeout(() => window.location.replace('AI.html'), 1500);
+    });
+
+    // Social providers (desktop OAuth deep link + CAPTCHA)
+    googleBtn?.addEventListener('click', async () => { try { window.turnstile?.execute?.(); } catch {} await signInWithProvider('google', { redirectTo, captchaToken }); });
+    githubBtn?.addEventListener('click', async () => { try { window.turnstile?.execute?.(); } catch {} await signInWithProvider('github', { redirectTo, captchaToken }); });
+    discordBtn?.addEventListener('click', async () => { try { window.turnstile?.execute?.(); } catch {} await signInWithProvider('discord', { redirectTo, captchaToken }); });
+
+    // Deep link listener to complete OAuth session
+    try {
+      const unlisten = await window.__TAURI__?.event?.listen('deep-link-url', async (e) => {
+        const url = (typeof e?.payload === 'string') ? e.payload : '';
+        if (!url) return;
+        const { data, error } = await exchangeCodeFromUrl(url);
+        if (error) { console.error(error); return; }
+        try {
+          const { data: { user } } = await supabase.auth.getUser();
+          if (user) {
+            const email = user.email || '';
+            await supabase.from('profiles').upsert({ id: user.id, email, username: user.user_metadata?.username }, { onConflict: 'id' });
+          }
+        } catch {}
+        window.location.replace('AI.html');
+      });
+      // Fallback event names
+      await window.__TAURI__?.event?.listen('deep-link://url', async (e) => {
+        const url = (typeof e?.payload === 'string') ? e.payload : '';
+        if (!url) return; await exchangeCodeFromUrl(url); window.location.replace('AI.html');
+      });
+      await window.__TAURI__?.event?.listen('tauri://deep-link', async (e) => {
+        const url = (typeof e?.payload === 'string') ? e.payload : '';
+        if (!url) return; await exchangeCodeFromUrl(url); window.location.replace('AI.html');
+      });
+    } catch {}
+
+    // (Guest sign-in removed per request)
+  </script>
+
+  <style>
+    :root {
+      /* Base colors aligned to Home page */
+      --bg: #0d0618;
+      --bg-2: #0a0312;
+      --text: #efe7ff;
+      --muted: #cbb7ff;
+      /* Keep existing accents for CTA consistency */
+      --card: rgba(255,255,255,0.06);
+      --card-strong: rgba(255,255,255,0.12);
+      --outline: rgba(202, 191, 253, 0.45);
+      --accent: #9A6CFF;
+      --accent-2: #CF28FF;
+      --accent-3: #8A2BE2;
+      --good: #22c55e;
+      --warn: #eab308;
+      --bad: #ef4444;
+      --shadow-neon: 0 0 20px rgba(138,43,226,0.65), 0 0 60px rgba(138,43,226,0.25);
+      --glass-stroke: rgba(157, 126, 255, 0.5);
+      --particle: rgba(223, 173, 255, 0.9);
+    }
+    [data-theme="light"] {
+      --bg: #efe9ff;
+      --bg-2: #e6dbff;
+      --text: #1a132b;
+      --muted: #4a3c73;
+      --card: rgba(255,255,255,0.55);
+      --card-strong: rgba(255,255,255,0.75);
+      --outline: rgba(138, 43, 226, 0.35);
+      --accent: #7b3cf5;
+      --accent-2: #a055ff;
+      --accent-3: #6b21a8;
+      --good: #16a34a;
+      --warn: #b45309;
+      --bad: #dc2626;
+      --shadow-neon: 0 0 14px rgba(138,43,226,0.35), 0 0 30px rgba(138,43,226,0.15);
+      --glass-stroke: rgba(122, 82, 226, 0.3);
+      --particle: rgba(120, 50, 200, 0.85);
+    }
+
+    /* Cosmic background layers */
+    body {
+      background:
+        radial-gradient(1200px 600px at 80% -10%, rgba(170, 120, 255, 0.25), transparent 60%),
+        radial-gradient(800px 800px at -10% 20%, rgba(115, 72, 255, 0.35), transparent 55%),
+        linear-gradient(180deg, var(--bg), var(--bg-2) 50%, var(--bg));
+      color: var(--text);
+      overflow-x: hidden;
+      min-height: 100vh;
+      font-feature-settings: "cv11", "ss01";
+      font-synthesis-weight: none;
+      text-rendering: optimizeLegibility;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    .nebula {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      filter: contrast(110%) saturate(120%);
+      opacity: 0.9;
+    }
+
+    /* Subtle moving gradients for nebula */
+    .nebula::before,
+    .nebula::after {
+      content: "";
+      position: absolute;
+      inset: -15%;
+      background:
+        radial-gradient(45% 35% at 30% 35%, rgba(130, 28, 255, 0.28), transparent 60%),
+        radial-gradient(35% 25% at 70% 25%, rgba(200, 60, 255, 0.15), transparent 60%),
+        radial-gradient(35% 30% at 50% 70%, rgba(150, 60, 255, 0.18), transparent 60%),
+        radial-gradient(25% 25% at 85% 75%, rgba(255, 70, 200, 0.12), transparent 70%);
+      animation: drift 40s linear infinite;
+      filter: blur(30px);
+    }
+    .nebula::after {
+      animation-duration: 65s;
+      animation-direction: reverse;
+      mix-blend-mode: screen;
+      opacity: 0.8;
+    }
+    @keyframes drift {
+      0% { transform: translate3d(0,0,0) scale(1); }
+      50% { transform: translate3d(3%, -2%, 0) scale(1.05); }
+      100% { transform: translate3d(0,0,0) scale(1); }
+    }
+
+    /* Canvas layers */
+    #starfield, #noiseLayer {
+      position: fixed;
+      inset: 0;
+      z-index: 1;
+      pointer-events: none;
+    }
+    #noiseLayer {
+      opacity: 0.08;
+      mix-blend-mode: soft-light;
+    }
+
+    /* Layout helpers */
+    .container-max {
+      max-width: 60rem;
+    }
+
+    /* Glassmorphic Card */
+    .glass-card {
+      background: linear-gradient(180deg, var(--card), var(--card-strong));
+      border-radius: 1.25rem;
+      border: 1px solid var(--glass-stroke);
+      box-shadow: var(--shadow-neon), 0 12px 30px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.08);
+      backdrop-filter: blur(16px) saturate(140%);
+    }
+
+    /* Text colors to ensure clarity */
+    .glass-card h1 {
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+    .glass-card label { color: var(--text); }
+
+    /* Trust line (match login) */
+    .trust {
+      display: flex;
+      align-items: center;
+      gap: .5rem;
+      justify-content: center;
+      color: var(--muted);
+      font-size: .89rem;
+      text-align: center;
+    }
+
+    /* Orb */
+    .orb {
+      width: 96px;
+      height: 96px;
+      border-radius: 9999px;
+      background: radial-gradient(60% 60% at 35% 30%, #fff, rgba(255,255,255,0.75) 30%, rgba(255,255,255,0.1) 60%, transparent 65%),
+                  radial-gradient(120% 120% at 70% 80%, rgba(138,43,226,0.9), rgba(207,40,255,0.85) 40%, rgba(107,33,168,0.7) 66%, rgba(0,0,0,0.1) 75%);
+      position: relative;
+      box-shadow: inset 0 0 24px rgba(255,255,255,0.35), 0 0 32px rgba(138,43,226,0.6), 0 0 80px rgba(207,40,255,0.3);
+      animation: orbPulse 6s ease-in-out infinite;
+      transform-style: preserve-3d;
+    }
+    .orb::after {
+      content: "";
+      position: absolute;
+      inset: -10px;
+      border-radius: inherit;
+      background: radial-gradient(60% 60% at 50% 45%, rgba(255,255,255,0.18), transparent 60%);
+      filter: blur(12px);
+      z-index: -1;
+    }
+    @keyframes orbPulse {
+      0%, 100% { transform: translateZ(0) scale(1); box-shadow: inset 0 0 22px rgba(255,255,255,0.3), 0 0 24px rgba(138,43,226,0.55), 0 0 70px rgba(207,40,255,0.25); }
+      50% { transform: translateZ(0) scale(1.04); box-shadow: inset 0 0 28px rgba(255,255,255,0.4), 0 0 36px rgba(138,43,226,0.75), 0 0 110px rgba(207,40,255,0.4); }
+    }
+    .orb.boost {
+      animation: boostPulse 1.4s ease-out 1, orbPulse 6s ease-in-out infinite 1.5s;
+    }
+    @keyframes boostPulse {
+      0% { transform: scale(1); filter: saturate(1); }
+      30% { transform: scale(1.1); filter: saturate(1.4); }
+      100% { transform: scale(1); filter: saturate(1); }
+    }
+
+    /* Inputs */
+    .input {
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(156, 163, 175, 0.25);
+      box-shadow: inset 2px 2px 6px rgba(0,0,0,0.25), inset -2px -2px 6px rgba(255,255,255,0.06);
+      color: var(--text);
+      transition: box-shadow 220ms ease, border-color 220ms ease, transform 220ms ease, background 220ms ease;
+    }
+    .input::placeholder { color: rgba(220,220,255,0.6); }
+    .input:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 4px rgba(154,108,255,0.2), inset 2px 2px 6px rgba(0,0,0,0.25);
+      transform: translateY(-1px);
+      background: rgba(255,255,255,0.12);
+    }
+    [aria-invalid="true"].input {
+      border-color: var(--bad);
+      box-shadow: 0 0 0 4px rgba(239,68,68,0.2);
+    }
+
+    /* Password energy meter */
+    .meter {
+      height: 10px;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(156,163,175,0.25);
+      border-radius: 9999px;
+      overflow: hidden;
+      position: relative;
+    }
+    .meter-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #ff4d4d, #ff9a76, #cf28ff, #8a2be2);
+      box-shadow: 0 0 16px rgba(138,43,226,0.45), inset 0 0 6px rgba(255,255,255,0.25);
+      border-radius: inherit;
+      transition: width 220ms ease, filter 220ms ease;
+      filter: saturate(1.2) brightness(1.05);
+    }
+    .meter-glow {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background: radial-gradient(120px 18px at var(--mx,50%) 50%, rgba(154,108,255,0.35), transparent 70%);
+      opacity: 0.0;
+      transition: opacity 160ms ease;
+    }
+    .meter:hover .meter-glow { opacity: 1; }
+
+    /* CTA button with ripple */
+    .btn-primary {
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      color: white;
+      border-radius: 9999px;
+      border: 1px solid rgba(255,255,255,0.18);
+      box-shadow: 0 10px 25px rgba(138,43,226,0.45), inset 0 1px 0 rgba(255,255,255,0.2);
+      position: relative;
+      overflow: hidden;
+      transition: transform 180ms ease, box-shadow 220ms ease, filter 220ms ease;
+    }
+    .btn-primary:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 16px 40px rgba(138,43,226,0.55), inset 0 1px 0 rgba(255,255,255,0.2);
+      filter: brightness(1.05) saturate(1.05);
+    }
+    .btn-primary:focus {
+      outline: none;
+      box-shadow: 0 0 0 4px rgba(154,108,255,0.35), 0 12px 30px rgba(138,43,226,0.55);
+    }
+    .ripple {
+      position: absolute;
+      border-radius: 9999px;
+      transform: translate(-50%, -50%);
+      background: radial-gradient(circle, rgba(255,255,255,0.7) 0%, rgba(255,255,255,0.35) 30%, rgba(255,255,255,0.1) 50%, transparent 60%);
+      width: 12px;
+      height: 12px;
+      animation: ripple 600ms ease-out forwards;
+      pointer-events: none;
+      mix-blend-mode: screen;
+    }
+    @keyframes ripple {
+      from { opacity: 0.9; transform: translate(-50%, -50%) scale(1); }
+      to   { opacity: 0;   transform: translate(-50%, -50%) scale(28); }
+    }
+
+    /* Divider */
+    .divider {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items: center;
+      gap: 0.75rem;
+      color: var(--muted);
+    }
+    .divider::before,
+    .divider::after {
+      content: "";
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+    }
+
+    /* Icon chips */
+    .icon-chip {
+      width: 48px;
+      height: 48px;
+      border-radius: 9999px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(180deg, rgba(255,255,255,0.08), rgba(255,255,255,0.14));
+      border: 1px solid rgba(255,255,255,0.18);
+      box-shadow: 0 8px 24px rgba(138,43,226,0.25), inset 0 1px 0 rgba(255,255,255,0.16);
+      color: var(--text);
+      transition: transform 180ms ease, box-shadow 220ms ease, filter 220ms ease, background 200ms ease;
+    }
+    .icon-chip:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 30px rgba(138,43,226,0.35), inset 0 1px 0 rgba(255,255,255,0.18);
+      filter: brightness(1.05);
+    }
+
+    .link {
+      color: var(--accent-2);
+      text-decoration: none;
+    }
+    .link:hover {
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+
+    /* Social icon chip (match login) */
+    .btn-social {
+      display: inline-grid;
+      place-items: center;
+      width: 42px;
+      height: 42px;
+      border-radius: 9999px;
+      border: 1px solid var(--card-strong);
+      background: var(--card);
+      color: var(--text);
+      transition: transform .12s ease, border-color .2s ease, background .2s ease;
+    }
+    .btn-social:hover { transform: translateY(-1px) scale(1.03); border-color: #b38cff; }
+    .btn-social:active { transform: translateY(0) scale(0.98); }
+    .btn-social svg { display: inline-block; }
+
+    /* Toggle */
+    .toggle {
+      --size: 28px;
+      position: relative;
+      width: 60px;
+      height: 32px;
+      border-radius: 9999px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.10), rgba(255,255,255,0.2));
+      border: 1px solid rgba(255,255,255,0.25);
+      box-shadow: inset 2px 2px 5px rgba(0,0,0,0.25), inset -2px -2px 6px rgba(255,255,255,0.08);
+      cursor: pointer;
+      transition: filter 200ms ease, background 200ms ease;
+    }
+    .toggle::after {
+      content: "";
+      position: absolute;
+      top: 2px; left: 2px;
+      width: var(--size); height: var(--size);
+      border-radius: 9999px;
+      background: radial-gradient(66% 66% at 35% 30%, #fff, rgba(255,255,255,0.7) 35%, rgba(255,255,255,0.1) 60%, transparent 65%),
+                  radial-gradient(120% 120% at 70% 80%, rgba(138,43,226,0.9), rgba(207,40,255,0.85) 40%, rgba(107,33,168,0.7) 66%, rgba(0,0,0,0.1) 75%);
+      box-shadow: 0 3px 10px rgba(0,0,0,0.3), 0 0 14px rgba(138,43,226,0.45);
+      transition: transform 240ms ease;
+    }
+    .toggle[data-on="true"]::after {
+      transform: translateX(28px);
+    }
+
+    /* Welcome overlay */
+    .overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 50;
+      display: none;
+      place-items: center;
+      background: radial-gradient(120% 90% at 50% 40%, rgba(138,43,226,0.15), transparent 70%), rgba(4,3,10,0.65);
+      backdrop-filter: blur(10px);
+    }
+    .overlay.active { display: grid; }
+    .overlay-card {
+      background: linear-gradient(180deg, var(--card), var(--card-strong));
+      border: 1px solid var(--glass-stroke);
+      border-radius: 1rem;
+      box-shadow: var(--shadow-neon), 0 12px 40px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.08);
+      padding: 1.5rem;
+      max-width: 28rem;
+      text-align: center;
+      transform: scale(0.96);
+      opacity: 0;
+      animation: popIn 520ms cubic-bezier(.16,1,.3,1) forwards;
+    }
+    @keyframes popIn {
+      from { transform: scale(0.96); opacity: 0; filter: saturate(0.9); }
+      50% { transform: scale(1.03); opacity: 1; filter: saturate(1.05); }
+      to { transform: scale(1); opacity: 1; }
+    }
+
+    /* Accessibility - Skip link */
+    .skip-link {
+      position: absolute;
+      top: -40px;
+      left: 12px;
+      background: #fff;
+      color: #111827;
+      padding: 8px 12px;
+      border-radius: 6px;
+      transition: top 140ms ease;
+      z-index: 100;
+    }
+    .skip-link:focus { top: 12px; }
+
+    /* Reduce motion preference */
+    @media (prefers-reduced-motion: reduce) {
+      .orb, .nebula::before, .nebula::after, .btn-primary, .icon-chip, .toggle::after {
+        animation: none !important;
+        transition: none !important;
+      }
+      #starfield { display: none; }
+    }
+    /* Split layout */
+    #main {
+      width: 50vw;
+      margin-right: 50vw; /* form on left */
+      min-height: 100vh;
+      display: block;
+    }
+    .glass-card { background: transparent; border: none; box-shadow: none; }
+    .glass-card::before { content: none; }
+    .logo-panel {
+      position: fixed;
+      inset: 0 0 0 auto; /* right half */
+      width: 50vw;
+      z-index: 2;
+      pointer-events: none;
+      overflow: hidden;
+      background: #0b0b0b;
+    }
+    .logo-panel::before {
+      content: "";
+      position: absolute; inset: -10% -10% -10% -10%;
+      background:
+        radial-gradient(100% 60% at 50% 50%, rgba(255,255,255,0.06), rgba(0,0,0,0) 60%),
+        linear-gradient(90deg, rgba(0,0,0,0.75), rgba(0,0,0,0.25) 40%, rgba(0,0,0,0));
+      filter: saturate(110%);
+    }
+    .logo-panel::after {
+      content: "";
+      position: absolute; top: -10%; right: -25%; bottom: -10%; width: 55%;
+      background: radial-gradient(closest-side, rgba(255,255,255,0.2), rgba(255,255,255,0.06) 60%, rgba(0,0,0,0) 100%);
+      transform: rotate(-4deg);
+      filter: blur(24px) saturate(110%);
+      opacity: .85;
+    }
+    .logo-panel img { position: absolute; inset: 0; margin: auto; right: 8%; height: min(82vh, 880px); width: auto; opacity: .18; filter: contrast(1.15) saturate(1.05) drop-shadow(0 8px 40px rgba(0,0,0,.5)); mix-blend-mode: normal; }
+    @media (max-width: 1024px) {
+      #main { width: 100vw; margin-right: 0; }
+      .logo-panel { display: none; }
+    }
+    /* Page background and disable old layers */
+    html, body { background: #0b0b0b; }
+    .nebula, #starfield, #noiseLayer { display: none !important; }
+  </style>
+</head>
+<body class="min-h-screen relative theme-dark">
+  <a href="#main" class="skip-link">Skip to content</a>
+
+  <!-- Background Layers -->
+  <div class="nebula" aria-hidden="true"></div>
+  <canvas id="starfield" aria-hidden="true"></canvas>
+  <canvas id="noiseLayer" aria-hidden="true"></canvas>
+
+  <!-- Top Bar: only logo at top-left -->
+  
+
+  <!-- Right half-page logo panel -->
+  <aside class="logo-panel" aria-hidden="true">
+    <img src="./logo.png" alt="Salmar" />
+  </aside>
+
+  <!-- Main (right half) -->
+  <main id="main" class="relative z-10">
+    <section class="mx-auto px-4 sm:px-6 lg:px-8 py-20 sm:py-24 lg:py-28">
+      <div class="mx-auto container-max">
+        <!-- Center Card -->
+        <div class="glass-card p-6 sm:p-8">
+          <div class="flex flex-col items-center text-center gap-2">
+            <div class="orb" id="heroOrb" aria-hidden="true" style="display:none"></div>
+            <h1 class="text-2xl sm:text-3xl font-bold">Begin your journey with Salmar.</h1>
+            <p class="text-sm sm:text-base text-purple-100/80">One account. Infinite intelligence.</p>
+          </div>
+
+          <form id="signupForm" class="mt-6 space-y-4" novalidate>
+            <!-- Name + Email on same row -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+              <div class="space-y-2">
+                <label for="username" class="block text-sm font-medium">Username</label>
+                <div class="relative">
+                  <input id="username" name="username" type="text" autocomplete="username" required placeholder="e.g. nova"
+                         class="input w-full rounded-xl py-3 px-4 pr-10" />
+                  <span class="absolute right-3 top-1/2 transform -translate-y-1/2 opacity-80" aria-hidden="true">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                      <path d="M12 12a5 5 0 1 0-5-5 5 5 0 0 0 5 5Zm0 2c-5 0-9 2.5-9 5.5A1.5 1.5 0 0 0 4.5 21h15A1.5 1.5 0 0 0 21 19.5C21 16.5 17 14 12 14Z" fill="currentColor" />
+                    </svg>
+                  </span>
+                </div>
+                <p id="nameError" class="text-xs text-red-400" role="status" aria-live="polite"></p>
+              </div>
+              <div class="space-y-2">
+                <label for="email" class="block text-sm font-medium">Email Address</label>
+                <div class="relative">
+                  <input id="email" name="email" type="email" autocomplete="email" required placeholder="you@domain.com"
+                         class="input w-full rounded-xl py-3 px-4 pr-10" />
+                  <span class="absolute right-3 top-1/2 transform -translate-y-1/2 opacity-80" aria-hidden="true">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                      <path d="M4 5h16a2 2 0 0 1 2 2v.25L12 13 2 7.25V7a2 2 0 0 1 2-2Zm18 5.25-10 6.25L2 10.25V17a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6.75Z" fill="currentColor"/>
+                    </svg>
+                  </span>
+                </div>
+                <p id="emailError" class="sr-only" role="status" aria-live="polite"></p>
+              </div>
+            </div>
+
+            <!-- Password + Confirm on same row -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+              <div class="space-y-2">
+                <div class="flex items-center justify-between">
+                  <label for="password" class="block text-sm font-medium">Password</label>
+                  <span id="strengthLabel" class="text-xs text-purple-100/80">Strength: —</span>
+                </div>
+                <div class="relative">
+                  <input id="password" name="password" type="password" autocomplete="new-password" required
+                         placeholder="Create a strong password"
+                         class="input w-full rounded-xl py-3 px-4 pr-16" />
+                  <button type="button" id="togglePass" class="absolute right-2 top-1/2 transform -translate-y-1/2 icon-chip w-9 h-9" aria-label="Show password">
+                    <svg id="eyeIcon" width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                      <path d="M12 5C7 5 3.27 8.11 2 12c1.27 3.89 5 7 10 7s8.73-3.11 10-7c-1.27-3.89-5-7-10-7Zm0 11a4 4 0 1 1 4-4 4 4 0 0 1-4 4Z" fill="currentColor"/>
+                    </svg>
+                  </button>
+                </div>
+                <div class="meter mt-2" aria-hidden="false" aria-label="Password strength meter">
+                  <div class="meter-fill" id="meterFill"></div>
+                  <div class="meter-glow" id="meterGlow"></div>
+                </div>
+                <p id="passError" class="sr-only" role="status" aria-live="polite"></p>
+              </div>
+              <div class="space-y-2">
+                <label for="confirmPassword" class="block text-sm font-medium">Confirm Password</label>
+                <input id="confirmPassword" name="confirmPassword" type="password" autocomplete="new-password" required
+                       placeholder="Re-enter your password"
+                       class="input w-full rounded-xl py-3 px-4" />
+                <p id="confirmError" class="sr-only" role="status" aria-live="polite"></p>
+              </div>
+            </div>
+
+            <!-- Biometric Setup -->
+            <div class="mt-1 p-3 rounded-xl border" style="border-color: var(--outline); background: rgba(255,255,255,0.05); box-shadow: inset 0 1px 0 rgba(255,255,255,0.06);">
+              <div class="flex items-center justify-between gap-3 flex-wrap">
+                <div>
+                  <p class="text-sm font-medium">Set up biometric login for faster access.</p>
+                  <p class="text-xs text-purple-100/75">Fingerprint or Face ID (optional)</p>
+                </div>
+                <div class="flex items-center gap-2">
+                  <button type="button" id="fingerBtn" class="icon-chip" aria-describedby="bioStatus" aria-label="Set up fingerprint login">
+                    <!-- Fingerprint Icon -->
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                      <path d="M12 2a8 8 0 0 0-8 8v2a8 8 0 0 0 16 0v-2a8 8 0 0 0-8-8Zm-6 10a6 6 0 0 1 12 0v2a6 6 0 1 1-12 0v-2Zm10 2a4 4 0 1 1-8 0v-2a4 4 0 1 1 8 0v2Z" fill="currentColor"/>
+                    </svg>
+                  </button>
+                  <button type="button" id="faceBtn" class="icon-chip" aria-describedby="bioStatus" aria-label="Set up Face ID login">
+                    <!-- Face ID Icon -->
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                      <path d="M4 5a1 1 0 0 1 1-1h2v2H6v1H4V5ZM18 4h1a1 1 0 0 1 1 1v2h-2V6h-1V4ZM4 18v-2h2v1h1v2H5a1 1 0 0 1-1-1ZM18 19v-2h1v-1h2v2a1 1 0 0 1-1 1h-2ZM9 10h1a2 2 0 0 1 2 2v2h-2v-2H9v-2Zm7 4a2 2 0 0 1-2 2h-1v-2h1v-2h2v2Z" fill="currentColor"/>
+                    </svg>
+                  </button>
+                </div>
+              </div>
+              <p id="bioStatus" class="mt-2 text-xs text-purple-100/75" role="status" aria-live="polite"></p>
+            </div>
+
+            <!-- CTA -->
+            <div class="pt-2">
+              <button type="submit" id="createBtn" class="btn-primary w-full py-3 text-base font-semibold">
+                Create My Salmar Account
+              </button>
+              <div class="mt-3 flex items-center justify-center gap-2 text-sm text-purple-100/85">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                  <path d="M12 2a10 10 0 1 0 0 20" stroke="currentColor" stroke-width="1.5" fill="none"/>
+                  <path d="M12 8v8m-4-4h8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                </svg>
+                <span>Already have an account?</span>
+                <a href="login.html" class="link">Log in here.</a>
+              </div>
+            </div>
+
+            <!-- Divider -->
+            <div class="my-4 divider text-sm">or</div>
+
+            <!-- Social -->
+            <div class="flex items-center justify-center gap-3">
+              <button type="button" class="btn-social focus-ring" aria-label="Continue with Google">
+                <!-- Google -->
+                <svg width="22" height="22" viewBox="0 0 48 48" aria-hidden="true">
+                  <path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3C33.8 31.4 29.3 34 24 34c-7 0-12.8-5.8-12.8-12.8S17 8.5 24 8.5c3.1 0 5.9 1.1 8 3.1l5.6-5.6C34.6 2.7 29.6.7 24 .7 11 .7.7 11 .7 24S11 47.3 24 47.3c12.3 0 23.3-9 23.3-23.3 0-1.8-.2-3.5-.7-5.1z"/>
+                  <path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.6 15.1 18.9 12 24 12c3.1 0 5.9 1.1 8 3.1l5.6-5.6C34.6 5.2 29.6 3.2 24 3.2 15.4 3.2 8 7.9 6.3 14.7z"/>
+                  <path fill="#4CAF50" d="M24 44.8c5.2 0 10-1.8 13.7-4.9l-6.3-5.2c-2 1.4-4.6 2.3-7.4 2.3-5.2 0-9.7-3.2-11.3-7.8l-6.6 5.1C8 39.6 15.3 44.8 24 44.8z"/>
+                  <path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-1.3 3.4-4 6-7.4 7.4l6.3 5.2c-.5.3 9.8-4.1 9.8-16.6 0-1.8-.2-3.5-.7-5.1z"/>
+                </svg>
+              </button>
+              <button type="button" class="btn-social focus-ring" aria-label="Continue with Discord">
+                <!-- Discord (explicit white fill to avoid theme conflicts) -->
+                <svg width="22" height="22" viewBox="0 0 71 55" aria-hidden="true">
+                  <path fill="#ffffff" d="M60.1 4.9A58.5 58.5 0 0046.9 1a41.1 41.1 0 00-2 4.2 56 56 0 00-17.8 0 41.2 41.2 0 00-2-4.2A58.8 58.8 0 0012 4.9C1.7 20.8-.9 36.3.3 51.7a58.9 58.9 0 0018.2 3.3c1.4-1.9 2.7-3.9 3.8-6a37.4 37.4 0 01-6-2.9c.5-.3 1-.6 1.5-.9a40.9 40.9 0 0015.3 3.8 40.9 40.9 0 0015.3-3.8l1.5.9a37.4 37.4 0 01-6 2.9 42.7 42.7 0 003.8 6 58.9 58.9 0 0018.2-3.3c1.4-17.1-2.3-32.7-12.9-46.8zM23.8 37.2c-3 0-5.5-2.8-5.5-6.2 0-3.5 2.4-6.2 5.5-6.2 3 0 5.5 2.8 5.5 6.2 0 3.5-2.4 6.2-5.5 6.2zm23.4 0c-3 0-5.5-2.8-5.5-6.2 0-3.5 2.4-6.2 5.5-6.2 3 0 5.5 2.8 5.5 6.2 0 3.5-2.4 6.2-5.5 6.2z"/>
+                </svg>
+              </button>
+              <button type="button" class="btn-social focus-ring" aria-label="Continue with GitHub">
+                <!-- GitHub -->
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                  <path fill-rule="evenodd" clip-rule="evenodd" d="M12 .5A11.5 11.5 0 0 0 .5 12a11.5 11.5 0 0 0 7.86 10.94c.58.11.79-.25.79-.56v-2.17c-3.2.7-3.87-1.37-3.87-1.37-.53-1.35-1.3-1.71-1.3-1.71-1.07-.73.08-.72.08-.72 1.18.08 1.8 1.22 1.8 1.22 1.05 1.8 2.75 1.28 3.42.98.11-.77.41-1.28.75-1.57-2.55-.29-5.23-1.27-5.23-5.65 0-1.25.45-2.27 1.2-3.07-.12-.29-.52-1.45.11-3.02 0 0 .98-.31 3.2 1.17a11.03 11.03 0 0 1 5.83 0c2.21-1.48 3.19-1.17 3.19-1.17.64 1.57.24 2.73.12 3.02.75.8 1.2 1.82 1.2 3.07 0 4.4-2.68 5.35-5.24 5.64.42.36.8 1.07.8 2.16v3.2c0 .31.21.67.8.56A11.5 11.5 0 0 0 23.5 12 11.5 11.5 0 0 0 12 .5Z"/>
+                </svg>
+              </button>
+            </div>
+
+            <!-- Trust line (match login) -->
+            <div class="trust mt-5">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M12 2l7 4v6c0 5-3.5 9.5-7 10-3.5-.5-7-5-7-10V6l7-4z" stroke="currentColor" stroke-width="1.6" fill="none"/>
+                <path d="M8 12l2.5 2.5L16 9" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              <span class="text-purple-100/80">Your data is encrypted, your identity protected. Welcome to Salmar.</span>
+            </div>
+          </form>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  
+
+  <!-- Turnstile container (invisible) -->
+  <div id="cf-signup" class="sr-only" aria-hidden="true"></div>
+
+  <!-- Success Overlay -->
+  <div class="overlay" id="successOverlay" role="dialog" aria-modal="true" aria-labelledby="welcomeTitle" aria-describedby="welcomeDesc">
+    <div class="overlay-card">
+      <div class="flex justify-center mb-4">
+        <div class="orb" style="width:72px;height:72px;"></div>
+      </div>
+      <h2 id="welcomeTitle" class="text-xl font-bold mb-2">Welcome, Explorer. Salmar is ready.</h2>
+      <p id="welcomeDesc" class="text-sm text-purple-100/85 mb-4">Your account has been created. The universe is at your fingertips.</p>
+      <button id="startExploring" class="btn-primary px-5 py-2.5">Start Exploring</button>
+    </div>
+  </div>
+
+  <script>
+    (function() {
+      const prefersReducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      const html = document.documentElement;
+      const futureModeBtn = document.getElementById('futureModeBtn');
+      const form = document.getElementById('signupForm');
+      const createBtn = document.getElementById('createBtn');
+      const heroOrb = document.getElementById('heroOrb');
+      const salmarOrb = document.getElementById('salmarOrb');
+      const starCanvas = document.getElementById('starfield');
+      const noiseCanvas = document.getElementById('noiseLayer');
+      const successOverlay = document.getElementById('successOverlay');
+      const startExploring = document.getElementById('startExploring');
+
+      const nameInput = document.getElementById('username');
+      const emailInput = document.getElementById('email');
+      const passInput = document.getElementById('password');
+      const confirmInput = document.getElementById('confirmPassword');
+      const meterFill = document.getElementById('meterFill');
+      const meterGlow = document.getElementById('meterGlow');
+      const strengthLabel = document.getElementById('strengthLabel');
+      const nameError = document.getElementById('nameError');
+      const emailError = document.getElementById('emailError');
+      const passError = document.getElementById('passError');
+      const confirmError = document.getElementById('confirmError');
+
+      const togglePassBtn = document.getElementById('togglePass');
+      const eyeIcon = document.getElementById('eyeIcon');
+
+      const bioStatus = document.getElementById('bioStatus');
+      const fingerBtn = document.getElementById('fingerBtn');
+      const faceBtn = document.getElementById('faceBtn');
+
+      // Theme persistence and toggle
+      try {
+        const saved = localStorage.getItem('salmar_theme');
+        if (saved === 'light' || saved === 'dark') html.setAttribute('data-theme', saved);
+      } catch {}
+      futureModeBtn?.addEventListener('click', () => {
+        const cur = html.getAttribute('data-theme') || 'dark';
+        const next = cur === 'dark' ? 'light' : 'dark';
+        html.setAttribute('data-theme', next);
+        try { localStorage.setItem('salmar_theme', next); } catch {}
+      });
+
+      // CTA ripple effect
+      createBtn.addEventListener('pointerenter', (e) => {
+        createBtn.style.setProperty('--x', e.offsetX + 'px');
+        createBtn.style.setProperty('--y', e.offsetY + 'px');
+      });
+      createBtn.addEventListener('pointermove', (e) => {
+        createBtn.style.setProperty('--x', e.offsetX + 'px');
+        createBtn.style.setProperty('--y', e.offsetY + 'px');
+      });
+      createBtn.addEventListener('click', (e) => {
+        spawnRipple(e, createBtn);
+      });
+
+      function spawnRipple(e, target) {
+        const rect = target.getBoundingClientRect();
+        const span = document.createElement('span');
+        span.className = 'ripple';
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        span.style.left = x + 'px';
+        span.style.top = y + 'px';
+        target.appendChild(span);
+        span.addEventListener('animationend', () => span.remove());
+      }
+
+      // Password visibility
+      let passShown = false;
+      togglePassBtn.addEventListener('click', () => {
+        passShown = !passShown;
+        passInput.type = passShown ? 'text' : 'password';
+        togglePassBtn.setAttribute('aria-label', passShown ? 'Hide password' : 'Show password');
+        // Toggle eye icon style by swapping path (simple effect)
+        eyeIcon.style.opacity = passShown ? '0.7' : '1';
+      });
+
+      // Validation + strength
+      function assessStrength(pw) {
+        let score = 0;
+        const patterns = [
+          /.{8,}/,            // length
+          /[a-z]/,            // lowercase
+          /[A-Z]/,            // uppercase
+          /[0-9]/,            // digits
+          /[^A-Za-z0-9]/      // symbols
+        ];
+        patterns.forEach(rx => score += rx.test(pw) ? 1 : 0);
+        if (pw.length >= 12) score++;
+        // Map score (0..6) to percentage
+        const percent = Math.min(100, Math.round((score / 6) * 100));
+        let label = 'Very Weak';
+        if (percent >= 20) label = 'Weak';
+        if (percent >= 40) label = 'Fair';
+        if (percent >= 60) label = 'Good';
+        if (percent >= 80) label = 'Strong';
+        return { percent, label };
+      }
+
+      function updateStrengthUI(e) {
+        const val = passInput.value || '';
+        const { percent, label } = assessStrength(val);
+        meterFill.style.width = percent + '%';
+        strengthLabel.textContent = 'Strength: ' + label;
+        // Meter glow follow
+        const target = e && e.offsetX ? e.offsetX : (percent + 1) + '%';
+        meterGlow.style.setProperty('--mx', typeof target === 'number' ? (target + 'px') : target);
+      }
+
+      passInput.addEventListener('input', (e) => {
+        updateStrengthUI(e);
+        // sparks from input to orb
+        emitSparksFromInput(passInput);
+      });
+      passInput.addEventListener('mousemove', (e) => updateStrengthUI(e));
+
+      // Field typing sparks
+      [nameInput, emailInput, confirmInput].forEach(el => {
+        el.addEventListener('input', () => emitSparksFromInput(el));
+      });
+
+      // Simple validators
+      function setError(el, errEl, message) {
+        if (message) {
+          el.setAttribute('aria-invalid', 'true');
+          errEl.classList.remove('sr-only');
+          errEl.classList.add('text-xs', 'text-red-300', 'mt-1');
+          errEl.textContent = message;
+        } else {
+          el.removeAttribute('aria-invalid');
+          errEl.classList.add('sr-only');
+          errEl.classList.remove('text-xs', 'text-red-300', 'mt-1');
+          errEl.textContent = '';
+        }
+      }
+
+      function validateName() {
+        const v = nameInput.value.trim();
+        if (v.length < 2) return setError(nameInput, nameError, 'Please enter your full name.');
+        setError(nameInput, nameError, '');
+        return true;
+      }
+
+      function validateEmail() {
+        const v = emailInput.value.trim();
+        const ok = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
+        if (!ok) return setError(emailInput, emailError, 'Please enter a valid email address.');
+        setError(emailInput, emailError, '');
+        return true;
+      }
+
+      function validatePassword() {
+        const v = passInput.value;
+        const { percent } = assessStrength(v);
+        if (percent < 40) {
+          setError(passInput, passError, 'Use at least 8 characters with mixed case, numbers, and symbols.');
+          return false;
+        }
+        setError(passInput, passError, '');
+        return true;
+      }
+
+      function validateConfirm() {
+        const v = confirmInput.value;
+        if (v !== passInput.value || v.length === 0) {
+          setError(confirmInput, confirmError, 'Passwords do not match.');
+          return false;
+        }
+        setError(confirmInput, confirmError, '');
+        return true;
+      }
+
+      [nameInput, emailInput, passInput, confirmInput].forEach(el => {
+        el.addEventListener('blur', () => {
+          if (el === nameInput) validateName();
+          if (el === emailInput) validateEmail();
+          if (el === passInput) validatePassword();
+          if (el === confirmInput) validateConfirm();
+        });
+      });
+
+      // Submit handler placeholder (actual signup handled in module script below)
+      form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const ok = [validateName(), validateEmail(), validatePassword(), validateConfirm()].every(Boolean);
+        spawnRipple({ clientX: window.innerWidth/2, clientY: createBtn.getBoundingClientRect().top + 24 }, createBtn);
+        if (!ok) return;
+        // Orb boost and background waves
+        triggerOrbBoost();
+        // Fake async submit, then show success overlay
+        setTimeout(() => {
+          successOverlay.classList.add('active');
+          // Focus the CTA for accessibility
+          setTimeout(() => startExploring.focus(), 50);
+        }, 900);
+      });
+
+      startExploring.addEventListener('click', () => {
+        successOverlay.classList.remove('active');
+      });
+
+      function triggerOrbBoost() {
+        heroOrb.classList.add('boost');
+        setTimeout(() => heroOrb.classList.remove('boost'), 1600);
+        // Background ripple waves from orb to starfield
+        if (!prefersReducedMotion) emitOrbWaves();
+      }
+
+      // Starfield + Sparks Canvas
+      let stars = [];
+      let sparks = [];
+      let waves = [];
+      let parallax = { x: 0, y: 0 };
+      let ctx;
+
+      function resizeCanvas() {
+        starCanvas.width = window.innerWidth;
+        starCanvas.height = window.innerHeight;
+        ctx = starCanvas.getContext('2d', { alpha: true });
+        initStars();
+      }
+
+      function initStars() {
+        const count = Math.min(350, Math.round(window.innerWidth * window.innerHeight / 5000));
+        stars = [];
+        for (let i = 0; i < count; i++) {
+          stars.push({
+            x: Math.random() * starCanvas.width,
+            y: Math.random() * starCanvas.height,
+            z: Math.random() * 1 + 0.2,
+            r: Math.random() * 1.2 + 0.2,
+            tw: Math.random() * 2 * Math.PI
+          });
+        }
+      }
+
+      function drawStars(t) {
+        if (!ctx) return;
+        ctx.clearRect(0, 0, starCanvas.width, starCanvas.height);
+        // Stars
+        for (let s of stars) {
+          const twinkle = (Math.sin(t * 0.002 + s.tw) + 1) * 0.5; // 0..1
+          const px = s.x + parallax.x * (1 - s.z);
+          const py = s.y + parallax.y * (1 - s.z);
+          const r = s.r + twinkle * 0.4;
+          ctx.beginPath();
+          ctx.arc(px, py, r, 0, Math.PI * 2);
+          ctx.fillStyle = `rgba(230, 210, 255, ${0.4 + twinkle * 0.6})`;
+          ctx.fill();
+        }
+        // Waves
+        for (let i = waves.length - 1; i >= 0; i--) {
+          const w = waves[i];
+          w.radius += w.speed;
+          w.alpha -= 0.008;
+          if (w.alpha <= 0) { waves.splice(i, 1); continue; }
+          const grd = ctx.createRadialGradient(w.x, w.y, Math.max(0, w.radius - 10), w.x, w.y, w.radius + 1);
+          grd.addColorStop(0, `rgba(154,108,255,${w.alpha * 0.45})`);
+          grd.addColorStop(0.6, `rgba(207,40,255,${w.alpha * 0.25})`);
+          grd.addColorStop(1, 'rgba(0,0,0,0)');
+          ctx.beginPath();
+          ctx.fillStyle = grd;
+          ctx.arc(w.x, w.y, w.radius + 1, 0, Math.PI * 2);
+          ctx.fill();
+        }
+        // Sparks
+        for (let i = sparks.length - 1; i >= 0; i--) {
+          const p = sparks[i];
+          p.vx *= 0.98; p.vy *= 0.98;
+          p.x += p.vx; p.y += p.vy;
+          p.life -= 1;
+          const a = Math.max(0, p.life / p.maxLife);
+          if (p.life <= 0) { sparks.splice(i, 1); continue; }
+          const grd = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, 8);
+          grd.addColorStop(0, `rgba(255,255,255,${0.85 * a})`);
+          grd.addColorStop(0.3, `rgba(200,160,255,${0.65 * a})`);
+          grd.addColorStop(1, 'rgba(0,0,0,0)');
+          ctx.beginPath();
+          ctx.fillStyle = grd;
+          ctx.arc(p.x, p.y, 8, 0, Math.PI * 2);
+          ctx.fill();
+        }
+      }
+
+      function animate(t = 0) {
+        drawStars(t);
+        requestAnimationFrame(animate);
+      }
+
+      // Parallax from mouse
+      window.addEventListener('pointermove', (e) => {
+        const cx = window.innerWidth / 2;
+        const cy = window.innerHeight / 2;
+        const dx = (e.clientX - cx) / cx;
+        const dy = (e.clientY - cy) / cy;
+        parallax.x = dx * 20;
+        parallax.y = dy * 20;
+      });
+
+      function getOrbCenter() {
+        const rect = heroOrb.getBoundingClientRect();
+        return { x: rect.left + rect.width / 2, y: rect.top + rect.height / 2 };
+      }
+
+      function emitSparksFromInput(inputEl) {
+        if (prefersReducedMotion) return;
+        const rect = inputEl.getBoundingClientRect();
+        const startX = rect.left + rect.width - 28;
+        const startY = rect.top + rect.height / 2;
+        const dest = getOrbCenter();
+        const angle = Math.atan2(dest.y - startY, dest.x - startX);
+        const speed = 6;
+        for (let i = 0; i < 4; i++) {
+          const spread = (Math.random() - 0.5) * 0.6;
+          sparks.push({
+            x: startX + (Math.random() * 12 - 6),
+            y: startY + (Math.random() * 10 - 5),
+            vx: Math.cos(angle + spread) * speed,
+            vy: Math.sin(angle + spread) * speed,
+            life: 40 + Math.random() * 20,
+            maxLife: 60
+          });
+        }
+      }
+
+      function emitOrbWaves() {
+        const c = getOrbCenter();
+        for (let i = 0; i < 3; i++) {
+          waves.push({
+            x: c.x,
+            y: c.y,
+            radius: 10 + i * 6,
+            speed: 2.4 + i * 0.6,
+            alpha: 0.8 - i * 0.2
+          });
+        }
+      }
+
+      // Noise overlay (single draw)
+      function drawNoise() {
+        const ctxN = noiseCanvas.getContext('2d', { alpha: true });
+        noiseCanvas.width = window.innerWidth;
+        noiseCanvas.height = window.innerHeight;
+        const imgData = ctxN.createImageData(noiseCanvas.width, noiseCanvas.height);
+        const data = imgData.data;
+        const density = 0.06; // 6% pixels noisy
+        for (let y = 0; y < noiseCanvas.height; y++) {
+          for (let x = 0; x < noiseCanvas.width; x++) {
+            if (Math.random() < density) {
+              const i = (y * noiseCanvas.width + x) * 4;
+              const v = 180 + Math.random() * 60; // slightly bright pixels
+              data[i] = data[i+1] = data[i+2] = v;
+              data[i+3] = 18 + Math.random() * 18; // very subtle alpha
+            }
+          }
+        }
+        ctxN.putImageData(imgData, 0, 0);
+      }
+
+      // WebAuthn (Biometrics) guarded
+      async function setupPasskey(displayName) {
+        if (!(window.PublicKeyCredential) || !window.isSecureContext) {
+          bioStatus.textContent = 'Biometrics unavailable on this device or context.';
+          return;
+        }
+        try {
+          const enc = new TextEncoder();
+          const challenge = crypto.getRandomValues(new Uint8Array(32));
+          const userId = crypto.getRandomValues(new Uint8Array(16));
+          const publicKey = {
+            challenge,
+            rp: { name: 'Salmar', id: window.location.hostname || 'localhost' },
+            user: {
+              id: userId,
+              name: (emailInput.value || 'user@example.com'),
+              displayName: displayName || (nameInput.value || 'Explorer')
+            },
+            pubKeyCredParams: [
+              { type: 'public-key', alg: -7 },   // ES256
+              { type: 'public-key', alg: -257 }  // RS256
+            ],
+            timeout: 60000,
+            attestation: 'none',
+            authenticatorSelection: {
+              userVerification: 'preferred',
+              residentKey: 'preferred',
+              requireResidentKey: false
+            }
+          };
+          bioStatus.textContent = 'Requesting device biometric...';
+          const cred = await navigator.credentials.create({ publicKey });
+          // Demo: we don't send to server; just confirm success visually.
+          bioStatus.textContent = 'Biometric (passkey) set up for faster access.';
+          // Emit a celebratory wave
+          emitOrbWaves();
+        } catch (err) {
+          // Gracefully handle SecurityError / NotAllowedError, etc.
+          bioStatus.textContent = (err && err.name === 'NotAllowedError')
+            ? 'Biometric setup cancelled.'
+            : 'Biometric setup unavailable in this environment.';
+        }
+      }
+
+      fingerBtn.addEventListener('click', () => setupPasskey('Fingerprint'));
+      faceBtn.addEventListener('click', () => setupPasskey('Face ID'));
+
+      // Initialize
+      window.addEventListener('resize', () => {
+        resizeCanvas();
+        drawNoise();
+      });
+
+      resizeCanvas();
+      drawNoise();
+      updateStrengthUI();
+
+      if (!prefersReducedMotion) {
+        requestAnimationFrame(animate);
+      }
+
+      // Accessibility: focus outlines on keyboard usage
+      function handleFirstTab(e) {
+        if (e.key === 'Tab') {
+          document.body.classList.add('outline-none');
+          window.removeEventListener('keydown', handleFirstTab);
+        }
+      }
+      window.addEventListener('keydown', handleFirstTab);
+
+    })();
+  </script>
+</body>
+</html>

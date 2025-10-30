@@ -1,0 +1,1666 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="neon">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Salmar Help Center</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          dropShadow: {
+            'neon': ['0 0 10px rgba(139, 92, 246, 0.6)', '0 0 24px rgba(255, 0, 229, 0.35)'],
+            'neon-cyan': ['0 0 10px rgba(0, 229, 255, 0.5)', '0 0 24px rgba(139, 92, 246, 0.35)'],
+          },
+          boxShadow: {
+            'soft': '10px 10px 30px rgba(0,0,0,0.25), -10px -10px 30px rgba(255,255,255,0.08)',
+            'glass': '0 10px 30px rgba(0,0,0,0.25)',
+            'focus': '0 0 0 3px rgba(139,92,246,0.55), 0 0 0 6px rgba(0,0,0,0.15)'
+          },
+          backdropBlur: {
+            xs: '2px'
+          },
+          animation: {
+            'pulse-slow': 'pulse 3.5s ease-in-out infinite',
+            'spin-slow': 'spin 12s linear infinite'
+          }
+        }
+      }
+    }
+  </script>
+  <!-- GSAP + ScrollTrigger -->
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+  <!-- Fuse.js for fuzzy search -->
+  <script src="https://cdn.jsdelivr.net/npm/fuse.js@7.0.0"></script>
+  <!-- Lenis smooth scroll -->
+  <script src="https://cdn.jsdelivr.net/npm/@studio-freight/lenis@1.0.35/bundled/lenis.min.js"></script>
+  <style>
+    /* Theme variables: Calm (light) + Neon (dark). Auto adopts prefers-color-scheme at load, then user can toggle. */
+    :root {
+      --bg-0: #0d061a;
+      --bg-1: #140b2b;
+      --surface: rgba(255, 255, 255, 0.06);
+      --surface-strong: rgba(255, 255, 255, 0.12);
+      --text: #f6f2ff;
+      --text-muted: #cbb8ff;
+      --accent: #8b5cf6;
+      --accent-2: #ff00e5;
+      --cyan: #00e5ff;
+      --success: #22c55e;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --ring: rgba(139, 92, 246, 0.55);
+      --glass: rgba(255, 255, 255, 0.07);
+      --card: rgba(255, 255, 255, 0.06);
+      --shadow-ambient: rgba(0, 0, 0, 0.45);
+      --grid: rgba(139, 92, 246, 0.08);
+      --neural: rgba(0, 229, 255, 0.10);
+    }
+
+    @media (prefers-color-scheme: light) {
+      :root {
+        --bg-0: #f7f4ff;
+        --bg-1: #ece6ff;
+        --surface: rgba(255, 255, 255, 0.8);
+        --surface-strong: rgba(255, 255, 255, 0.92);
+        --text: #1f1140;
+        --text-muted: #4b3e7a;
+        --accent: #6e56cf;
+        --accent-2: #b832ff;
+        --cyan: #1ab3c6;
+        --glass: rgba(255, 255, 255, 0.75);
+        --card: rgba(255, 255, 255, 0.88);
+        --shadow-ambient: rgba(11, 2, 31, 0.15);
+        --grid: rgba(110, 86, 207, 0.15);
+        --neural: rgba(26, 179, 198, 0.16);
+      }
+    }
+
+    html[data-theme="calm"] {
+      --bg-0: #f7f4ff;
+      --bg-1: #ece6ff;
+      --surface: rgba(255, 255, 255, 0.8);
+      --surface-strong: rgba(255, 255, 255, 0.92);
+      --text: #1f1140;
+      --text-muted: #4b3e7a;
+      --accent: #6e56cf;
+      --accent-2: #b832ff;
+      --cyan: #1ab3c6;
+      --glass: rgba(255, 255, 255, 0.75);
+      --card: rgba(255, 255, 255, 0.88);
+      --shadow-ambient: rgba(11, 2, 31, 0.15);
+      --grid: rgba(110, 86, 207, 0.15);
+      --neural: rgba(26, 179, 198, 0.16);
+    }
+
+    html[data-theme="neon"] {
+      --bg-0: #0b021f;
+      --bg-1: #140b2b;
+      --surface: rgba(255, 255, 255, 0.06);
+      --surface-strong: rgba(255, 255, 255, 0.12);
+      --text: #f6f2ff;
+      --text-muted: #cbb8ff;
+      --accent: #8b5cf6;
+      --accent-2: #ff00e5;
+      --cyan: #00e5ff;
+      --glass: rgba(255, 255, 255, 0.07);
+      --card: rgba(255, 255, 255, 0.06);
+      --shadow-ambient: rgba(0, 0, 0, 0.45);
+      --grid: rgba(139, 92, 246, 0.08);
+      --neural: rgba(0, 229, 255, 0.10);
+    }
+
+    /* Background: cosmic gradient + grid + neural paths + subtle grain */
+    body {
+      background: radial-gradient(1200px 700px at 15% 10%, var(--bg-1), transparent 60%),
+        radial-gradient(1200px 700px at 85% 0%, rgba(139, 92, 246, 0.18), transparent 60%),
+        linear-gradient(180deg, var(--bg-0), var(--bg-1) 65%, var(--bg-0));
+      color: var(--text);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    .bg-layers:before,
+    .bg-layers:after {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    /* Grid layer */
+    .bg-layers:before {
+      background-image:
+        linear-gradient(to right, var(--grid) 1px, transparent 1px),
+        linear-gradient(to bottom, var(--grid) 1px, transparent 1px);
+      background-size: 48px 48px, 48px 48px;
+      mask-image: radial-gradient(1000px 600px at 50% 5%, black, transparent 70%);
+      opacity: 0.45;
+    }
+
+    /* Neural pathways (soft curved lines) + grain */
+    .bg-layers:after {
+      background:
+        radial-gradient(40% 60% at 20% 30%, rgba(0, 229, 255, 0.10), transparent),
+        radial-gradient(30% 40% at 80% 20%, rgba(255, 0, 229, 0.08), transparent),
+        repeating-conic-gradient(from 0deg, rgba(255, 255, 255, 0.015) 0deg 10deg, transparent 10deg 20deg);
+      mix-blend-mode: screen;
+      opacity: 0.6;
+      filter: saturate(120%);
+    }
+
+    /* Glassmorphism card + neumorphic soft edges */
+    .glass {
+      background: var(--glass);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      box-shadow: 6px 6px 24px var(--shadow-ambient), -6px -6px 18px rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+    }
+
+    .glass-strong {
+      background: var(--surface);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      box-shadow: 10px 10px 35px var(--shadow-ambient);
+    }
+
+    /* Skip link */
+    .skip-link {
+      position: absolute;
+      left: -999px;
+      top: auto;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      z-index: -999;
+    }
+
+    .skip-link:focus {
+      left: 1rem;
+      top: 1rem;
+      width: auto;
+      height: auto;
+      padding: .5rem .75rem;
+      z-index: 50;
+      box-shadow: 0 0 0 3px var(--ring);
+      border-radius: .5rem;
+      background: var(--surface-strong);
+      color: var(--text);
+    }
+
+    /* Glowing question orb */
+    .orb {
+      position: absolute;
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      background:
+        radial-gradient(35% 35% at 35% 35%, rgba(255, 255, 255, 0.85), rgba(255, 255, 255, 0.05) 40%),
+        radial-gradient(80% 80% at 50% 50%, rgba(139, 92, 246, 0.75), rgba(255, 0, 229, 0.6) 60%, rgba(0, 229, 255, 0.55) 100%);
+      box-shadow:
+        0 0 20px rgba(139, 92, 246, 0.6),
+        0 0 45px rgba(255, 0, 229, 0.35),
+        inset 0 0 20px rgba(255, 255, 255, 0.35);
+      filter: saturate(115%);
+      transform: translate3d(0, 0, 0);
+      transition: filter .3s ease, transform .3s ease, box-shadow .3s ease;
+      will-change: transform, filter, box-shadow;
+    }
+
+    .orb.thinking {
+      filter: saturate(140%);
+      box-shadow:
+        0 0 28px rgba(139, 92, 246, 0.8),
+        0 0 72px rgba(255, 0, 229, 0.5),
+        inset 0 0 26px rgba(255, 255, 255, 0.45);
+    }
+
+    .orb::after {
+      content: "?";
+      position: absolute;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      font-weight: 900;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Inter, "Helvetica Neue";
+      color: white;
+      text-shadow: 0 2px 10px rgba(0, 0, 0, 0.35);
+      font-size: 2rem;
+      letter-spacing: .05em;
+    }
+
+    /* Search combobox styles */
+    .search-wrap {
+      position: relative;
+    }
+
+    .search-input {
+      background: var(--surface-strong);
+      border: 1px solid rgba(139, 92, 246, 0.25);
+      color: var(--text);
+      outline: none;
+      transition: box-shadow .25s ease, border-color .25s ease, background .25s ease;
+      box-shadow: 0 2px 14px rgba(0, 0, 0, 0.2), 0 0 0 1px rgba(255, 255, 255, 0.06) inset;
+    }
+
+    .search-input::placeholder {
+      color: var(--text-muted);
+    }
+
+    .search-input:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.25), 0 2px 18px rgba(0, 0, 0, 0.25);
+      background: linear-gradient(0deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0.03)), var(--surface-strong);
+    }
+
+    .listbox {
+      position: absolute;
+      top: calc(100% + .5rem);
+      left: 0;
+      right: 0;
+      z-index: 30;
+      background: var(--surface);
+      border: 1px solid rgba(139, 92, 246, 0.25);
+      border-radius: .9rem;
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.35);
+      overflow: hidden;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      max-height: 18rem;
+      overflow-y: auto;
+    }
+
+    .option {
+      padding: .75rem 1rem;
+      cursor: pointer;
+      display: grid;
+      grid-template-columns: 24px 1fr auto;
+      gap: .75rem;
+      align-items: center;
+      color: var(--text);
+    }
+
+    .option[aria-selected="true"],
+    .option:hover {
+      background: linear-gradient(90deg, rgba(139, 92, 246, 0.18), transparent 60%);
+    }
+
+    .option .badge {
+      padding: .125rem .5rem;
+      border-radius: 999px;
+      font-size: .7rem;
+      color: white;
+      background: linear-gradient(90deg, var(--accent), var(--accent-2));
+      box-shadow: 0 0 8px rgba(139, 92, 246, 0.35);
+      white-space: nowrap;
+    }
+
+    /* Ripple hover for topic cards */
+    .ripple {
+      position: relative;
+      overflow: hidden;
+      isolation: isolate;
+    }
+
+    .ripple::after {
+      content: "";
+      position: absolute;
+      inset: -150% -150%;
+      background: radial-gradient(200px 200px at var(--x, 50%) var(--y, 50%), rgba(139, 92, 246, 0.2), transparent 60%);
+      opacity: 0;
+      transition: opacity .3s ease, transform .3s ease;
+      transform: translateZ(0);
+      pointer-events: none;
+    }
+
+    .ripple:hover::after {
+      opacity: 1;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid rgba(139, 92, 246, 0.18);
+      border-radius: 1.1rem;
+      box-shadow: 10px 10px 24px var(--shadow-ambient), -10px -10px 24px rgba(255, 255, 255, 0.04);
+      transition: transform .25s ease, box-shadow .25s ease, border-color .25s ease;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+    }
+
+    .card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 18px 45px rgba(139, 92, 246, 0.25), 0 0 0 1px rgba(139, 92, 246, 0.35) inset;
+      border-color: rgba(139, 92, 246, 0.35);
+    }
+
+    .icon-wrap {
+      width: 56px;
+      height: 56px;
+      border-radius: 14px;
+      display: grid;
+      place-items: center;
+      background: linear-gradient(135deg, rgba(139, 92, 246, 0.2), rgba(0, 229, 255, 0.18));
+      border: 1px solid rgba(139, 92, 246, 0.25);
+      box-shadow: 0 10px 20px rgba(139, 92, 246, 0.25), inset 0 0 20px rgba(139, 92, 246, 0.1);
+    }
+
+    /* Bulleted glow list */
+    .glow-bullet li {
+      display: grid;
+      grid-template-columns: 20px 1fr;
+      gap: .75rem;
+      align-items: start;
+    }
+
+    .glow-bullet li::before {
+      content: "";
+      margin-top: .5rem;
+      width: 10px;
+      height: 10px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, var(--accent), var(--accent-2));
+      box-shadow: 0 0 12px rgba(139, 92, 246, 0.65);
+    }
+
+    /* Modals / drawers */
+    .overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 50;
+      display: none;
+      background: rgba(10, 6, 20, 0.55);
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+    }
+
+    .overlay.active {
+      display: block;
+    }
+
+    .modal {
+      max-width: 42rem;
+      margin: 8vh auto;
+      border-radius: 1rem;
+      background: var(--surface-strong);
+      border: 1px solid rgba(139, 92, 246, 0.25);
+      box-shadow: 0 22px 70px rgba(0, 0, 0, 0.45);
+      overflow: hidden;
+    }
+
+    /* Chat Drawer */
+    .chat-drawer {
+      position: fixed;
+      top: 0;
+      right: 0;
+      height: 100vh;
+      width: 100%;
+      max-width: 28rem;
+      transform: translateX(100%);
+      transition: transform .35s cubic-bezier(.2, .8, .2, 1);
+      z-index: 60;
+      background: var(--surface-strong);
+      border-left: 1px solid rgba(139, 92, 246, 0.25);
+      box-shadow: -10px 0 40px rgba(0, 0, 0, 0.45);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .chat-drawer.open {
+      transform: translateX(0);
+    }
+
+    .chat-button {
+      position: fixed;
+      bottom: 1.5rem;
+      right: 1.5rem;
+      z-index: 55;
+      width: 64px;
+      height: 64px;
+      border-radius: 999px;
+      display: grid;
+      place-items: center;
+      background: radial-gradient(120% 120% at 30% 30%, rgba(139, 92, 246, 0.85), rgba(255, 0, 229, 0.8));
+      color: #fff;
+      border: 1px solid rgba(139, 92, 246, 0.4);
+      box-shadow: 0 10px 25px rgba(139, 92, 246, 0.35), 0 0 0 6px rgba(139, 92, 246, 0.15);
+      transition: transform .2s ease, box-shadow .2s ease;
+    }
+
+    .chat-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 16px 35px rgba(139, 92, 246, 0.45), 0 0 0 7px rgba(139, 92, 246, 0.2);
+    }
+
+    /* Guide mode spotlight (mask hole) */
+    .guide-spotlight {
+      position: fixed;
+      inset: 0;
+      z-index: 70;
+      pointer-events: none;
+      transition: clip-path .35s ease;
+    }
+
+    .guide-spotlight::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: rgba(8, 4, 18, 0.65);
+      backdrop-filter: blur(2px);
+      -webkit-backdrop-filter: blur(2px);
+      -webkit-mask: radial-gradient(200px 200px at var(--gx, 50%) var(--gy, 50%), transparent 180px, black 200px);
+      mask: radial-gradient(200px 200px at var(--gx, 50%) var(--gy, 50%), transparent 180px, black 200px);
+      transition: -webkit-mask-position .25s ease, mask-position .25s ease, -webkit-mask-size .25s ease, mask-size .25s ease;
+      pointer-events: auto;
+    }
+
+    .guide-tooltip {
+      position: fixed;
+      z-index: 71;
+      max-width: 28rem;
+      background: var(--surface-strong);
+      border: 1px solid rgba(139, 92, 246, 0.35);
+      border-radius: 1rem;
+      box-shadow: 0 18px 55px rgba(0, 0, 0, 0.45);
+      padding: 1rem;
+    }
+
+    /* Focus ring */
+    :focus-visible {
+      outline: none;
+      box-shadow: 0 0 0 3px var(--ring);
+      border-radius: .5rem;
+    }
+
+    /* Trust bar shimmer border */
+    .shimmer-border {
+      position: relative;
+      border-radius: 1rem;
+      overflow: hidden;
+    }
+
+    .shimmer-border::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: conic-gradient(from 0deg, rgba(139, 92, 246, 0.25), rgba(0, 229, 255, 0.25), rgba(255, 0, 229, 0.25), rgba(139, 92, 246, 0.25));
+      filter: blur(12px);
+      opacity: .6;
+      z-index: -1;
+      animation: rotate 8s linear infinite;
+    }
+
+    @keyframes rotate {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    /* Reduced motion support */
+    @media (prefers-reduced-motion: reduce) {
+
+      .orb,
+      .chat-button,
+      .card,
+      .ripple::after,
+      .guide-spotlight::before,
+      .shimmer-border::after {
+        transition: none !important;
+        animation: none !important;
+      }
+    }
+  </style>
+</head>
+
+<body class="bg-layers antialiased selection:bg-fuchsia-300/40 selection:text-fuchsia-900">
+  <a href="#main" class="skip-link">Skip to content</a>
+
+  <!-- Top Navigation / Theme Toggle -->
+  <header class="relative z-10">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <!-- Simple wordmark "Salmar" -->
+        <div class="w-10 h-10 rounded-xl grid place-items-center glass drop-shadow-neon" aria-hidden="true">
+          <svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true">
+            <defs>
+              <linearGradient id="g1" x1="0" x2="1">
+                <stop offset="0%" stop-color="#8b5cf6" />
+                <stop offset="100%" stop-color="#ff00e5" />
+              </linearGradient>
+            </defs>
+            <path
+              d="M12 2c5.5 0 10 3.6 10 8.1 0 3.4-2.4 6.2-5.8 7.5L16 22l-4-2-4 2 .8-4.4C5.4 16.3 2 13.5 2 10.1 2 5.6 6.5 2 12 2z"
+              fill="url(#g1)" />
+          </svg>
+        </div>
+        <div class="leading-tight">
+          <p class="text-xl font-extrabold tracking-tight" style="color: var(--text)">Salmar Help Center</p>
+          <p class="text-sm" style="color: var(--text-muted)">The Future is Purple. The Future is Helpful.</p>
+        </div>
+      </div>
+      <div class="flex items-center gap-2"></div>
+    </div>
+  </header>
+
+  <!-- Hero / Search -->
+  <main id="main" class="relative">
+    <section class="relative pt-6 sm:pt-10">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="relative overflow-hidden glass-strong rounded-2xl p-6 sm:p-10">
+          <!-- Floating orb -->
+          <div id="orb" class="orb animate-pulse-slow" style="top: -30px; right: 5%;"></div>
+
+          <div class="max-w-3xl">
+            <h1 class="text-3xl sm:text-5xl font-black leading-tight tracking-tight mb-3" style="color: var(--text)">
+              Welcome to the Salmar Help Center
+            </h1>
+            <p class="text-base sm:text-lg mb-6" style="color: var(--text-muted)">
+              Your guide to unlocking everything Salmar can do.
+            </p>
+
+            <!-- Search combobox -->
+            <div class="search-wrap">
+              <label for="search" class="sr-only">Search the Help Center</label>
+              <div class="flex items-center gap-2">
+                <div class="flex-1 relative">
+                  <input id="search" type="text"
+                    class="search-input w-full rounded-2xl pl-12 pr-4 py-4 text-base sm:text-lg" role="combobox"
+                    aria-expanded="false" aria-controls="search-listbox" aria-autocomplete="list" autocomplete="off"
+                    placeholder="Ask a question or search for help…" />
+                  <svg class="absolute left-4 top-1/2 -translate-y-1/2 opacity-80" width="22" height="22"
+                    viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                    <path d="M21 21l-4.3-4.3M10.5 18a7.5 7.5 0 1 1 0-15 7.5 7.5 0 0 1 0 15z" stroke="url(#g2)"
+                      stroke-width="2" stroke-linecap="round" />
+                    <defs>
+                      <linearGradient id="g2" x1="0" x2="1">
+                        <stop offset="0%" stop-color="#8b5cf6" />
+                        <stop offset="100%" stop-color="#00e5ff" />
+                      </linearGradient>
+                    </defs>
+                  </svg>
+                </div>
+                <button id="startGuideBiometrics"
+                  class="hidden sm:inline-flex items-center gap-2 px-4 py-3 rounded-xl border border-violet-400/30 hover:border-violet-300/60"
+                  style="background: var(--surface); color: var(--text)">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                    <path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0-18 0" stroke="#8b5cf6" stroke-width="2" />
+                    <path d="M8 12h8M12 8v8" stroke="#00e5ff" stroke-width="2" stroke-linecap="round" />
+                  </svg>
+                  Guide Mode
+                </button>
+              </div>
+              <p id="microcopy" class="mt-2 text-sm" style="color: var(--text-muted)">
+                Try: “Set up biometric login” or “Connect Slack.”
+              </p>
+
+              <!-- Dynamic suggestion chips -->
+              <div id="chips" class="mt-3 flex flex-wrap gap-2"></div>
+
+              <!-- ARIA live region -->
+              <div id="searchStatus" class="sr-only" role="status" aria-live="polite"></div>
+
+              <!-- Suggestions listbox -->
+              <ul id="search-listbox" class="listbox mt-3 hidden" role="listbox" tabindex="-1"
+                aria-label="Search suggestions"></ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Popular Topics -->
+    <section class="relative mt-10 sm:mt-16" aria-labelledby="popular-topics-title">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex items-end justify-between flex-wrap gap-3 mb-5">
+          <h2 id="popular-topics-title" class="text-2xl sm:text-3xl font-extrabold tracking-tight">Popular Topics</h2>
+          <p class="text-sm sm:text-base" style="color: var(--text-muted)">Quick access to the most common categories
+          </p>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+          <!-- Getting Started -->
+          <button id="topic-getting-started" class="card ripple p-5 text-left focus-visible:shadow-focus"
+            data-category="Getting Started">
+            <div class="flex items-start gap-4">
+              <div class="icon-wrap shrink-0">
+                <!-- key icon -->
+                <svg width="26" height="26" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                  <path d="M7.5 7.5a5 5 0 1 1 7.1 7.04L15 15h-2l-2 2H8l-1 1H5l2.5-2.5" stroke="url(#g3)"
+                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                  <defs>
+                    <linearGradient id="g3" x1="0" x2="1">
+                      <stop offset="0%" stop-color="#8b5cf6" />
+                      <stop offset="100%" stop-color="#00e5ff" />
+                    </linearGradient>
+                  </defs>
+                </svg>
+              </div>
+              <div class="flex-1">
+                <h3 class="font-bold text-lg">Getting Started</h3>
+                <p class="text-sm mt-1" style="color: var(--text-muted)">Account setup, first steps</p>
+              </div>
+            </div>
+          </button>
+          <!-- Security & Privacy -->
+          <button id="topic-security" class="card ripple p-5 text-left" data-category="Security & Privacy">
+            <div class="flex items-start gap-4">
+              <div class="icon-wrap shrink-0">
+                <!-- shield -->
+                <svg width="26" height="26" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                  <path d="M12 3l7 3v6c0 4.97-3.06 7.88-7 9-3.94-1.12-7-4.03-7-9V6l7-3z" stroke="url(#g4)"
+                    stroke-width="2" fill="transparent" />
+                  <path d="M9 12l2 2 4-4" stroke="#22c55e" stroke-width="2" stroke-linecap="round"
+                    stroke-linejoin="round" />
+                  <defs>
+                    <linearGradient id="g4" x1="0" x2="1">
+                      <stop offset="0%" stop-color="#8b5cf6" />
+                      <stop offset="100%" stop-color="#ff00e5" />
+                    </linearGradient>
+                  </defs>
+                </svg>
+              </div>
+              <div class="flex-1">
+                <h3 class="font-bold text-lg">Security & Privacy</h3>
+                <p class="text-sm mt-1" style="color: var(--text-muted)">Biometrics, encryption, safety</p>
+              </div>
+            </div>
+          </button>
+          <!-- Using Salmar -->
+          <button id="topic-using" class="card ripple p-5 text-left" data-category="Using Salmar">
+            <div class="flex items-start gap-4">
+              <div class="icon-wrap shrink-0">
+                <!-- bolt -->
+                <svg width="26" height="26" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                  <path d="M13 3L4 14h7l-1 7 9-11h-7l1-7z" stroke="url(#g5)" stroke-width="2" fill="transparent" />
+                  <defs>
+                    <linearGradient id="g5" x1="0" x2="1">
+                      <stop offset="0%" stop-color="#8b5cf6" />
+                      <stop offset="100%" stop-color="#00e5ff" />
+                    </linearGradient>
+                  </defs>
+                </svg>
+              </div>
+              <div class="flex-1">
+                <h3 class="font-bold text-lg">Using Salmar</h3>
+                <p class="text-sm mt-1" style="color: var(--text-muted)">Features, shortcuts, commands</p>
+              </div>
+            </div>
+          </button>
+          <!-- Integrations -->
+          <button id="topic-integrations" class="card ripple p-5 text-left" data-category="Integrations">
+            <div class="flex items-start gap-4">
+              <div class="icon-wrap shrink-0">
+                <!-- link -->
+                <svg width="26" height="26" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                  <path d="M10 13a5 5 0 0 1 0-7l1-1a5 5 0 0 1 7 7l-1 1M14 11a5 5 0 0 1 0 7l-1 1a5 5 0 0 1-7-7l1-1"
+                    stroke="url(#g6)" stroke-width="2" stroke-linecap="round" />
+                  <defs>
+                    <linearGradient id="g6" x1="0" x2="1">
+                      <stop offset="0%" stop-color="#8b5cf6" />
+                      <stop offset="100%" stop-color="#ff00e5" />
+                    </linearGradient>
+                  </defs>
+                </svg>
+              </div>
+              <div class="flex-1">
+                <h3 class="font-bold text-lg">Integrations</h3>
+                <p class="text-sm mt-1" style="color: var(--text-muted)">Google, Slack, APIs</p>
+              </div>
+            </div>
+          </button>
+          <!-- Billing & Subscriptions -->
+          <button id="topic-billing" class="card ripple p-5 text-left" data-category="Billing & Subscriptions">
+            <div class="flex items-start gap-4">
+              <div class="icon-wrap shrink-0">
+                <!-- card -->
+                <svg width="26" height="26" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                  <rect x="3" y="5" width="18" height="14" rx="2" stroke="url(#g7)" stroke-width="2" />
+                  <path d="M3 9h18" stroke="#00e5ff" stroke-width="2" />
+                  <defs>
+                    <linearGradient id="g7" x1="0" x2="1">
+                      <stop offset="0%" stop-color="#8b5cf6" />
+                      <stop offset="100%" stop-color="#ff00e5" />
+                    </linearGradient>
+                  </defs>
+                </svg>
+              </div>
+              <div class="flex-1">
+                <h3 class="font-bold text-lg">Billing & Subscriptions</h3>
+                <p class="text-sm mt-1" style="color: var(--text-muted)">Plans, invoices, payments</p>
+              </div>
+            </div>
+          </button>
+          <!-- Troubleshooting -->
+          <button id="topic-troubleshooting" class="card ripple p-5 text-left" data-category="Troubleshooting">
+            <div class="flex items-start gap-4">
+              <div class="icon-wrap shrink-0">
+                <!-- wrench -->
+                <svg width="26" height="26" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                  <path d="M14 7a4 4 0 1 0 3 6l5 5-2 2-5-5a4 4 0 0 0-6-5l1-3 4-1z" stroke="url(#g8)" stroke-width="2"
+                    fill="transparent" />
+                  <defs>
+                    <linearGradient id="g8" x1="0" x2="1">
+                      <stop offset="0%" stop-color="#00e5ff" />
+                      <stop offset="100%" stop-color="#8b5cf6" />
+                    </linearGradient>
+                  </defs>
+                </svg>
+              </div>
+              <div class="flex-1">
+                <h3 class="font-bold text-lg">Troubleshooting</h3>
+                <p class="text-sm mt-1" style="color: var(--text-muted)">Fix issues quickly</p>
+              </div>
+            </div>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Suggested Articles -->
+    <a href="fullarticle.html" class="#">
+      <section class="relative mt-12 sm:mt-16" aria-labelledby="suggested-articles-title">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div class="glass rounded-2xl p-6 sm:p-8">
+            <div class="flex items-center justify-between flex-wrap gap-3">
+              <div>
+                <h2 id="suggested-articles-title" class="text-2xl sm:text-3xl font-extrabold tracking-tight">Suggested
+                  Articles</h2>
+                <p class="text-sm sm:text-base mt-1" style="color: var(--text-muted)">Most-read guides for quick answers
+                </p>
+              </div>
+              <button id="startGuideSlack"
+                class="inline-flex items-center gap-2 px-4 py-2 rounded-xl border border-violet-400/30 hover:border-violet-300/60"
+                style="background: var(--surface); color: var(--text)">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                  <path d="M12 2l3 6 6 1-4 4 1 6-6-3-6 3 1-6-4-4 6-1 3-6z" stroke="#8b5cf6" stroke-width="2"
+                    stroke-linejoin="round" />
+                </svg>
+                Start Slack Guide
+              </button>
+            </div>
+
+            <ul id="mostReadList" class="glow-bullet mt-6 space-y-4"></ul>
+          </div>
+        </div>
+      </section>
+    </a>
+
+    <!-- Advanced Support -->
+    <section class="relative mt-12 sm:mt-16" aria-labelledby="advanced-support-title">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <h2 id="advanced-support-title" class="text-2xl sm:text-3xl font-extrabold tracking-tight mb-5">Advanced Support
+          Options</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+          <button id="reportIssueBtn" class="card ripple p-5 text-left">
+            <div class="flex items-center gap-4">
+              <div class="icon-wrap">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                  <path d="M12 9v4m0 4h.01M2 12a10 10 0 1 0 20 0A10 10 0 0 0 2 12z" stroke="url(#g9)" stroke-width="2"
+                    stroke-linecap="round" />
+                  <defs>
+                    <linearGradient id="g9" x1="0" x2="1">
+                      <stop offset="0%" stop-color="#f59e0b" />
+                      <stop offset="100%" stop-color="#ef4444" />
+                    </linearGradient>
+                  </defs>
+                </svg>
+              </div>
+              <div>
+                <h3 class="font-bold text-lg">Report an Issue</h3>
+                <p class="text-sm mt-1" style="color: var(--text-muted)">Quick form for bug reports</p>
+              </div>
+            </div>
+          </button>
+
+          <button id="openChatBtn" class="card ripple p-5 text-left">
+            <div class="flex items-center gap-4">
+              <div class="icon-wrap">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                  <path d="M4 6h16v8H7l-3 3V6z" stroke="url(#g10)" stroke-width="2" stroke-linejoin="round" />
+                  <defs>
+                    <linearGradient id="g10" x1="0" x2="1">
+                      <stop offset="0%" stop-color="#8b5cf6" />
+                      <stop offset="100%" stop-color="#00e5ff" />
+                    </linearGradient>
+                  </defs>
+                </svg>
+              </div>
+              <div>
+                <h3 class="font-bold text-lg">Live Chat with Salmar</h3>
+                <p class="text-sm mt-1" style="color: var(--text-muted)">AI-powered instant help</p>
+              </div>
+            </div>
+          </button>
+
+          <a href="#contact" class="card ripple p-5 text-left">
+            <div class="flex items-center gap-4">
+              <div class="icon-wrap">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                  <path d="M3 5h18v14H3z" stroke="url(#g11)" stroke-width="2" />
+                  <path d="M3 7l9 6 9-6" stroke="#8b5cf6" stroke-width="2" />
+                  <defs>
+                    <linearGradient id="g11" x1="0" x2="1">
+                      <stop offset="0%" stop-color="#8b5cf6" />
+                      <stop offset="100%" stop-color="#ff00e5" />
+                    </linearGradient>
+                  </defs>
+                </svg>
+              </div>
+              <div>
+                <h3 class="font-bold text-lg">Contact Support</h3>
+                <p class="text-sm mt-1" style="color: var(--text-muted)">If the knowledge base doesn’t solve it</p>
+              </div>
+            </div>
+          </a>
+        </div>
+        <p class="text-sm mt-4" style="color: var(--text-muted)">Still need help? We’re one click away.</p>
+      </div>
+    </section>
+
+    <!-- Trust Badge Bar -->
+    <section class="relative mt-12 sm:mt-16">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="shimmer-border p-0.5 rounded-2xl">
+          <div class="glass rounded-2xl p-6 sm:p-8 grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6 items-center">
+            <div class="text-center sm:text-left">
+              <p class="text-sm uppercase tracking-widest" style="color: var(--text-muted)">Trust Badge</p>
+              <p class="text-xl sm:text-2xl font-extrabold mt-1">You're in good hands</p>
+            </div>
+            <div class="text-center">
+              <p class="text-sm" style="color: var(--text-muted)">99% of users find answers in under</p>
+              <div class="mt-1 text-3xl sm:text-4xl font-black">
+                <span id="trustPercent">0</span>% • <span id="trustTime">0:00</span> mins
+              </div>
+            </div>
+            <div class="text-center sm:text-right">
+              <span class="inline-flex items-center gap-2 px-3 py-2 rounded-xl"
+                style="background: linear-gradient(90deg, rgba(139,92,246,0.2), rgba(0,229,255,0.2)); border: 1px solid rgba(139,92,246,0.35);">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                  <path d="M5 13l4 4L19 7" stroke="#22c55e" stroke-width="2" stroke-linecap="round" />
+                </svg>
+                Verified by user data
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer id="contact" class="relative mt-16 sm:mt-24">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="glass rounded-2xl p-6 sm:p-10">
+          <div class="flex flex-col sm:flex-row items-center sm:items-start justify-between gap-6">
+            <div class="text-center sm:text-left">
+              <p class="text-2xl font-extrabold">Salmar Help Center</p>
+              <p class="mt-1" style="color: var(--text-muted)">The Future is Purple. The Future is Helpful.</p>
+              <div class="mt-4 flex items-center gap-3">
+                <a href="#"
+                  class="inline-flex items-center justify-center w-9 h-9 rounded-full border border-violet-400/30 hover:border-violet-300/70"
+                  aria-label="Twitter">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                    <path
+                      d="M22 5.8c-.7.3-1.4.5-2.2.6.8-.5 1.3-1.2 1.6-2.1-.8.5-1.6.8-2.6 1A3.8 3.8 0 0 0 12 8.6c0 .3 0 .6.1.8-3.2-.2-6-1.7-8-4-.3.6-.4 1.2-.4 1.9 0 1.3.6 2.4 1.6 3.1-.6 0-1.1-.2-1.6-.4v.1c0 1.8 1.3 3.3 3 3.7-.3.1-.6.1-.9.1-.2 0-.4 0-.6-.1.4 1.5 1.8 2.6 3.5 2.6a7.7 7.7 0 0 1-4.8 1.7h-.9A11 11 0 0 0 9 20c7.2 0 11.2-6 11.2-11.2v-.5c.8-.6 1.4-1.2 1.8-2z"
+                      fill="url(#g12)" />
+                    <defs>
+                      <linearGradient id="g12" x1="0" x2="1">
+                        <stop offset="0%" stop-color="#8b5cf6" />
+                        <stop offset="100%" stop-color="#00e5ff" />
+                      </linearGradient>
+                    </defs>
+                  </svg>
+                </a>
+                <a href="#"
+                  class="inline-flex items-center justify-center w-9 h-9 rounded-full border border-violet-400/30 hover:border-violet-300/70"
+                  aria-label="GitHub">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                    <path
+                      d="M12 2a10 10 0 0 0-3.2 19.5c.5.1.7-.2.7-.5v-1.7C6.7 20 6 18 6 18c-.5-1.2-1.3-1.5-1.3-1.5-1-.7.1-.7.1-.7 1.1.1 1.7 1.1 1.7 1.1 1 .1.8-1.4 1.6-1.8-2.5-.3-5.1-1.3-5.1-5.8 0-1.3.5-2.3 1.2-3.2-.1-.3-.5-1.6.1-3.3 0 0 .9-.3 3 .1.9-.2 2-.4 3-.4s2.1.1 3 .4c2.1-.4 3-.1 3-.1.6 1.7.2 3 .1 3.3.8.9 1.2 2 1.2 3.2 0 4.6-2.6 5.5-5.1 5.8.7.6 1 .6 1 2.4v1.9c0 .3.2.6.7.5A10 10 0 0 0 12 2z"
+                      fill="url(#g13)" />
+                    <defs>
+                      <linearGradient id="g13" x1="0" x2="1">
+                        <stop offset="0%" stop-color="#8b5cf6" />
+                        <stop offset="100%" stop-color="#00e5ff" />
+                      </linearGradient>
+                    </defs>
+                  </svg>
+                </a>
+                <a href="#"
+                  class="inline-flex items-center justify-center w-9 h-9 rounded-full border border-violet-400/30 hover:border-violet-300/70"
+                  aria-label="LinkedIn">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                    <path
+                      d="M6 9H3v12h3V9zM4.5 3a1.5 1.5 0 100 3 1.5 1.5 0 000-3zM21 21h-3v-6.5c0-3.6-4-3.3-4 0V21h-3V9h3v1.9c1.4-2.7 7-2.9 7 2.6V21z"
+                      fill="url(#g14)" />
+                    <defs>
+                      <linearGradient id="g14" x1="0" x2="1">
+                        <stop offset="0%" stop-color="#8b5cf6" />
+                        <stop offset="100%" stop-color="#00e5ff" />
+                      </linearGradient>
+                    </defs>
+                  </svg>
+                </a>
+              </div>
+            </div>
+            <div class="flex flex-col sm:flex-row gap-6">
+              <div class="space-y-2">
+
+                <button id="footerReportIssueBtn" class="block px-4 py-2 rounded-lg text-left"
+                  style="background: var(--surface); border: 1px solid rgba(139,92,246,0.25)">Report an Issue</button>
+                <a href="securitystatus.html" class="block px-4 py-2 rounded-lg"
+                  style="background: var(--surface); border: 1px solid rgba(139,92,246,0.25)">Security Status</a>
+              </div>
+              <div class="space-y-2">
+                <a href="privacy.html" class="block px-4 py-2 rounded-lg"
+                  style="background: var(--surface); border: 1px solid rgba(139,92,246,0.25)">Privacy Policy</a>
+                <a href="terms.html" class="block px-4 py-2 rounded-lg"
+                  style="background: var(--surface); border: 1px solid rgba(139,92,246,0.25)">Terms of Service</a>
+              </div>
+            </div>
+          </div>
+          <div class="mt-6 text-center text-sm" style="color: var(--text-muted)">&copy; <span id="year"></span> Salmar.
+            All rights reserved.</div>
+        </div>
+      </div>
+    </footer>
+  </main>
+
+  <!-- Floating Chat Button -->
+  <button id="floatChatBtn" class="chat-button" aria-label="Open live chat">
+    <svg width="26" height="26" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path d="M4 6h16v8H7l-3 3V6z" stroke="white" stroke-width="2" stroke-linejoin="round" />
+    </svg>
+  </button>
+
+  <!-- Chat Drawer -->
+  <aside id="chatDrawer" class="chat-drawer" aria-label="Live Chat with Salmar" aria-hidden="true">
+    <header class="px-4 py-3 border-b border-violet-400/20 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <img src="https://picsum.photos/seed/salmar/40" alt="Salmar avatar"
+          class="w-9 h-9 rounded-full ring-2 ring-violet-400/40" />
+        <div>
+          <p class="font-bold leading-tight">Live Chat with Salmar</p>
+          <p class="text-xs" style="color: var(--text-muted)">AI-powered instant help</p>
+        </div>
+      </div>
+      <button id="closeChatBtn" class="p-2 rounded-lg hover:bg-white/5" aria-label="Close chat">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+        </svg>
+      </button>
+    </header>
+    <div id="chatMessages" class="flex-1 overflow-y-auto p-4 space-y-4">
+      <div class="flex items-start gap-3">
+        <img src="https://picsum.photos/seed/salmar/36" alt="" class="w-8 h-8 rounded-full ring-2 ring-violet-400/40" />
+        <div class="max-w-[80%] rounded-2xl px-4 py-3"
+          style="background: var(--surface); border: 1px solid rgba(139,92,246,0.25)">
+          <p class="text-sm">Hi! I’m Salmar. Ask me anything or select a guide to begin. ✨</p>
+        </div>
+      </div>
+    </div>
+    <form id="chatForm" class="p-3 border-t border-violet-400/20">
+      <label for="chatInput" class="sr-only">Type your message</label>
+      <div class="flex items-center gap-2">
+        <input id="chatInput" class="flex-1 px-3 py-3 rounded-xl"
+          style="background: var(--surface); border:1px solid rgba(139,92,246,0.25)" placeholder="Type your message…" />
+        <button class="px-4 py-3 rounded-xl text-white"
+          style="background: linear-gradient(90deg, var(--accent), var(--accent-2));">Send</button>
+      </div>
+    </form>
+  </aside>
+
+  <!-- Report Issue Modal -->
+  <div id="modalOverlay" class="overlay" aria-hidden="true" aria-labelledby="reportTitle" role="dialog">
+    <div class="modal">
+      <div class="p-4 sm:p-6 border-b border-violet-400/20 flex items-center justify-between">
+        <h3 id="reportTitle" class="text-xl font-bold">Report an Issue</h3>
+        <a href='report.html'><button id="closeModal" class="p-2 rounded-lg hover:bg-white/5"
+            aria-label="Close report issue form">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+            </svg>
+          </button></a>
+
+
+        <!-- Article Quick-View Modal -->
+        <div id="articleOverlay" class="overlay" aria-hidden="true" aria-labelledby="articleTitle" role="dialog">
+          <div class="modal max-w-3xl">
+            <div class="p-4 sm:p-6 border-b border-violet-400/20 flex items-center justify-between">
+              <h3 id="articleTitle" class="text-xl font-bold">Article</h3>
+              <button id="closeArticle" class="p-2 rounded-lg hover:bg-white/5" aria-label="Close article">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                  <path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                </svg>
+              </button>
+            </div>
+            <div class="p-4 sm:p-6 space-y-4">
+              <div id="articleMeta" class="text-sm" style="color: var(--text-muted)"></div>
+              <div id="articleContent" class="prose prose-invert max-w-none"></div>
+              <div class="flex items-center justify-between">
+                <button id="startGuideFromArticle"
+                  class="px-4 py-2 rounded-xl border border-violet-400/30 hover:border-violet-300/60"
+                  style="background: var(--surface); color: var(--text)">Start Interactive Guide</button>
+                <a id="openFullArticle" href="#" target="_blank" rel="noopener noreferrer"
+                  class="px-4 py-2 rounded-xl text-white"
+                  style="background: linear-gradient(90deg, var(--accent), var(--accent-2));">Open Full Article</a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Guide Mode Elements -->
+        <div id="guideSpotlight" class="guide-spotlight hidden"></div>
+        <div id="guideTooltip" class="guide-tooltip hidden">
+          <div class="flex items-start gap-3">
+            <div class="w-9 h-9 rounded-xl grid place-items-center"
+              style="background: linear-gradient(135deg, rgba(139,92,246,0.25), rgba(0,229,255,0.25)); border: 1px solid rgba(139,92,246,0.35)">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M12 3l7 3v6c0 4.97-3.06 7.88-7 9-3.94-1.12-7-4.03-7-9V6l7-3z" stroke="#8b5cf6"
+                  stroke-width="2" />
+              </svg>
+            </div>
+            <div class="flex-1">
+              <p id="guideStepTitle" class="font-bold">Step</p>
+              <p id="guideStepText" class="text-sm mt-1" style="color: var(--text-muted)">Instruction</p>
+              <div class="flex items-center justify-between mt-3">
+                <div id="guideProgress" class="text-xs" style="color: var(--text-muted)">1 / 3</div>
+                <div class="flex items-center gap-2">
+                  <button id="guidePrev"
+                    class="px-3 py-2 rounded-lg border border-violet-400/30 hover:border-violet-300/60"
+                    style="background: var(--surface)">Back</button>
+                  <button id="guideNext" class="px-3 py-2 rounded-lg text-white"
+                    style="background: linear-gradient(90deg, var(--accent), var(--accent-2));">Next</button>
+                  <button id="guideExit"
+                    class="px-3 py-2 rounded-lg border border-violet-400/30 hover:border-violet-300/60"
+                    style="background: var(--surface)">Exit</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <script>
+            ; (() => {
+              const prefersReduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+              // Smooth scroll with Lenis
+              try {
+                const lenis = new Lenis({
+                  duration: prefersReduced ? 0.8 : 1.1,
+                  easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+                  smoothWheel: !prefersReduced
+                });
+                function raf(time) { lenis.raf(time); requestAnimationFrame(raf); }
+                requestAnimationFrame(raf);
+              } catch (e) { /* Lenis unavailable - continue gracefully */ }
+
+              // Safe localStorage access
+              const storage = {
+                get(k) {
+                  try { return window.localStorage ? localStorage.getItem(k) : null; } catch (e) { return null; }
+                },
+                set(k, v) {
+                  try { if (window.localStorage) localStorage.setItem(k, v); } catch (e) { /* ignore */ }
+                }
+              };
+
+              // Theme fixed to dark (neon)
+              document.documentElement.setAttribute('data-theme', 'neon');
+
+              // Orb animation
+              const orb = document.getElementById('orb');
+              let orbX = window.innerWidth * 0.75, orbY = 100;
+              function positionOrb(x, y) {
+                orb.style.transform = `translate3d(${x}px, ${y}px, 0)`;
+              }
+              // initial position near hero top-right
+              positionOrb(0, 0); // base transform; gsap will manage
+              if (window.gsap) {
+                gsap.set(orb, { x: 0, y: 0 });
+                // gentle float
+                if (!prefersReduced) {
+                  gsap.to(orb, { y: '+=12', duration: 2.5, yoyo: true, repeat: -1, ease: 'sine.inOut' });
+                  gsap.to(orb, { x: '+=8', duration: 3.0, yoyo: true, repeat: -1, ease: 'sine.inOut' });
+                }
+              }
+
+              // Move glow with mouse near hero
+              document.addEventListener('mousemove', (e) => {
+                const hero = document.querySelector('section > div > .glass-strong');
+                if (!hero) return;
+                const rect = hero.getBoundingClientRect();
+                const inside = e.clientX >= rect.left && e.clientX <= rect.right && e.clientY >= rect.top && e.clientY <= rect.bottom;
+                if (inside && window.gsap && !prefersReduced) {
+                  gsap.to(orb, { x: e.clientX - rect.left - 60, y: e.clientY - rect.top - 60, duration: 0.35, ease: 'sine.out' });
+                }
+              });
+
+              // Search data seeding
+              const articles = [
+                // Getting Started
+                { id: 'a1', title: 'Create your Salmar account', category: 'Getting Started', tags: ['account', 'signup', 'onboarding'], mostRead: true, content: 'Learn how to create your Salmar account in under a minute. We’ll guide you through email verification and first steps.' },
+                { id: 'a2', title: 'Set up biometric login in Salmar', category: 'Security & Privacy', tags: ['biometric', 'login', 'security', 'face id', 'touch id'], mostRead: true, content: 'Enable Face ID or Touch ID for passwordless, secure access. Navigate to Settings → Security → Biometrics and follow the prompts.' },
+                { id: 'a3', title: 'Connect Slack to Salmar', category: 'Integrations', tags: ['slack', 'integration', 'workspace'], mostRead: true, content: 'Integrate Slack to receive alerts and run commands. Go to Integrations → Slack → Connect and authorize your workspace.' },
+                { id: 'a4', title: 'Troubleshooting login errors', category: 'Troubleshooting', tags: ['login', 'error', 'auth'], mostRead: true, content: 'Resolve common login problems including two-factor codes, expired sessions, and network restrictions.' },
+                { id: 'a5', title: 'Understanding your AI privacy settings', category: 'Security & Privacy', tags: ['privacy', 'data', 'model'], mostRead: true, content: 'Control how your data is used to improve Salmar. Manage retention, redaction, and data isolation settings.' },
+                { id: 'a6', title: 'Canceling or upgrading your subscription', category: 'Billing & Subscriptions', tags: ['billing', 'plan', 'subscription'], mostRead: true, content: 'Change plans any time. Learn about proration, refunds, and invoice access from the billing portal.' },
+
+                // More content
+                { id: 'a7', title: 'Keyboard shortcuts for power users', category: 'Using Salmar', tags: ['shortcuts', 'commands', 'productivity'], content: 'Master navigation with quick actions palette, global shortcuts, and custom command bindings.' },
+                { id: 'a8', title: 'Connect Google Calendar', category: 'Integrations', tags: ['google', 'calendar', 'oauth'], content: 'Sync events bi-directionally. Authorize Google, choose calendars, and set conflict resolution.' },
+                { id: 'a9', title: 'API access and tokens', category: 'Using Salmar', tags: ['api', 'tokens', 'developer'], content: 'Create API tokens, assign scopes, rotate keys, and observe usage from developer dashboard.' },
+                { id: 'a10', title: 'Enable two-factor authentication (2FA)', category: 'Security & Privacy', tags: ['2fa', 'security', 'totp', 'authenticator'], content: 'Protect your account with TOTP apps or hardware keys. Recovery codes and enforcement options included.' },
+                { id: 'a11', title: 'Invoice history and receipts', category: 'Billing & Subscriptions', tags: ['invoices', 'billing'], content: 'Download past invoices and set up custom billing contacts or PO numbers.' },
+                { id: 'a12', title: 'Fix integration connection errors', category: 'Troubleshooting', tags: ['integration', 'errors', 'oauth'], content: 'Guide to common OAuth issues, permission scopes, and rate limits for external services.' },
+                { id: 'a13', title: 'Team roles and permissions', category: 'Getting Started', tags: ['teams', 'roles', 'access'], content: 'Owner, Admin, Member roles explained. How to invite teammates and assign permissions safely.' },
+                { id: 'a14', title: 'Custom workflows with automations', category: 'Using Salmar', tags: ['automation', 'workflow', 'rules'], content: 'Build flows with triggers and actions: schedule tasks, route alerts, and orchestrate integrations.' },
+                { id: 'a15', title: 'Security whitepaper & encryption details', category: 'Security & Privacy', tags: ['security', 'encryption', 'compliance'], content: 'Learn how Salmar secures data with encryption at rest, in transit, and key management practices.' },
+                { id: 'a16', title: 'Connect Slack: slash commands and alerts', category: 'Integrations', tags: ['slack', 'commands', 'alerts'], content: 'Use /salmar commands from Slack channels, configure alert routing and notification preferences.' },
+                { id: 'a17', title: 'Reset your password', category: 'Getting Started', tags: ['password', 'reset', 'account'], content: 'Reset flow via email with safety checks and session invalidation.' },
+                { id: 'a18', title: 'Latency/timeout troubleshooting', category: 'Troubleshooting', tags: ['latency', 'timeout', 'network'], content: 'Identify slow network issues and optimize performance settings.' }
+              ];
+
+              // Chips area
+              const chips = document.getElementById('chips');
+              function renderChips(items) {
+                chips.innerHTML = '';
+                (items || []).slice(0, 4).forEach(a => {
+                  const b = document.createElement('button');
+                  b.className = 'px-3 py-1.5 text-sm rounded-full border border-violet-400/30 hover:border-violet-300/60';
+                  b.style.background = 'var(--surface)';
+                  b.textContent = a.title;
+                  b.addEventListener('click', () => openArticle(a.id));
+                  chips.appendChild(b);
+                });
+              }
+
+              // Fuse search
+              const fuse = new Fuse(articles, {
+                keys: ['title', 'tags', 'content', 'category'],
+                includeScore: true,
+                threshold: 0.35
+              });
+
+              const searchInput = document.getElementById('search');
+              const listbox = document.getElementById('search-listbox');
+              const status = document.getElementById('searchStatus');
+              let activeIndex = -1;
+              let visibleOptions = [];
+              let listboxOpen = false;
+              let inputDebounce;
+
+              function openListbox() { listbox.classList.remove('hidden'); searchInput.setAttribute('aria-expanded', 'true'); listboxOpen = true; }
+              function closeListbox() { listbox.classList.add('hidden'); searchInput.setAttribute('aria-expanded', 'false'); listboxOpen = false; activeIndex = -1; }
+              function setActive(i) {
+                const options = Array.from(listbox.querySelectorAll('[role="option"]'));
+                options.forEach((opt, idx) => opt.setAttribute('aria-selected', String(i === idx)));
+                if (i >= 0 && options[i]) {
+                  searchInput.setAttribute('aria-activedescendant', options[i].id);
+                  options[i].scrollIntoView({ block: 'nearest' });
+                } else {
+                  searchInput.removeAttribute('aria-activedescendant');
+                }
+                activeIndex = i;
+              }
+
+              function renderList(items) {
+                listbox.innerHTML = '';
+                visibleOptions = items.slice(0, 8);
+                visibleOptions.forEach((res, idx) => {
+                  const a = res.item || res; // fuse returns item
+                  const li = document.createElement('li');
+                  li.id = 'opt-' + a.id;
+                  li.setAttribute('role', 'option');
+                  li.className = 'option';
+                  li.setAttribute('aria-selected', 'false');
+
+                  const icon = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+                  icon.setAttribute('width', '20'); icon.setAttribute('height', '20'); icon.setAttribute('viewBox', '0 0 24 24');
+                  icon.innerHTML = '<defs><linearGradient id="gopt" x1="0" x2="1"><stop offset="0%" stop-color="#8b5cf6"/><stop offset="100%" stop-color="#00e5ff"/></linearGradient></defs><path d="M12 2l3 6 6 1-4 4 1 6-6-3-6 3 1-6-4-4 6-1 3-6z" stroke="url(#gopt)" stroke-width="2" fill="transparent"/>';
+                  const info = document.createElement('div');
+                  info.innerHTML = `<div class="font-medium">${a.title}</div><div class="text-xs" style="color: var(--text-muted)">${a.category}</div>`;
+                  const badge = document.createElement('span');
+                  badge.className = 'badge';
+                  badge.textContent = a.category;
+
+                  li.appendChild(icon);
+                  li.appendChild(info);
+                  li.appendChild(badge);
+                  li.addEventListener('click', () => { openArticle(a.id); closeListbox(); });
+                  li.addEventListener('mousemove', () => setActive(idx));
+                  listbox.appendChild(li);
+                });
+                if (visibleOptions.length) openListbox(); else closeListbox();
+                status.textContent = `${visibleOptions.length} result${visibleOptions.length !== 1 ? 's' : ''} found.`;
+              }
+
+              function performSearch(q) {
+                if (!q || q.trim().length === 0) { renderList([]); return; }
+                const results = fuse.search(q.trim());
+                renderList(results);
+              }
+
+              searchInput.addEventListener('input', (e) => {
+                orb.classList.add('thinking');
+                clearTimeout(inputDebounce);
+                inputDebounce = setTimeout(() => {
+                  performSearch(e.target.value);
+                  orb.classList.remove('thinking');
+                  // Update chips with top results
+                  const sugg = fuse.search(e.target.value).map(r => r.item).slice(0, 4);
+                  renderChips(sugg);
+                }, 180);
+              });
+
+              searchInput.addEventListener('keydown', (e) => {
+                const count = visibleOptions.length;
+                if (!count) return;
+                if (e.key === 'ArrowDown') {
+                  e.preventDefault();
+                  setActive((activeIndex + 1) % count);
+                } else if (e.key === 'ArrowUp') {
+                  e.preventDefault();
+                  setActive((activeIndex - 1 + count) % count);
+                } else if (e.key === 'Enter') {
+                  if (activeIndex >= 0) {
+                    const a = (visibleOptions[activeIndex].item || visibleOptions[activeIndex]);
+                    openArticle(a.id);
+                    closeListbox();
+                  }
+                } else if (e.key === 'Escape') {
+                  closeListbox();
+                }
+              });
+              searchInput.addEventListener('focus', () => {
+                if (visibleOptions.length) openListbox();
+              });
+              document.addEventListener('click', (e) => {
+                if (!listbox.contains(e.target) && e.target !== searchInput) closeListbox();
+              });
+
+              // Most read list
+              const mostReadList = document.getElementById('mostReadList');
+              function renderMostRead() {
+                mostReadList.innerHTML = '';
+                articles.filter(a => a.mostRead).slice(0, 6).forEach(a => {
+                  const li = document.createElement('li');
+                  const link = document.createElement('button');
+                  link.className = 'text-left hover:underline decoration-violet-400/60';
+                  link.textContent = a.title;
+                  link.addEventListener('click', () => openArticle(a.id));
+                  li.appendChild(link);
+                  mostReadList.appendChild(li);
+                });
+              }
+              renderMostRead();
+
+              // Suggestions chips initial
+              renderChips(articles.filter(a => a.mostRead));
+
+              // Ripple gradient mouse position
+              function attachRipple(el) {
+                el.addEventListener('pointermove', (e) => {
+                  const rect = el.getBoundingClientRect();
+                  const x = e.clientX - rect.left;
+                  const y = e.clientY - rect.top;
+                  el.style.setProperty('--x', x + 'px');
+                  el.style.setProperty('--y', y + 'px');
+                });
+              }
+              document.querySelectorAll('.ripple').forEach(attachRipple);
+
+              // Category filters -> update chips and scroll to list
+              document.querySelectorAll('[id^="topic-"]').forEach(btn => {
+                btn.addEventListener('click', () => {
+                  const cat = btn.getAttribute('data-category');
+                  const filtered = articles.filter(a => a.category === cat);
+                  renderChips(filtered.slice(0, 4));
+                  searchInput.value = '';
+                  performSearch('');
+                  status.textContent = `Showing popular items for ${cat}.`;
+                  // gentle highlight
+                  btn.classList.add('ring-2');
+                  setTimeout(() => btn.classList.remove('ring-2'), 600);
+                  // also scroll to Suggested Articles
+                  document.getElementById('suggested-articles-title').scrollIntoView({ behavior: prefersReduced ? 'auto' : 'smooth', block: 'start' });
+                });
+              });
+
+              // Article Quick-View
+              const articleOverlay = document.getElementById('articleOverlay');
+              const articleTitle = document.getElementById('articleTitle');
+              const articleMeta = document.getElementById('articleMeta');
+              const articleContent = document.getElementById('articleContent');
+              const closeArticleBtn = document.getElementById('closeArticle');
+              const startGuideFromArticle = document.getElementById('startGuideFromArticle');
+              const openFullArticle = document.getElementById('openFullArticle');
+              let lastOpenedArticle = null;
+
+              function openArticle(id) {
+                const a = articles.find(x => x.id === id);
+                if (!a) return;
+                lastOpenedArticle = a;
+                articleTitle.textContent = a.title;
+                articleMeta.textContent = `${a.category} • tags: ${a.tags ? a.tags.join(', ') : '—'}`;
+                articleContent.innerHTML = '';
+                // Safe content injection as text
+                const p = document.createElement('p');
+                p.textContent = a.content;
+                articleContent.appendChild(p);
+                openFullArticle.href = '#';
+                startGuideFromArticle.style.display = (a.title.toLowerCase().includes('biometric') || a.title.toLowerCase().includes('slack')) ? 'inline-flex' : 'none';
+                articleOverlay.classList.add('active');
+                articleOverlay.setAttribute('aria-hidden', 'false');
+              }
+              closeArticleBtn.addEventListener('click', () => {
+                articleOverlay.classList.remove('active');
+                articleOverlay.setAttribute('aria-hidden', 'true');
+              });
+              articleOverlay.addEventListener('click', (e) => {
+                if (e.target === articleOverlay) { articleOverlay.classList.remove('active'); articleOverlay.setAttribute('aria-hidden', 'true'); }
+              });
+
+              // Report Issue modal
+              const modalOverlay = document.getElementById('modalOverlay');
+              const reportIssueBtn = document.getElementById('reportIssueBtn');
+              const footerReportIssueBtn = document.getElementById('footerReportIssueBtn');
+              const closeModal = document.getElementById('closeModal');
+              function openModal() { modalOverlay.classList.add('active'); modalOverlay.setAttribute('aria-hidden', 'false'); }
+              function closeModalFn() { modalOverlay.classList.remove('active'); modalOverlay.setAttribute('aria-hidden', 'true'); }
+              reportIssueBtn.addEventListener('click', openModal);
+              footerReportIssueBtn.addEventListener('click', openModal);
+              closeModal.addEventListener('click', closeModalFn);
+              modalOverlay.addEventListener('click', e => { if (e.target === modalOverlay) closeModalFn(); });
+
+              // Report Issue validation
+              const issueForm = document.getElementById('issueForm');
+              const email = document.getElementById('issueEmail');
+              const emailError = document.getElementById('emailError');
+              const desc = document.getElementById('issueDesc');
+              const descError = document.getElementById('descError');
+              const success = document.getElementById('issueSuccess');
+
+              issueForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                let ok = true;
+                const validEmail = /^\S+@\S+\.\S+$/.test(email.value.trim());
+                if (!validEmail) { emailError.classList.remove('hidden'); ok = false; } else { emailError.classList.add('hidden'); }
+                if (desc.value.trim().length < 20) { descError.classList.remove('hidden'); ok = false; } else { descError.classList.add('hidden'); }
+                if (ok) {
+                  success.classList.remove('hidden');
+                  setTimeout(() => { closeModalFn(); issueForm.reset(); success.classList.add('hidden'); }, 1400);
+                }
+              });
+
+              // Chat drawer
+              const chatDrawer = document.getElementById('chatDrawer');
+              const openChatBtn = document.getElementById('openChatBtn');
+              const floatChatBtn = document.getElementById('floatChatBtn');
+              const closeChatBtn = document.getElementById('closeChatBtn');
+              const chatMessages = document.getElementById('chatMessages');
+              const chatForm = document.getElementById('chatForm');
+              const chatInput = document.getElementById('chatInput');
+
+              function openChat() {
+                chatDrawer.classList.add('open');
+                chatDrawer.setAttribute('aria-hidden', 'false');
+                setTimeout(() => chatInput.focus(), 200);
+              }
+              function closeChat() {
+                chatDrawer.classList.remove('open');
+                chatDrawer.setAttribute('aria-hidden', 'true');
+              }
+              openChatBtn.addEventListener('click', openChat);
+              floatChatBtn.addEventListener('click', openChat);
+              closeChatBtn.addEventListener('click', closeChat);
+
+              function addMsg(text, from = 'user') {
+                const wrap = document.createElement('div');
+                wrap.className = 'flex items-start gap-3 ' + (from === 'user' ? 'justify-end' : '');
+                if (from === 'user') {
+                  const bubble = document.createElement('div');
+                  bubble.className = 'max-w-[80%] rounded-2xl px-4 py-3 text-sm text-white';
+                  bubble.style.background = 'linear-gradient(90deg, var(--accent), var(--accent-2))';
+                  bubble.textContent = text;
+                  wrap.appendChild(bubble);
+                } else {
+                  const img = document.createElement('img');
+                  img.src = 'https://picsum.photos/seed/salmar/36'; img.alt = ''; img.className = 'w-8 h-8 rounded-full ring-2 ring-violet-400/40';
+                  const bubble = document.createElement('div');
+                  bubble.className = 'max-w-[80%] rounded-2xl px-4 py-3 text-sm';
+                  bubble.style.background = 'var(--surface)';
+                  bubble.style.border = '1px solid rgba(139,92,246,0.25)';
+                  bubble.textContent = text;
+                  wrap.appendChild(img);
+                  wrap.appendChild(bubble);
+                }
+                chatMessages.appendChild(wrap);
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+              }
+              chatForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const val = chatInput.value.trim();
+                if (!val) return;
+                addMsg(val, 'user');
+                chatInput.value = '';
+                setTimeout(() => {
+                  // simple suggestion response
+                  const res = fuse.search(val).map(r => r.item).slice(0, 3);
+                  if (res.length) {
+                    addMsg(`I found ${res.length} helpful article${res.length > 1 ? 's' : ''}: ${res.map(a => a.title).join(' • ')}. Tap a title below:`);
+                    // add quick action chips
+                    const holder = document.createElement('div');
+                    holder.className = 'flex flex-wrap gap-2 pl-11';
+                    res.forEach(a => {
+                      const chip = document.createElement('button');
+                      chip.className = 'px-2.5 py-1.5 rounded-full text-xs';
+                      chip.style.background = 'linear-gradient(90deg, rgba(139,92,246,0.25), rgba(0,229,255,0.25))';
+                      chip.style.border = '1px solid rgba(139,92,246,0.35)';
+                      chip.textContent = a.title;
+                      chip.addEventListener('click', () => openArticle(a.id));
+                      holder.appendChild(chip);
+                    });
+                    chatMessages.appendChild(holder);
+                    chatMessages.scrollTop = chatMessages.scrollHeight;
+                  } else {
+                    addMsg("I couldn't find an exact match. Try keywords like “Slack” or “biometric”.");
+                  }
+                }, 500);
+              });
+
+              // Guide Mode
+              const guideSpotlight = document.getElementById('guideSpotlight');
+              const guideTooltip = document.getElementById('guideTooltip');
+              const guideTitle = document.getElementById('guideStepTitle');
+              const guideText = document.getElementById('guideStepText');
+              const guideProgress = document.getElementById('guideProgress');
+              const btnPrev = document.getElementById('guidePrev');
+              const btnNext = document.getElementById('guideNext');
+              const btnExit = document.getElementById('guideExit');
+              const startGuideBiometrics = document.getElementById('startGuideBiometrics');
+              const startGuideSlack = document.getElementById('startGuideSlack');
+
+              let guideSteps = [];
+              let guideIndex = 0;
+
+              function computeTooltipPos(targetRect) {
+                const margin = 16;
+                let top = targetRect.bottom + margin;
+                let left = targetRect.left + window.scrollX;
+                if (left + 340 > window.innerWidth - 16) left = window.innerWidth - 356;
+                if (top + 180 > window.innerHeight) top = targetRect.top - 220;
+                guideTooltip.style.top = top + 'px';
+                guideTooltip.style.left = Math.max(16, left) + 'px';
+              }
+
+              function spotlightTo(el) {
+                if (!el) return;
+                const rect = el.getBoundingClientRect();
+                const gx = rect.left + rect.width / 2;
+                const gy = rect.top + rect.height / 2;
+                guideSpotlight.style.setProperty('--gx', gx + 'px');
+                guideSpotlight.style.setProperty('--gy', gy + 'px');
+                computeTooltipPos(rect);
+                if (!prefersReduced && window.gsap) {
+                  gsap.to(window, { scrollTo: { y: rect.top + window.scrollY - 140 }, duration: 0.5, ease: 'power2.out' });
+                } else {
+                  window.scrollTo({ top: rect.top + window.scrollY - 140, behavior: 'auto' });
+                }
+              }
+
+              function updateGuide() {
+                const step = guideSteps[guideIndex];
+                if (!step) return endGuide();
+                guideTitle.textContent = step.title;
+                guideText.textContent = step.text;
+                guideProgress.textContent = (guideIndex + 1) + ' / ' + guideSteps.length;
+                const el = document.querySelector(step.selector);
+                if (el) spotlightTo(el);
+                btnPrev.disabled = guideIndex === 0;
+                btnNext.textContent = guideIndex === guideSteps.length - 1 ? 'Finish' : 'Next';
+              }
+
+              function startGuide(type = 'biometrics') {
+                guideSteps = type === 'biometrics' ? [
+                  { title: 'Open Security & Privacy', text: 'Click the Security & Privacy card to access your protection settings.', selector: '#topic-security' },
+                  { title: 'Locate Biometrics', text: 'In Security, find “Biometric login”. We support Face ID and Touch ID.', selector: '#suggested-articles-title' },
+                  { title: 'Enable & Confirm', text: 'Follow the on-screen instructions to enable biometrics securely.', selector: '#reportIssueBtn' }
+                ] : [
+                  { title: 'Open Integrations', text: 'Click the Integrations card to explore available connectors.', selector: '#topic-integrations' },
+                  { title: 'Select Slack', text: 'Choose Slack and click Connect to authorize your workspace.', selector: '#suggested-articles-title' },
+                  { title: 'Finish Setup', text: 'Configure channels and slash commands to complete the integration.', selector: '#openChatBtn' }
+                ];
+                guideIndex = 0;
+                guideSpotlight.classList.remove('hidden');
+                guideTooltip.classList.remove('hidden');
+                updateGuide();
+              }
+
+              function endGuide() {
+                guideSpotlight.classList.add('hidden');
+                guideTooltip.classList.add('hidden');
+              }
+
+              btnPrev.addEventListener('click', () => { if (guideIndex > 0) { guideIndex--; updateGuide(); } });
+              btnNext.addEventListener('click', () => { if (guideIndex < guideSteps.length - 1) { guideIndex++; updateGuide(); } else { endGuide(); } });
+              btnExit.addEventListener('click', endGuide);
+              startGuideBiometrics.addEventListener('click', () => startGuide('biometrics'));
+              startGuideSlack.addEventListener('click', () => startGuide('slack'));
+              document.getElementById('startGuideFromArticle').addEventListener('click', () => {
+                if (!lastOpenedArticle) return;
+                const t = lastOpenedArticle.title.toLowerCase().includes('slack') ? 'slack' : 'biometrics';
+                endArticleQuickView();
+                startGuide(t);
+              });
+              function endArticleQuickView() {
+                articleOverlay.classList.remove('active');
+                articleOverlay.setAttribute('aria-hidden', 'true');
+              }
+
+              // Trust bar count-up
+              function countUp(el, to, duration = 1200) {
+                const start = 0;
+                const t0 = performance.now();
+                function loop(t) {
+                  const p = Math.min(1, (t - t0) / duration);
+                  const val = Math.floor(start + (to - start) * p);
+                  el.textContent = val;
+                  if (p < 1) requestAnimationFrame(loop);
+                }
+                requestAnimationFrame(loop);
+              }
+              const trustPercent = document.getElementById('trustPercent');
+              const trustTime = document.getElementById('trustTime');
+              let trustAnimated = false;
+              if (window.IntersectionObserver) {
+                const io = new IntersectionObserver((entries) => {
+                  entries.forEach(e => {
+                    if (e.isIntersecting && !trustAnimated) {
+                      trustAnimated = true;
+                      countUp(trustPercent, 99, 1400);
+                      // animate time to 2:00
+                      const start = 0, end = 120, dur = 1400, t0 = performance.now();
+                      function step(t) {
+                        const p = Math.min(1, (t - t0) / dur);
+                        const secs = Math.floor(start + (end - start) * p);
+                        const m = Math.floor(secs / 60), s = (secs % 60).toString().padStart(2, '0');
+                        trustTime.textContent = `${m}:${s}`;
+                        if (p < 1) requestAnimationFrame(step);
+                      }
+                      requestAnimationFrame(step);
+                    }
+                  });
+                }, { threshold: 0.35 });
+                io.observe(trustPercent.closest('section'));
+              } else {
+                trustPercent.textContent = '99';
+                trustTime.textContent = '2:00';
+              }
+
+              // GSAP section reveals
+              if (window.gsap && window.ScrollTrigger && !prefersReduced) {
+                gsap.utils.toArray('section').forEach((sec, i) => {
+                  gsap.from(sec.querySelectorAll('.card, .glass, h2'), {
+                    opacity: 0, y: 24, stagger: 0.08, duration: 0.6, ease: 'power2.out',
+                    scrollTrigger: { trigger: sec, start: 'top 80%' }
+                  });
+                });
+              }
+
+              // Footer year
+              document.getElementById('year').textContent = new Date().getFullYear();
+
+              // Microcopy rotation while idle
+              const microcopy = document.getElementById('microcopy');
+              const hints = [
+                'Try: “Set up biometric login” or “Connect Slack.”',
+                'Try: “Create an API token” or “Enable 2FA.”',
+                'Try: “Manage billing” or “Keyboard shortcuts.”'
+              ];
+              let hintIndex = 0;
+              setInterval(() => {
+                hintIndex = (hintIndex + 1) % hints.length;
+                microcopy.textContent = hints[hintIndex];
+              }, 6000);
+
+              // Accessibility: keyboard open chat with Alt+L
+              document.addEventListener('keydown', (e) => {
+                if (e.altKey && (e.key.toLowerCase() === 'l')) {
+                  e.preventDefault();
+                  openChat();
+                }
+              });
+
+              // Close overlays with Escape
+              document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') {
+                  closeModalFn();
+                  closeChat();
+                  articleOverlay.classList.remove('active'); articleOverlay.setAttribute('aria-hidden', 'true');
+                  endGuide();
+                }
+              });
+
+              // Click-to-open from chips
+              chips.addEventListener('click', (e) => {
+                if (e.target.tagName === 'BUTTON') {
+                  const title = e.target.textContent.trim();
+                  const found = articles.find(a => a.title === title);
+                  if (found) openArticle(found.id);
+                }
+              });
+
+              // Make sure spotlight follows on scroll/resize
+              window.addEventListener('resize', () => { if (!guideSpotlight.classList.contains('hidden')) updateGuide(); });
+              window.addEventListener('scroll', () => { if (!guideSpotlight.classList.contains('hidden')) updateGuide(); }, { passive: true });
+
+            })();
+        </script>
+</body>
+
+</html>

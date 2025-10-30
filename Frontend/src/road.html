@@ -1,0 +1,1163 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Salmar AI - Roadmap to the Future</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --deep-purple: #240046;
+            --neon-violet: #9D4EDD;
+            --light-purple: #C77DFF;
+            --ultra-violet: #7209B7;
+            --dark-purple: #10002B;
+            --accent-pink: #E0AAFF;
+            --text-light: #F8F9FA;
+            --text-muted: #B8B8D1;
+            --glass-bg: rgba(157, 78, 221, 0.1);
+            --glass-border: rgba(157, 78, 221, 0.3);
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--deep-purple);
+            color: var(--text-light);
+            overflow-x: hidden;
+            position: relative;
+            min-height: 100vh;
+        }
+
+        /* Animated Nebula Background */
+        .nebula-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .star {
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+            animation: twinkle 3s infinite;
+        }
+
+        @keyframes twinkle {
+
+            0%,
+            100% {
+                opacity: 0.3;
+                transform: scale(1);
+            }
+
+            50% {
+                opacity: 1;
+                transform: scale(1.2);
+            }
+        }
+
+        .nebula-cloud {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(60px);
+            opacity: 0.3;
+            animation: float 20s infinite ease-in-out;
+        }
+
+        @keyframes float {
+
+            0%,
+            100% {
+                transform: translate(0, 0) scale(1);
+            }
+
+            33% {
+                transform: translate(50px, -30px) scale(1.1);
+            }
+
+            66% {
+                transform: translate(-30px, 40px) scale(0.9);
+            }
+        }
+
+        /* Header */
+        header {
+            position: relative;
+            z-index: 10;
+            padding: 2rem 5%;
+            background: linear-gradient(180deg, rgba(16, 0, 43, 0.9) 0%, rgba(36, 0, 70, 0) 100%);
+            backdrop-filter: blur(10px);
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--neon-violet);
+            text-shadow: 0 0 20px rgba(157, 78, 221, 0.5);
+        }
+
+        .orb-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: radial-gradient(circle at 30% 30%, var(--light-purple), var(--neon-violet), var(--ultra-violet));
+            box-shadow: 0 0 30px rgba(157, 78, 221, 0.6);
+            animation: pulse-orb 2s infinite;
+        }
+
+        @keyframes pulse-orb {
+
+            0%,
+            100% {
+                transform: scale(1);
+                box-shadow: 0 0 30px rgba(157, 78, 221, 0.6);
+            }
+
+            50% {
+                transform: scale(1.1);
+                box-shadow: 0 0 50px rgba(157, 78, 221, 0.9);
+            }
+        }
+
+        .theme-toggle {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            padding: 0.8rem 1.5rem;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            color: var(--text-light);
+            font-size: 1rem;
+        }
+
+        .theme-toggle:hover {
+            background: rgba(157, 78, 221, 0.2);
+            box-shadow: 0 0 20px rgba(157, 78, 221, 0.4);
+        }
+
+        /* Hero Section */
+        .hero {
+            position: relative;
+            z-index: 10;
+            text-align: center;
+            padding: 4rem 5% 3rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .hero h1 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            font-weight: 800;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, var(--light-purple), var(--neon-violet), var(--accent-pink));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: gradient-shift 3s ease infinite;
+        }
+
+        @keyframes gradient-shift {
+
+            0%,
+            100% {
+                filter: hue-rotate(0deg);
+            }
+
+            50% {
+                filter: hue-rotate(20deg);
+            }
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            color: var(--text-muted);
+            max-width: 700px;
+            margin: 0 auto 2rem;
+            line-height: 1.8;
+        }
+
+        /* Timeline Container */
+        .timeline-wrapper {
+            position: relative;
+            z-index: 10;
+            padding: 3rem 0;
+            overflow: hidden;
+        }
+
+        .timeline-nav {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 3rem;
+            flex-wrap: wrap;
+            padding: 0 5%;
+        }
+
+        .timeline-btn {
+            background: var(--glass-bg);
+            border: 2px solid var(--glass-border);
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            backdrop-filter: blur(10px);
+            color: var(--text-light);
+            font-size: 1rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .timeline-btn:hover,
+        .timeline-btn.active {
+            background: var(--neon-violet);
+            border-color: var(--light-purple);
+            box-shadow: 0 0 30px rgba(157, 78, 221, 0.6);
+            transform: translateY(-3px);
+        }
+
+        /* Timeline Sections */
+        .timeline-section {
+            padding: 2rem 5%;
+            max-width: 1400px;
+            margin: 0 auto 4rem;
+            display: none;
+            animation: fadeInUp 0.6s ease;
+        }
+
+        .timeline-section.active {
+            display: block;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .section-icon {
+            font-size: 2.5rem;
+            filter: drop-shadow(0 0 10px currentColor);
+        }
+
+        .section-header h2 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--neon-violet);
+        }
+
+        /* Feature Cards Grid */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2rem;
+        }
+
+        .feature-card {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 2rem;
+            backdrop-filter: blur(20px);
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(157, 78, 221, 0.1), transparent);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--neon-violet);
+            box-shadow: 0 20px 60px rgba(157, 78, 221, 0.4);
+        }
+
+        .feature-card:hover::before {
+            opacity: 1;
+        }
+
+        .feature-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+        }
+
+        .feature-icon {
+            font-size: 2rem;
+            color: var(--neon-violet);
+            filter: drop-shadow(0 0 10px var(--neon-violet));
+        }
+
+        .feature-card h3 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--light-purple);
+        }
+
+        .feature-card p {
+            color: var(--text-muted);
+            line-height: 1.7;
+            margin-bottom: 1.5rem;
+        }
+
+        /* Voting System */
+        .feature-actions {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .vote-btn {
+            background: rgba(157, 78, 221, 0.2);
+            border: 1px solid var(--neon-violet);
+            padding: 0.6rem 1.2rem;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: var(--text-light);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 600;
+        }
+
+        .vote-btn:hover {
+            background: var(--neon-violet);
+            box-shadow: 0 0 20px rgba(157, 78, 221, 0.5);
+            transform: scale(1.05);
+        }
+
+        .vote-btn.voted {
+            background: var(--neon-violet);
+            box-shadow: 0 0 20px rgba(157, 78, 221, 0.5);
+        }
+
+        .notify-btn {
+            background: transparent;
+            border: 1px solid var(--glass-border);
+            padding: 0.6rem 1.2rem;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .notify-btn:hover {
+            border-color: var(--accent-pink);
+            color: var(--accent-pink);
+            box-shadow: 0 0 15px rgba(224, 170, 255, 0.3);
+        }
+
+        /* Transparency Promise Section */
+        .transparency-section {
+            position: relative;
+            z-index: 10;
+            max-width: 1200px;
+            margin: 4rem auto;
+            padding: 3rem 5%;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 30px;
+            backdrop-filter: blur(20px);
+        }
+
+        .transparency-section h2 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 2rem;
+            text-align: center;
+            color: var(--neon-violet);
+        }
+
+        .promise-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .promise-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            padding: 1.5rem;
+            background: rgba(157, 78, 221, 0.05);
+            border-radius: 15px;
+            border: 1px solid rgba(157, 78, 221, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .promise-item:hover {
+            background: rgba(157, 78, 221, 0.1);
+            transform: translateX(10px);
+        }
+
+        .promise-icon {
+            font-size: 1.5rem;
+            color: var(--accent-pink);
+            flex-shrink: 0;
+        }
+
+        .promise-item p {
+            color: var(--text-muted);
+            line-height: 1.7;
+        }
+
+        /* Footer */
+        footer {
+            position: relative;
+            z-index: 10;
+            text-align: center;
+            padding: 3rem 5%;
+            background: linear-gradient(0deg, rgba(16, 0, 43, 0.9) 0%, rgba(36, 0, 70, 0) 100%);
+            backdrop-filter: blur(10px);
+            margin-top: 4rem;
+        }
+
+        footer p {
+            color: var(--text-muted);
+            margin-bottom: 1rem;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .footer-links a {
+            color: var(--neon-violet);
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: var(--light-purple);
+            text-shadow: 0 0 10px var(--light-purple);
+        }
+
+        
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .hero p {
+                font-size: 1rem;
+            }
+
+            .timeline-nav {
+                gap: 1rem;
+            }
+
+            .timeline-btn {
+                padding: 0.8rem 1.5rem;
+                font-size: 0.9rem;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .section-header h2 {
+                font-size: 2rem;
+            }
+        }
+
+        /* Scroll Animation */
+        .scroll-reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.6s ease;
+        }
+
+        .scroll-reveal.revealed {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Vote Counter Animation */
+        @keyframes vote-pop {
+            0% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.3);
+            }
+
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        .vote-count {
+            animation: vote-pop 0.3s ease;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Animated Nebula Background -->
+    <div class="nebula-bg" id="nebulaBg"></div>
+
+    <!-- Header -->
+    <header>
+        <div class="header-content">
+            <div class="logo">
+                <div class="orb-icon"></div>
+                <span>Salmar AI</span>
+            </div>
+            
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <h1>🟣 Roadmap to the Future</h1>
+        <p>Your window into the future of Salmar AI. Explore the features we're building, improvements on the horizon,
+            and our long-term vision. Stay connected, informed, and excited about what's coming.</p>
+    </section>
+
+    <!-- Timeline Navigation -->
+    <div class="timeline-wrapper">
+        <div class="timeline-nav">
+            <button class="timeline-btn active" data-section="released">
+                <span>✅</span> Recently Released
+            </button>
+            <button class="timeline-btn" data-section="progress">
+                <span>⚙️</span> In Progress
+            </button>
+            <button class="timeline-btn" data-section="soon">
+                <span>🚀</span> Coming Soon
+            </button>
+            <button class="timeline-btn" data-section="future">
+                <span>🌌</span> Future Vision
+            </button>
+        </div>
+
+        <!-- Recently Released Section -->
+        <div class="timeline-section active" id="released">
+            <div class="section-header">
+                <span class="section-icon">✅</span>
+                <h2>Recently Released</h2>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card scroll-reveal">
+                    <div class="feature-header">
+                        <div class="feature-icon">🔐</div>
+                    </div>
+                    <h3>Biometric Login</h3>
+                    <p>Experience faster and more secure access with advanced biometric authentication. Your security is
+                        our priority.</p>
+                    <div class="feature-actions">
+                        <button class="vote-btn" data-votes="847">
+                            <i class="fas fa-heart"></i>
+                            <span class="vote-count">847</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="feature-card scroll-reveal">
+                    <div class="feature-header">
+                        <div class="feature-icon">🔮</div>
+                    </div>
+                    <h3>Salmar Orb (AI Presence)</h3>
+                    <p>Meet the Salmar Orb - a mesmerizing AI presence with pulsing, swirling, and glowing animations
+                        that brings your AI to life.</p>
+                    <div class="feature-actions">
+                        <button class="vote-btn" data-votes="1243">
+                            <i class="fas fa-heart"></i>
+                            <span class="vote-count">1243</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="feature-card scroll-reveal">
+                    <div class="feature-header">
+                        <div class="feature-icon">🛡️</div>
+                    </div>
+                    <h3>Security Status Page</h3>
+                    <p>Real-time transparency into our security measures. Know exactly how we're protecting your data at
+                        all times.</p>
+                    <div class="feature-actions">
+                        <button class="vote-btn" data-votes="692">
+                            <i class="fas fa-heart"></i>
+                            <span class="vote-count">692</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="feature-card scroll-reveal">
+                    <div class="feature-header">
+                        <div class="feature-icon">📚</div>
+                    </div>
+                    <h3>Help Center</h3>
+                    <p>Comprehensive guides, tutorials, and documentation to help you make the most of Salmar AI's
+                        powerful features.</p>
+                    <div class="feature-actions">
+                        <button class="vote-btn" data-votes="534">
+                            <i class="fas fa-heart"></i>
+                            <span class="vote-count">534</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- In Progress Section -->
+        <div class="timeline-section" id="progress">
+            <div class="section-header">
+                <span class="section-icon">⚙️</span>
+                <h2>In Progress</h2>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card scroll-reveal">
+                    <div class="feature-header">
+                        <div class="feature-icon">🌍</div>
+                    </div>
+                    <h3>Multi-Language Support</h3>
+                    <p>Breaking language barriers with support for 50+ languages. Making Salmar AI accessible to users
+                        worldwide.</p>
+                    <div class="feature-actions">
+                        <button class="vote-btn" data-votes="2156">
+                            <i class="fas fa-heart"></i>
+                            <span class="vote-count">2156</span>
+                        </button>
+                        <button class="notify-btn">
+                            <i class="fas fa-bell"></i> Notify Me
+                        </button>
+                    </div>
+                </div>
+
+                <div class="feature-card scroll-reveal">
+                    <div class="feature-header">
+                        <div class="feature-icon">🎤</div>
+                    </div>
+                    <h3>Voice-First Conversations</h3>
+                    <p>Natural, fluid voice interactions with advanced sound design. Talk to Salmar like you would to a
+                        friend.</p>
+                    <div class="feature-actions">
+                        <button class="vote-btn" data-votes="1876">
+                            <i class="fas fa-heart"></i>
+                            <span class="vote-count">1876</span>
+                        </button>
+                        <button class="notify-btn">
+                            <i class="fas fa-bell"></i> Notify Me
+                        </button>
+                    </div>
+                </div>
+
+                <div class="feature-card scroll-reveal">
+                    <div class="feature-header">
+                        <div class="feature-icon">♿</div>
+                    </div>
+                    <h3>Expanded Accessibility</h3>
+                    <p>Dyslexia-friendly fonts, simplified mode, enhanced screen reader support, and more inclusive
+                        design features.</p>
+                    <div class="feature-actions">
+                        <button class="vote-btn" data-votes="1432">
+                            <i class="fas fa-heart"></i>
+                            <span class="vote-count">1432</span>
+                        </button>
+                        <button class="notify-btn">
+                            <i class="fas fa-bell"></i> Notify Me
+                        </button>
+                    </div>
+                </div>
+
+                <div class="feature-card scroll-reveal">
+                    <div class="feature-header">
+                        <div class="feature-icon">🎓</div>
+                    </div>
+                    <h3>AI-Powered Learning Paths</h3>
+                    <p>Personalized learning journeys that adapt to your pace, style, and goals. Education reimagined
+                        with AI.</p>
+                    <div class="feature-actions">
+                        <button class="vote-btn" data-votes="1987">
+                            <i class="fas fa-heart"></i>
+                            <span class="vote-count">1987</span>
+                        </button>
+                        <button class="notify-btn">
+                            <i class="fas fa-bell"></i> Notify Me
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Coming Soon Section -->
+        <div class="timeline-section" id="soon">
+            <div class="section-header">
+                <span class="section-icon">🚀</span>
+                <h2>Coming Soon</h2>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card scroll-reveal">
+                    <div class="feature-header">
+                        <div class="feature-icon">📱</div>
+                    </div>
+                    <h3>Mobile-First Offline Mode</h3>
+                    <p>Access Salmar AI anywhere, anytime - even without an internet connection. Your AI companion,
+                        always available.</p>
+                    <div class="feature-actions">
+                        <button class="vote-btn" data-votes="3421">
+                            <i class="fas fa-heart"></i>
+                            <span class="vote-count">3421</span>
+                        </button>
+                        <button class="notify-btn">
+                            <i class="fas fa-bell"></i> Notify Me
+                        </button>
+                    </div>
+                </div>
+
+                <div class="feature-card scroll-reveal">
+                    <div class="feature-header">
+                        <div class="feature-icon">👥</div>
+                    </div>
+                    <h3>Collaborative AI Sessions</h3>
+                    <p>Work together with your team in shared AI spaces. Brainstorm, create, and innovate collectively
+                        with Salmar.</p>
+                    <div class="feature-actions">
+                        <button class="vote-btn" data-votes="2876">
+                            <i class="fas fa-heart"></i>
+                            <span class="vote-count">2876</span>
+                        </button>
+                        <button class="notify-btn">
+                            <i class="fas fa-bell"></i> Notify Me
+                        </button>
+                    </div>
+                </div>
+
+                <div class="feature-card scroll-reveal">
+                    <div class="feature-header">
+                        <div class="feature-icon">🎨</div>
+                    </div>
+                    <h3>Advanced Creative Mode</h3>
+                    <p>Generate music, create stunning visuals, and get design assistance. Unleash your creativity with
+                        AI-powered tools.</p>
+                    <div class="feature-actions">
+                        <button class="vote-btn" data-votes="4123">
+                            <i class="fas fa-heart"></i>
+                            <span class="vote-count">4123</span>
+                        </button>
+                        <button class="notify-btn">
+                            <i class="fas fa-bell"></i> Notify Me
+                        </button>
+                    </div>
+                </div>
+
+                <div class="feature-card scroll-reveal">
+                    <div class="feature-header">
+                        <div class="feature-icon">🎮</div>
+                    </div>
+                    <h3>Gamified Experience</h3>
+                    <p>Earn Helper Points for feedback, unlock achievements, and level up your Salmar journey. Learning
+                        meets gaming.</p>
+                    <div class="feature-actions">
+                        <button class="vote-btn" data-votes="2654">
+                            <i class="fas fa-heart"></i>
+                            <span class="vote-count">2654</span>
+                        </button>
+                        <button class="notify-btn">
+                            <i class="fas fa-bell"></i> Notify Me
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Future Vision Section -->
+        <div class="timeline-section" id="future">
+            <div class="section-header">
+                <span class="section-icon">🌌</span>
+                <h2>Future Vision</h2>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card scroll-reveal">
+                    <div class="feature-header">
+                        <div class="feature-icon">🧠</div>
+                    </div>
+                    <h3>Neural Integration</h3>
+                    <p>The next frontier: connecting Salmar with wearable brain-computer interfaces for thought-based
+                        interaction.</p>
+                    <div class="feature-actions">
+                        <button class="vote-btn" data-votes="5432">
+                            <i class="fas fa-heart"></i>
+                            <span class="vote-count">5432</span>
+                        </button>
+                        <button class="notify-btn">
+                            <i class="fas fa-bell"></i> Notify Me
+                        </button>
+                    </div>
+                </div>
+
+                <div class="feature-card scroll-reveal">
+                    <div class="feature-header">
+                        <div class="feature-icon">⚖️</div>
+                    </div>
+                    <h3>Global Fairness Engine</h3>
+                    <p>Ensuring unbiased, culturally-aware responses across all regions. AI that respects and
+                        understands diversity.</p>
+                    <div class="feature-actions">
+                        <button class="vote-btn" data-votes="4876">
+                            <i class="fas fa-heart"></i>
+                            <span class="vote-count">4876</span>
+                        </button>
+                        <button class="notify-btn">
+                            <i class="fas fa-bell"></i> Notify Me
+                        </button>
+                    </div>
+                </div>
+
+                <div class="feature-card scroll-reveal">
+                    <div class="feature-header">
+                        <div class="feature-icon">🔌</div>
+                    </div>
+                    <h3>Salmar AI API Marketplace</h3>
+                    <p>A thriving ecosystem of plugins and extensions. Developers worldwide building on the Salmar
+                        platform.</p>
+                    <div class="feature-actions">
+                        <button class="vote-btn" data-votes="3987">
+                            <i class="fas fa-heart"></i>
+                            <span class="vote-count">3987</span>
+                        </button>
+                        <button class="notify-btn">
+                            <i class="fas fa-bell"></i> Notify Me
+                        </button>
+                    </div>
+                </div>
+
+                <div class="feature-card scroll-reveal">
+                    <div class="feature-header">
+                        <div class="feature-icon">🌟</div>
+                    </div>
+                    <h3>Quantum AI Processing</h3>
+                    <p>Harnessing quantum computing for unprecedented AI capabilities. Solving problems once thought
+                        impossible.</p>
+                    <div class="feature-actions">
+                        <button class="vote-btn" data-votes="6234">
+                            <i class="fas fa-heart"></i>
+                            <span class="vote-count">6234</span>
+                        </button>
+                        <button class="notify-btn">
+                            <i class="fas fa-bell"></i> Notify Me
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Transparency Promise Section -->
+    <section class="transparency-section">
+        <h2>🤝 Our Transparency Promise</h2>
+        <p style="text-align: center; color: var(--text-muted); max-width: 800px; margin: 0 auto 2rem;">
+            We're committed to building Salmar AI with you, not just for you. Here's our promise to the community:
+        </p>
+        <div class="promise-grid">
+            <div class="promise-item">
+                <div class="promise-icon">📅</div>
+                <div>
+                    <p><strong>Monthly Updates</strong><br>This roadmap is updated on the first Monday of every month
+                        with the latest progress and new features.</p>
+                </div>
+            </div>
+            <div class="promise-item">
+                <div class="promise-icon">🗳️</div>
+                <div>
+                    <p><strong>Community Voting</strong><br>Your votes directly influence our development priorities. We
+                        listen to what matters most to you.</p>
+                </div>
+            </div>
+            <div class="promise-item">
+                <div class="promise-icon">⚖️</div>
+                <div>
+                    <p><strong>Innovation & Stability</strong><br>We balance cutting-edge features with rock-solid
+                        reliability and ethical AI practices.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2024 Salmar AI. Building the future of AI, together.</p>
+        <div class="footer-links">
+            <a href="#"><i class="fas fa-shield-alt"></i> Privacy Policy</a>
+            <a href="#"><i class="fas fa-file-contract"></i> Terms of Service</a>
+            <a href="#"><i class="fas fa-envelope"></i> Contact Us</a>
+            <a href="#"><i class="fab fa-twitter"></i> Twitter</a>
+            <a href="#"><i class="fab fa-discord"></i> Discord</a>
+        </div>
+    </footer>
+
+    <script>
+        // Generate animated nebula background
+        function createNebula() {
+            const nebulaBg = document.getElementById('nebulaBg');
+
+            // Create stars
+            for (let i = 0; i < 100; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                star.style.width = Math.random() * 3 + 'px';
+                star.style.height = star.style.width;
+                star.style.left = Math.random() * 100 + '%';
+                star.style.top = Math.random() * 100 + '%';
+                star.style.animationDelay = Math.random() * 3 + 's';
+                nebulaBg.appendChild(star);
+            }
+
+            // Create nebula clouds
+            const colors = ['#9D4EDD', '#C77DFF', '#7209B7', '#E0AAFF'];
+            for (let i = 0; i < 5; i++) {
+                const cloud = document.createElement('div');
+                cloud.className = 'nebula-cloud';
+                cloud.style.width = Math.random() * 400 + 200 + 'px';
+                cloud.style.height = cloud.style.width;
+                cloud.style.left = Math.random() * 100 + '%';
+                cloud.style.top = Math.random() * 100 + '%';
+                cloud.style.background = colors[Math.floor(Math.random() * colors.length)];
+                cloud.style.animationDelay = Math.random() * 5 + 's';
+                cloud.style.animationDuration = Math.random() * 10 + 15 + 's';
+                nebulaBg.appendChild(cloud);
+            }
+        }
+
+        createNebula();
+
+        
+
+        // Timeline Navigation
+        const timelineBtns = document.querySelectorAll('.timeline-btn');
+        const timelineSections = document.querySelectorAll('.timeline-section');
+
+        timelineBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const targetSection = btn.getAttribute('data-section');
+
+                // Remove active class from all buttons and sections
+                timelineBtns.forEach(b => b.classList.remove('active'));
+                timelineSections.forEach(s => s.classList.remove('active'));
+
+                // Add active class to clicked button and target section
+                btn.classList.add('active');
+                document.getElementById(targetSection).classList.add('active');
+
+                // Scroll to section
+                document.getElementById(targetSection).scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            });
+        });
+
+        // Voting System
+        const voteBtns = document.querySelectorAll('.vote-btn');
+
+        voteBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const isVoted = btn.classList.contains('voted');
+                const voteCountSpan = btn.querySelector('.vote-count');
+                let currentVotes = parseInt(voteCountSpan.textContent);
+
+                if (isVoted) {
+                    // Unvote
+                    btn.classList.remove('voted');
+                    currentVotes--;
+                } else {
+                    // Vote
+                    btn.classList.add('voted');
+                    currentVotes++;
+                }
+
+                voteCountSpan.textContent = currentVotes;
+
+                // Add animation
+                voteCountSpan.style.animation = 'none';
+                setTimeout(() => {
+                    voteCountSpan.style.animation = 'vote-pop 0.3s ease';
+                }, 10);
+            });
+        });
+
+        // Notify Me Buttons
+        const notifyBtns = document.querySelectorAll('.notify-btn');
+
+        notifyBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const isNotifying = btn.classList.contains('notifying');
+
+                if (isNotifying) {
+                    btn.innerHTML = '<i class="fas fa-bell"></i> Notify Me';
+                    btn.classList.remove('notifying');
+                } else {
+                    btn.innerHTML = '<i class="fas fa-bell-slash"></i> Subscribed';
+                    btn.classList.add('notifying');
+                    btn.style.borderColor = 'var(--accent-pink)';
+                    btn.style.color = 'var(--accent-pink)';
+
+                    // Show confirmation
+                    setTimeout(() => {
+                        alert('🔔 You\'ll be notified when this feature launches!');
+                    }, 100);
+                }
+            });
+        });
+
+        // Scroll Reveal Animation
+        const scrollRevealElements = document.querySelectorAll('.scroll-reveal');
+
+        const revealOnScroll = () => {
+            scrollRevealElements.forEach(element => {
+                const elementTop = element.getBoundingClientRect().top;
+                const windowHeight = window.innerHeight;
+
+                if (elementTop < windowHeight - 100) {
+                    element.classList.add('revealed');
+                }
+            });
+        };
+
+        window.addEventListener('scroll', revealOnScroll);
+        revealOnScroll(); // Initial check
+
+        // Smooth scroll for all internal links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Add parallax effect to nebula clouds
+        window.addEventListener('scroll', () => {
+            const scrolled = window.pageYOffset;
+            const clouds = document.querySelectorAll('.nebula-cloud');
+
+            clouds.forEach((cloud, index) => {
+                const speed = (index + 1) * 0.1;
+                cloud.style.transform = `translateY(${scrolled * speed}px)`;
+            });
+        });
+
+        // Add hover effect to feature cards
+        const featureCards = document.querySelectorAll('.feature-card');
+
+        featureCards.forEach(card => {
+            card.addEventListener('mousemove', (e) => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+
+                const centerX = rect.width / 2;
+                const centerY = rect.height / 2;
+
+                const rotateX = (y - centerY) / 20;
+                const rotateY = (centerX - x) / 20;
+
+                card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-10px)`;
+            });
+
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) translateY(0)';
+            });
+        });
+
+        // Add typing effect to hero text
+        const heroTitle = document.querySelector('.hero h1');
+        const originalText = heroTitle.textContent;
+        heroTitle.textContent = '';
+
+        let charIndex = 0;
+        const typingSpeed = 50;
+
+        function typeText() {
+            if (charIndex < originalText.length) {
+                heroTitle.textContent += originalText.charAt(charIndex);
+                charIndex++;
+                setTimeout(typeText, typingSpeed);
+            }
+        }
+
+        setTimeout(typeText, 500);
+    </script>
+</body>
+
+</html>
