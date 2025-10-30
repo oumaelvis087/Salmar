@@ -1,0 +1,80 @@
+version: '3.8'
+
+services:
+  # Go API service
+  api:
+    build:
+      context: .
+      dockerfile: ./build/api/Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      - PORT=8080
+      - ENVIRONMENT=development
+      - PYTHON_SERVICES_HOST=host.docker.internal
+      - NLP_SERVICE_PORT=5001
+      - IMAGE_SERVICE_PORT=5002
+      - CODE_SERVICE_PORT=5003
+    volumes:
+      - ./configs:/app/configs
+    depends_on:
+      - nlp-service
+      - image-service
+      - code-service
+    networks:
+      - salmar-net
+
+  # NLP service
+  nlp-service:
+    build:
+      context: ./python
+      dockerfile: ../build/python/Dockerfile
+    ports:
+      - "5001:5001"
+    environment:
+      - PORT=5001
+      - SERVICE_NAME=nlp
+      - NLP_SERVICE_PORT=5001
+    volumes:
+      - ./python/nlp_service:/app/nlp_service
+    command: ["python", "nlp_service/app.py"]
+    networks:
+      - salmar-net
+
+  # Image service
+  image-service:
+    build:
+      context: ./python
+      dockerfile: ../build/python/Dockerfile
+    ports:
+      - "5002:5002"
+    environment:
+      - PORT=5002
+      - SERVICE_NAME=image
+      - IMAGE_SERVICE_PORT=5002
+    volumes:
+      - ./python/image_service:/app/image_service
+    command: ["python", "image_service/app.py"]
+    networks:
+      - salmar-net
+
+  # Code service
+  code-service:
+    build:
+      context: ./python
+      dockerfile: ../build/python/Dockerfile
+    ports:
+      - "5003:5003"
+    environment:
+      - PORT=5003
+      - SERVICE_NAME=code
+      - CODE_SERVICE_PORT=5003
+    volumes:
+      - ./python/code_service:/app/code_service
+    command: ["python", "code_service/app.py"]
+    networks:
+      - salmar-net
+
+networks:
+  salmar-net:
+    driver: bridge
